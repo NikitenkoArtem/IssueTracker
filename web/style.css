@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+header{
+    background: gray;
+    height: 30px;
+    padding-bottom: 20px;
+    color: white;
+    text-align: left;
+    font-size: 25px;
+    font-family: Arial sans-serif;
+}
+ul{
+    list-style-type: none;
+}
+li{
+    float: left;
+    padding: 20px 10px 20px 10px;
+}
+li a{
+    display: inline;
+    text-decoration: none;
+}
+li a:hover {
+    background-color: green;
+}
+.admin{
+    display: inline;
+    float: left;
+}
+.admin-content{
+    display: none;
+    position: absolute;
+    background-color: green;
+    z-index: 1;
+}
+.admin:hover .admin-content{
+    display: inline;
+}
