@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="dbconnect.jsp" %>
 
 <!DOCTYPE html>
 <html>
@@ -22,7 +21,9 @@
             <td>Summary</td>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody>
+
+      </tbody>
   </table>
   </body>
 </html>

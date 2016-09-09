@@ -9,13 +9,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Created by Price on 09.09.2016.
- */
 public class DBConnection {
-    private static Connection conn;
+    public DBConnection() {
+    }
 
-    public static Connection getConnection() {
+    public static Connection getConnection() throws SQLException {
+        Connection conn = null;
         try {
             InitialContext ctx = new InitialContext();
             Context env = (Context) ctx.lookup("java:/comp/env");
@@ -23,27 +22,27 @@ public class DBConnection {
             conn = ds.getConnection();
         } catch (NamingException e) {
             e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return conn;
     }
 
-    public static void connectionClose() throws SQLException {
+    public boolean executeUpdate(Connection conn, String sql) throws SQLException {
+        PreparedStatement stmt = null;
+        int insert = 0;
         try {
+            stmt = conn.prepareStatement(sql);
+            insert = stmt.executeUpdate();
         } finally {
-            conn.close();
+            stmt.close();
+        }
+        if (insert > 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public static void resultSetClose(ResultSet rs) throws SQLException {
-        try {
-        } finally {
-            rs.close();
-        }
-    }
-
-    public static ResultSet executeQuery(String sql) throws SQLException {
+    public ResultSet executeQuery(Connection conn, String sql) throws SQLException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {

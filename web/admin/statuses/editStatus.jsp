@@ -11,6 +11,15 @@
     <title>Title</title>
 </head>
 <body>
-
+    <form method="post" action="">
+        <table>
+            <tbody>
+            <tr>
+                <td>Status name</td>
+                <td><input type="text" name="status_name"/></td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
 </body>
 </html>
