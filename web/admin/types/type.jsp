@@ -11,6 +11,7 @@
     <title>Issue Tracker</title>
 </head>
 <body>
-
+<%@ include file="add-edit-type.jspf" %>
+<%@ include file="typeList.jspf" %>
 </body>
 </html>

@@ -1,3 +1,4 @@
+<%@ page import="java.io.PrintWriter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <!DOCTYPE html>
@@ -7,23 +8,13 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <header>
-        <%@ include file="navigation.jsp" %>
-    </header>
-  <table border="1px">
-      <thead>
-        <tr>
-            <td>Id</td>
-            <td>Priority</td>
-            <td>Assignee</td>
-            <td>Type</td>
-            <td>Status</td>
-            <td>Summary</td>
-        </tr>
-      </thead>
-      <tbody>
-
-      </tbody>
-  </table>
-  </body>
+<%
+    PrintWriter writer = response.getWriter();
+    writer.print(request.getAttribute("str"));
+%>
+<header>
+    <%@ include file="navigation.jspf" %>
+</header>
+<%@ include file="issueList.jspf" %>
+</body>
 </html>

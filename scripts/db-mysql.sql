@@ -156,3 +156,8 @@ REFERENCES STATUSES (STATUS_ID);
 ALTER TABLE ISSUES
 ADD CONSTRAINT ISSUES_TYPE_FK FOREIGN KEY (TYPE)
 REFERENCES TYPES (TYPE_ID);
+
+INSERT INTO `epam`.`managers` (`MANAGER_ID`, `MANAGER_NAME`) VALUES ('1', 'ceh');
+INSERT INTO `epam`.`projects` (`PROJECT_ID`, `PROJECT_NAME`, `DESCRIPTION`, `BUILD`, `MANAGER`) VALUES ('1', 'issue tracker', 'info', '1.0', '1');
+INSERT INTO `epam`.`issues` VALUES ('1', '2016-09-10', 'test@epam.ceh', '2016-09-10', 'test@epam.ceh', 'info', 'first record', '1', '1', '1', '1', '1', '1.0', 'ceh');
+INSERT INTO `epam`.`issues` VALUES ('2', '2016-09-09', 'user@epam.ceh', '2016-09-10', 'user@epam.ceh', 'information', 'second', '1', '1', '2', '2', '1', '1.0.1', 'user');

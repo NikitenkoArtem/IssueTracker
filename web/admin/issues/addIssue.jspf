@@ -1,0 +1,76 @@
+<form method="post" action="/add-issue">
+    <table>
+        <thead>
+        <tr>
+            <td>Summary</td>
+            <td>Description</td>
+            <td>Status</td>
+            <td>Resolution</td>
+            <td>Type</td>
+            <td>Priority</td>
+            <td>Project</td>
+            <td>Build found</td>
+            <td>Assignee</td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" name="summary" required/></td>
+                <td><textarea cols="15" name="desc" required></textarea></td>
+                <td>
+                    <select>
+                        <%
+                            while (statuses.next()) {
+                                out.print("<option name='status' required>" + statuses.getString(1) + "</option>");
+                            }
+                        %>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <%
+                            while (resolutions.next()) {
+                                out.print("<option name='resolution' required>" + resolutions.getString(1) + "</option>");
+                            }
+                        %>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <%
+                            while (types.next()) {
+                                out.print("<option name='type' required>" + types.getString(1) + "</option>");
+                            }
+                        %>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <%
+                            while (priorities.next()) {
+                                out.print("<option name='priority' required>" + priorities.getString(1) + "</option>");
+                            }
+                        %>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option name="project" required>???</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option name="build" required>???</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option name="assignee"></option>
+                    </select>
+                </td>
+                <td><input type="submit" value="Add issue"/></td>
+            </tr>
+        </tbody>
+    </table>
+</form>

@@ -1,0 +1,40 @@
+<%@ page import="by.epam.DBConnection" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.sql.SQLException" %>
+<table border="1px">
+    <thead>
+    <tr>
+        <td>Id</td>
+        <td>Priority</td>
+        <td>Assignee</td>
+        <td>Type</td>
+        <td>Status</td>
+        <td>Summary</td>
+    </tr>
+    </thead>
+    <tbody>
+    <%
+        try (Connection conn = DBConnection.getConnection()) {
+            String issue =
+                    "SELECT issue_id, p.priority_name, assignee, t.type_name, s.status_name, summary\n" +
+                    "FROM issues\n" +
+                    "INNER JOIN priorities p ON p.PRIORITY_ID = PRIORITY\n" +
+                    "INNER JOIN types t ON t.TYPE_ID = TYPE INNER JOIN statuses s ON s.STATUS_ID = STATUS";
+            final ResultSet rs = conn.prepareStatement(issue).executeQuery();
+            while (rs.next()) {
+                out.print("<tr>");
+                out.print("<td>" + rs.getString("issue_id") + "</td>");
+                out.print("<td>" + rs.getString("priority_name") + "</td>");
+                out.print("<td>" + rs.getString("assignee") + "</td>");
+                out.print("<td>" + rs.getString("type_name") + "</td>");
+                out.print("<td>" + rs.getString("status_name") + "</td>");
+                out.print("<td>" + rs.getString("summary") + "</td>");
+                out.print("</tr>");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    %>
+    </tbody>
+</table>

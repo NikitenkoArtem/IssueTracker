@@ -12,6 +12,10 @@ import java.io.IOException;
  */
 @WebServlet(name = "Type")
 public class Type extends HttpServlet {
+    private final String addType = "insert into projects values(?, ?, ?, ?, ?)";
+    private final String editType = "update projects set ? = ?";
+    private final String typeList = "select * from projects";
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }

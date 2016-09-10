@@ -6,8 +6,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -19,9 +21,11 @@ public class Issue extends HttpServlet {
             "build_found, assignee) values(?, ?, ?, ?, ?, ?, ?, ?)";
     private final String changeIssue = "update issues set summary=?, description=?, status=?, resolution=?, type=?, " +
             "priority=?, project=?, build_found=?, assignee=?";
+    private final String issues = "select * from issues";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        PrintWriter writer = response.getWriter();
+        writer.print("Hello, Issue!");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -62,6 +66,17 @@ public class Issue extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private ResultSet getIssues() {
+        try (Connection conn = DBConnection.getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement(changeIssue)) {
+                return stmt.executeQuery();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

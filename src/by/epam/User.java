@@ -5,6 +5,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -20,23 +21,15 @@ public class User extends HttpServlet {
     private final String password = "update users set password = ?";
     private final String editUser = "update users set ? = ?";
 
-    private final String addResolution = "insert into projects values(?, ?, ?, ?, ?)";
-    private final String editResolution = "update projects set ? = ?";
-    private final String resolutionList = "select * from projects";
-
-    private final String addPriority = "insert into projects values(?, ?, ?, ?, ?)";
-    private final String editPriority = "update projects set ? = ?";
-    private final String priorityList = "select * from projects";
-
-    private final String addType = "insert into projects values(?, ?, ?, ?, ?)";
-    private final String editType = "update projects set ? = ?";
-    private final String typeList = "select * from projects";
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        addUser(request);
 //        changePassword(request);
         PrintWriter writer = response.getWriter();
-        writer.print("Hello, world!");
+        final String str = "Hello, world!";
+        writer.print(str);
+        HttpSession session = request.getSession();
+        session.setAttribute(str, str);
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 
     private void changePassword(HttpServletRequest request) {

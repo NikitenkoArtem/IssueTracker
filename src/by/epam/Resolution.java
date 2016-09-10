@@ -12,6 +12,10 @@ import java.io.IOException;
  */
 @WebServlet(name = "Resolution")
 public class Resolution extends HttpServlet {
+    private final String addResolution = "insert into projects values(?, ?, ?, ?, ?)";
+    private final String editResolution = "update projects set ? = ?";
+    private final String resolutionList = "select * from projects";
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
