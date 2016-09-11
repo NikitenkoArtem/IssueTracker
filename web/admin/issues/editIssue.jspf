@@ -1,3 +1,6 @@
+<sql:query var="issue_id" dataSource="jdbc/epam">
+    SELECT issue_id, create_date, created_by, modify_date, modifyed_by FROM issues
+</sql:query>
 <tr>
     <td>Id</td>
     <td><input type="text" readonly/></td>

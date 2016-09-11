@@ -1,3 +1,16 @@
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+<sql:query var="statuses" dataSource="jdbc/epam">
+    SELECT status_name FROM statuses
+</sql:query>
+<sql:query var="resolutions" dataSource="jdbc/epam">
+    SELECT resolution_name FROM resolutions
+</sql:query>
+<sql:query var="priorities" dataSource="jdbc/epam">
+    SELECT priority_name FROM priorities
+</sql:query>
+<sql:query var="types" dataSource="jdbc/epam">
+    SELECT type_name FROM types
+</sql:query>
 <form method="post" action="/add-issue">
     <table>
         <thead>
@@ -15,62 +28,57 @@
         </tr>
         </thead>
         <tbody>
-            <tr>
-                <td><input type="text" name="summary" required/></td>
-                <td><textarea cols="15" name="desc" required></textarea></td>
-                <td>
-                    <select>
-                        <%
-                            while (statuses.next()) {
-                                out.print("<option name='status' required>" + statuses.getString(1) + "</option>");
-                            }
-                        %>
-                    </select>
-                </td>
-                <td>
-                    <select>
-                        <%
-                            while (resolutions.next()) {
-                                out.print("<option name='resolution' required>" + resolutions.getString(1) + "</option>");
-                            }
-                        %>
-                    </select>
-                </td>
-                <td>
-                    <select>
-                        <%
-                            while (types.next()) {
-                                out.print("<option name='type' required>" + types.getString(1) + "</option>");
-                            }
-                        %>
-                    </select>
-                </td>
-                <td>
-                    <select>
-                        <%
-                            while (priorities.next()) {
-                                out.print("<option name='priority' required>" + priorities.getString(1) + "</option>");
-                            }
-                        %>
-                    </select>
-                </td>
-                <td>
-                    <select>
-                        <option name="project" required>???</option>
-                    </select>
-                </td>
-                <td>
-                    <select>
-                        <option name="build" required>???</option>
-                    </select>
-                </td>
-                <td>
-                    <select>
-                        <option name="assignee"></option>
-                    </select>
-                </td>
-                <td><input type="submit" value="Add issue"/></td>
-            </tr>
+        <c:if test="${param.editissue == true}">
+            <%@ include file="editIssue.jspf" %>
+        </c:if>
+        <tr>
+            <td><input type="text" name="summary" required/></td>
+            <td><textarea cols="15" name="desc" required></textarea></td>
+            <td>
+                <select>
+                    <c:forEach var="row" items="${statuses.rows}">
+                        <option name="status" required><c:out value="${row.status_name}"/></option>
+                    </c:forEach>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <c:forEach var="row" items="${resolutions.rows}">
+                        <option name="resolution" required><c:out value="${row.resolution_name}"/></option>
+                    </c:forEach>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <c:forEach var="row" items="${types.rows}">
+                        <option name="type" required><c:out value="${row.type_name}"/></option>
+                    </c:forEach>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <c:forEach var="row" items="${priorities.rows}">
+                        <option name="priority" required><c:out value="${row.priority_name}"/></option>
+                    </c:forEach>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option name="project" required></option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option name="build" required></option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option name="assignee"></option>
+                </select>
+            </td>
+            <td><input type="submit" value="Add issue"/></td>
+        </tr>
         </tbody>
     </table>
 </form>

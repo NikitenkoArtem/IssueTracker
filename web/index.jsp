@@ -9,8 +9,8 @@
 </head>
 <body>
 <%
-    PrintWriter writer = response.getWriter();
-    writer.print(request.getAttribute("str"));
+//    PrintWriter writer = response.getWriter();
+//    writer.print(request.getAttribute("str"));
 %>
 <header>
     <%@ include file="navigation.jspf" %>

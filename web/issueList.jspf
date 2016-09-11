@@ -1,7 +1,5 @@
-<%@ page import="by.epam.DBConnection" %>
-<%@ page import="java.sql.Connection" %>
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.sql.SQLException" %>
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <table border="1px">
     <thead>
     <tr>
@@ -14,27 +12,27 @@
     </tr>
     </thead>
     <tbody>
-    <%
-        try (Connection conn = DBConnection.getConnection()) {
-            String issue =
-                    "SELECT issue_id, p.priority_name, assignee, t.type_name, s.status_name, summary\n" +
-                    "FROM issues\n" +
-                    "INNER JOIN priorities p ON p.PRIORITY_ID = PRIORITY\n" +
-                    "INNER JOIN types t ON t.TYPE_ID = TYPE INNER JOIN statuses s ON s.STATUS_ID = STATUS";
-            final ResultSet rs = conn.prepareStatement(issue).executeQuery();
-            while (rs.next()) {
-                out.print("<tr>");
-                out.print("<td>" + rs.getString("issue_id") + "</td>");
-                out.print("<td>" + rs.getString("priority_name") + "</td>");
-                out.print("<td>" + rs.getString("assignee") + "</td>");
-                out.print("<td>" + rs.getString("type_name") + "</td>");
-                out.print("<td>" + rs.getString("status_name") + "</td>");
-                out.print("<td>" + rs.getString("summary") + "</td>");
-                out.print("</tr>");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    %>
+    <c:catch var="e">
+        <sql:query var="issues" dataSource="jdbc/epam">
+            SELECT issue_id, p.priority_name, assignee, t.type_name, s.status_name, summary
+            FROM issues
+            INNER JOIN priorities p ON p.PRIORITY_ID = PRIORITY
+            INNER JOIN types t ON t.TYPE_ID = TYPE INNER JOIN statuses s ON s.STATUS_ID = STATUS
+        </sql:query>
+        <c:forEach var="row" items="${issues.rows}">
+            <tr>
+                <td><a href='admin/issues/issue.jsp?issueId=<c:out value="${row.issue_id}"/>'></a><c:out value="${row.issue_id}"/></td>
+                <td><c:out value="${row.priority_name}"/></td>
+                <td><c:out value="${row.assignee}"/></td>
+                <td><c:out value="${row.type_name}"/></td>
+                <td><c:out value="${row.status_name}"/></td>
+                <td><c:out value="${row.summary}"/></td>
+            </tr>
+        </c:forEach>
+    </c:catch>
+    <c:if test="${e != null}">
+        <p>The exception is : ${e} <br/>
+            There is an exception: ${e.message}</p>
+    </c:if>
     </tbody>
 </table>
