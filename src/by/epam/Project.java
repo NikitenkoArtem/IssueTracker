@@ -6,9 +6,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Price on 07.09.2016.
@@ -17,14 +22,19 @@ import java.sql.SQLException;
 public class Project extends HttpServlet {
     private final String newProject = "insert into projects values(?, ?, ?, ?)";
     private final String changeProject = "update projects set project_name=?, description=?, build=?, manager=?";
-    private final String projectList = "select * from projects";
+    private final String projectList = "";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        try (Connection conn = DBConnection.getConnection()) {
+//            request.setAttribute("projects", getInfo(conn, projectList));
+            request.getRequestDispatcher("/admin/projects/project.jsp").forward(request, response);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addProject(HttpServletRequest request) throws SQLException {

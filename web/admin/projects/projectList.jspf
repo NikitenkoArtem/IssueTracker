@@ -1,2 +1,19 @@
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<sql:query var="projects" dataSource="jdbc/epam">
+    SELECT project_name, manager_name, description
+    FROM projects
+    INNER JOIN managers m ON manager = m.manager_id
+</sql:query>
 <table>
+    <%@ include file="headerProject.jspf" %>
+    <tbody>
+    <c:forEach var="row" items="${projects.rows}">
+        <tr>
+            <td><a href='/project.jsp?projectName=<c:out value="${row.project_name}"/>'><c:out value="${row.project_name}"/></a></td>
+            <td><c:out value="${row.manager_name}"/></td>
+            <td><c:out value="${row.description}"/></td>
+        </tr>
+    </c:forEach>
+    </tbody>
 </table>

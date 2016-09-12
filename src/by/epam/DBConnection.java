@@ -53,4 +53,10 @@ public class DBConnection {
         }
         return rs;
     }
+
+    public ResultSet getInfo(Connection conn, String sql) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            return stmt.executeQuery();
+        }
+    }
 }

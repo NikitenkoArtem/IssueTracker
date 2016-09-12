@@ -1,24 +1,12 @@
-<form method="post" action="">
+<form method="post" action="/project">
     <table>
+        <%@ include file="headerProject.jspf" %>
         <tbody>
         <tr>
-            <td>Project name</td>
             <td><input type="text" name="proj_name"/></td>
-        </tr>
-        <tr>
-            <td>Description</td>
             <td><input type="text" name="desc"/></td>
-        </tr>
-        <tr>
-            <td>Build</td>
             <td><input type="text" name="build"/></td>
-        </tr>
-        <tr>
-            <td>Manager</td>
             <td><input type="text" name="manager"/></td>
-        </tr>
-        <tr>
-            <td></td>
             <td><input type="submit" value="Add project"/></td>
         </tr>
         </tbody>

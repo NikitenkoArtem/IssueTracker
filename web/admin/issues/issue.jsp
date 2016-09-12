@@ -11,9 +11,10 @@
 <body>
     <c:choose>
         <c:when test="${param.issueId == 1}">
+            <%--<jsp:forward page="/issue"/>--%>
             <%@ include file="addIssue.jspf" %>
         </c:when>
-        <c:when test="${param.addissue == 'true'}">
+        <c:when test="${param.addIssue == 'true'}">
             <%@ include file="addIssue.jspf" %>
         </c:when>
     </c:choose>

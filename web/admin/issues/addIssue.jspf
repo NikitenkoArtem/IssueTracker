@@ -1,17 +1,5 @@
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
-<sql:query var="statuses" dataSource="jdbc/epam">
-    SELECT status_name FROM statuses
-</sql:query>
-<sql:query var="resolutions" dataSource="jdbc/epam">
-    SELECT resolution_name FROM resolutions
-</sql:query>
-<sql:query var="priorities" dataSource="jdbc/epam">
-    SELECT priority_name FROM priorities
-</sql:query>
-<sql:query var="types" dataSource="jdbc/epam">
-    SELECT type_name FROM types
-</sql:query>
-<form method="post" action="/add-issue">
+<form method="post" action="/issue">
     <table>
         <thead>
         <tr>
