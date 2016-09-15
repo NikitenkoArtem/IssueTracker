@@ -70,15 +70,15 @@ public class User extends HttpServlet {
 
             if (options != null) {
                 for (String selectedOption : options) {
-                    if (selectedOption.equals("add")) {
-                        db.executeUpdate(conn, addUser);
-                    }
-                    if (selectedOption.equals("changepwd")) {
-                        db.executeUpdate(conn, password);
-                    }
-                    if (selectedOption.equals("edituser")) {
-                        db.executeUpdate(conn, editUser);
-                    }
+//                    if (selectedOption.equals("add")) {
+//                        db.executeUpdate(conn, addUser);
+//                    }
+//                    if (selectedOption.equals("changepwd")) {
+//                        db.executeUpdate(conn, password);
+//                    }
+//                    if (selectedOption.equals("edituser")) {
+//                        db.executeUpdate(conn, editUser);
+//                    }
                 }
             }
         } catch (SQLException e) {

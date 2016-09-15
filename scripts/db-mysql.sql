@@ -1,163 +1,139 @@
+use test;
+
 CREATE TABLE ROLES
 (
-  ROLE_ID INT NOT NULL
-, ROLE_NAME VARCHAR(50) NOT NULL
-, CONSTRAINT ROLES_PK PRIMARY KEY (ROLE_ID)
+  ROLE_NAME VARCHAR(50) NOT NULL
+, CONSTRAINT ROLES_PK PRIMARY KEY (ROLE_NAME)
 );
-
-insert into roles values(1, 'GUEST');
-insert into roles values(2, 'USER');
-insert into roles values(3, 'ADMINISTRATOR');
-commit;
 
 CREATE TABLE USERS
 (
   EMAIL VARCHAR(120) NOT NULL
 , FIRST_NAME VARCHAR(45) NOT NULL
 , LAST_NAME VARCHAR(45) NOT NULL
-, ROLE INT NOT NULL
-, PASSWORD VARCHAR(25) NOT NULL
+, ROLE VARCHAR(50) NOT NULL
+, PASSWORD VARCHAR(50) NOT NULL
 , CONSTRAINT USERS_PK PRIMARY KEY (EMAIL)
+, CONSTRAINT USERS_FK FOREIGN KEY (ROLE) REFERENCES ROLES (ROLE_NAME)
 );
-ALTER TABLE USERS
-ADD CONSTRAINT USERS_FK FOREIGN KEY (ROLE)
-REFERENCES ROLES (ROLE_ID);
 
 -- ########################### STATUSES ###########################
 CREATE TABLE STATUSES
 (
-  STATUS_ID INT NOT NULL
-, STATUS_NAME VARCHAR(30) NOT NULL
-, CONSTRAINT STATUSES_PK PRIMARY KEY (STATUS_ID)
+  STATUS_NAME VARCHAR(30) NOT NULL
+, CONSTRAINT STATUSES_PK PRIMARY KEY (STATUS_NAME)
 );
 
-insert into statuses values(1, 'New');
-insert into statuses values(2, 'Assigned');
-insert into statuses values(3, 'In Progress');
-insert into statuses values(4, 'Resolved');
-insert into statuses values(5, 'Closed');
-insert into statuses values(6, 'Reopened');
-commit;
 -- #################################################################
-
 
 CREATE TABLE RESOLUTIONS
 (
-  RESOLUTION_ID INT NOT NULL
-, RESOLUTION_NAME VARCHAR(30) NOT NULL
-, CONSTRAINT RESOLUTIONS_PK PRIMARY KEY (RESOLUTION_ID)
+  RESOLUTION_NAME VARCHAR(30) NOT NULL
+, CONSTRAINT RESOLUTIONS_PK PRIMARY KEY (RESOLUTION_NAME)
 );
-
-insert into resolutions values(1, 'Fixed');
-insert into resolutions values(2, 'Invalid');
-insert into resolutions values(3, 'Wontfix');
-insert into resolutions values(4, 'Worksforme');
-commit;
 
 CREATE TABLE PRIORITIES
 (
-  PRIORITY_ID INT NOT NULL
-, PRIORITY_NAME VARCHAR(30) NOT NULL
-, CONSTRAINT PRIORITIES_PK PRIMARY KEY (PRIORITY_ID)
+  PRIORITY_NAME VARCHAR(30) NOT NULL
+, CONSTRAINT PRIORITIES_PK PRIMARY KEY (PRIORITY_NAME)
 );
-
-insert into priorities values(1, 'Critical');
-insert into priorities values(2, 'Major');
-insert into priorities values(3, 'Important');
-insert into priorities values(4, 'Minor');
-commit;
 
 CREATE TABLE TYPES
 (
-  TYPE_ID INT NOT NULL
-, TYPE_NAME VARCHAR(30) NOT NULL
-, CONSTRAINT TYPES_PK PRIMARY KEY (TYPE_ID)
+  TYPE_NAME VARCHAR(30) NOT NULL
+, CONSTRAINT TYPES_PK PRIMARY KEY (TYPE_NAME)
 );
 
-insert into types values(1, 'Cosmetic');
-insert into types values(2, 'Bug');
-insert into types values(3, 'Feature');
-insert into types values(4, 'Performance');
-commit;
 
 CREATE TABLE MANAGERS
 (
-  MANAGER_ID INT NOT NULL
-, MANAGER_NAME VARCHAR(60) NOT NULL
-, CONSTRAINT MANAGERS_PK PRIMARY KEY (MANAGER_ID)
+  MANAGER_NAME VARCHAR(30) NOT NULL
+, CONSTRAINT MANAGERS_PK PRIMARY KEY (MANAGER_NAME)
 );
 
 CREATE TABLE PROJECTS
 (
-  PROJECT_ID INT NOT NULL
-, PROJECT_NAME VARCHAR(50) NOT NULL
+  PROJECT_NAME VARCHAR(30) NOT NULL
 , DESCRIPTION VARCHAR(100) NOT NULL
 , BUILD VARCHAR(20) NOT NULL
-, MANAGER INT NOT NULL
-, CONSTRAINT PROJECTS_PK PRIMARY KEY (PROJECT_ID)
+, MANAGER VARCHAR(30) NOT NULL
+, CONSTRAINT PROJECTS_PK PRIMARY KEY (PROJECT_NAME)
+, CONSTRAINT PROJECTS_FK FOREIGN KEY (MANAGER) REFERENCES MANAGERS (MANAGER_NAME)
 );
-
-ALTER TABLE PROJECTS
-ADD CONSTRAINT PROJECTS_FK FOREIGN KEY
-(
-  PROJECT_ID
-)
-REFERENCES MANAGERS
-(
-  MANAGER_ID
-);
-
-
-
 
 CREATE TABLE ISSUES
 (
-  ISSUE_ID INT NOT NULL
+  ISSUE_ID INT NOT NULL AUTO_INCREMENT
 , CREATE_DATE DATE NOT NULL
 , CREATED_BY VARCHAR(120) NOT NULL
 , MODIFY_DATE DATE NOT NULL
 , MODIFYED_BY VARCHAR(20) NOT NULL
 , SUMMARY VARCHAR(30) NOT NULL
 , DESCRIPTION VARCHAR(255) NOT NULL
-, STATUS INT NOT NULL
-, RESOLUTION INT
-, TYPE INT NOT NULL
-, PRIORITY INT NOT NULL
-, PROJECT INT NOT NULL
-, BUILD_FOUND VARCHAR(20) NOT NULL
+, STATUS VARCHAR(30) NOT NULL
+, RESOLUTION VARCHAR(30)
+, TYPE VARCHAR(30) NOT NULL
+, PRIORITY VARCHAR(30) NOT NULL
+, PROJECT VARCHAR(30) NOT NULL
+, BUILD_FOUND VARCHAR(15) NOT NULL
 , ASSIGNEE VARCHAR(20)
 , CONSTRAINT ISSUES_PK PRIMARY KEY (ISSUE_ID)
+, CONSTRAINT ISSUES_CREATED_BY_FK FOREIGN KEY (CREATED_BY) REFERENCES USERS (EMAIL)
+, CONSTRAINT ISSUES_MODIFYED_BY_FK FOREIGN KEY (MODIFYED_BY) REFERENCES USERS (EMAIL)
+, CONSTRAINT ISSUES_PRIORITY_FK FOREIGN KEY (PRIORITY) REFERENCES PRIORITIES (PRIORITY_NAME)
+, CONSTRAINT ISSUES_PROJECT_FK FOREIGN KEY (PROJECT) REFERENCES PROJECTS (PROJECT_NAME)
+, CONSTRAINT ISSUES_RESOLUTION_FK FOREIGN KEY (RESOLUTION) REFERENCES RESOLUTIONS (RESOLUTION_NAME)
+, CONSTRAINT ISSUES_STATUS_FK FOREIGN KEY (STATUS) REFERENCES STATUSES (STATUS_NAME)
+, CONSTRAINT ISSUES_TYPE_FK FOREIGN KEY (TYPE) REFERENCES TYPES (TYPE_NAME)
 );
 
-ALTER TABLE ISSUES
-ADD CONSTRAINT ISSUES_CREATED_BY_FK FOREIGN KEY (CREATED_BY)
-REFERENCES USERS (EMAIL);
+insert into roles values('GUEST');
+insert into roles values('USER');
+insert into roles values('ADMINISTRATOR');
+commit;
 
-ALTER TABLE ISSUES
-ADD CONSTRAINT ISSUES_MODIFYED_BY_FK FOREIGN KEY (MODIFYED_BY)
-REFERENCES USERS (EMAIL);
+insert into statuses values('New');
+insert into statuses values('Assigned');
+insert into statuses values('In Progress');
+insert into statuses values('Resolved');
+insert into statuses values('Closed');
+insert into statuses values('Reopened');
+commit;
 
-ALTER TABLE ISSUES
-ADD CONSTRAINT ISSUES_PRIORITY_FK FOREIGN KEY (PRIORITY)
-REFERENCES PRIORITIES (PRIORITY_ID);
+insert into priorities values('Critical');
+insert into priorities values('Major');
+insert into priorities values('Important');
+insert into priorities values('Minor');
+commit;
 
-ALTER TABLE ISSUES
-ADD CONSTRAINT ISSUES_PROJECT_FK FOREIGN KEY (PROJECT)
-REFERENCES PROJECTS (PROJECT_ID);
+insert into types values('Cosmetic');
+insert into types values('Bug');
+insert into types values('Feature');
+insert into types values('Performance');
+commit;
 
-ALTER TABLE ISSUES
-ADD CONSTRAINT ISSUES_RESOLUTION_FK FOREIGN KEY (RESOLUTION)
-REFERENCES RESOLUTIONS (RESOLUTION_ID);
+insert into resolutions values('Fixed');
+insert into resolutions values('Invalid');
+insert into resolutions values('Wontfix');
+insert into resolutions values('Worksforme');
+commit;
 
-ALTER TABLE ISSUES
-ADD CONSTRAINT ISSUES_STATUS_FK FOREIGN KEY (STATUS)
-REFERENCES STATUSES (STATUS_ID);
+INSERT INTO managers VALUES ('epamer');
+INSERT INTO managers VALUES ('team lead');
+commit;
 
-ALTER TABLE ISSUES
-ADD CONSTRAINT ISSUES_TYPE_FK FOREIGN KEY (TYPE)
-REFERENCES TYPES (TYPE_ID);
+INSERT INTO projects VALUES ('another one', 'some text', '1.0', 'epamer');
+INSERT INTO projects VALUES ('issue tracker', 'info', '1.0', 'team lead');
+commit;
 
-INSERT INTO `epam`.`managers` (`MANAGER_ID`, `MANAGER_NAME`) VALUES ('1', 'ceh');
-INSERT INTO `epam`.`projects` (`PROJECT_ID`, `PROJECT_NAME`, `DESCRIPTION`, `BUILD`, `MANAGER`) VALUES ('1', 'issue tracker', 'info', '1.0', '1');
-INSERT INTO `epam`.`issues` VALUES ('1', '2016-09-10', 'test@epam.ceh', '2016-09-10', 'test@epam.ceh', 'info', 'first record', '1', '1', '1', '1', '1', '1.0', 'ceh');
-INSERT INTO `epam`.`issues` VALUES ('2', '2016-09-09', 'user@epam.ceh', '2016-09-10', 'user@epam.ceh', 'information', 'second', '1', '1', '2', '2', '1', '1.0.1', 'user');
+INSERT INTO users VALUES ('test@epam.ceh', 'test', 'test account', 'guest', 'pass');
+INSERT INTO users VALUES ('user@epam.ceh', 'user', 'user account', 'administrator', 'pass');
+commit;
+
+INSERT INTO issues
+(`CREATE_DATE`, `CREATED_BY`, `MODIFY_DATE`, `MODIFYED_BY`, `SUMMARY`, `DESCRIPTION`, `STATUS`, `RESOLUTION`, `TYPE`, `PRIORITY`, `PROJECT`, `BUILD_FOUND`, `ASSIGNEE`)
+ VALUES ('2016-09-10', 'test@epam.ceh', '2016-09-10', 'test@epam.ceh', 'info', 'first record', 'New', 'Invalid', 'Cosmetic', 'Critical', 'issue tracker', '1.0', 'test');
+INSERT INTO issues
+(`CREATE_DATE`, `CREATED_BY`, `MODIFY_DATE`, `MODIFYED_BY`, `SUMMARY`, `DESCRIPTION`, `STATUS`, `RESOLUTION`, `TYPE`, `PRIORITY`, `PROJECT`, `BUILD_FOUND`, `ASSIGNEE`)
+VALUES ('2016-09-09', 'user@epam.ceh', '2016-09-10', 'user@epam.ceh', 'information', 'second', 'New', 'Fixed', 'Bug', 'Major', 'another one', '1.0.1', 'user');
+commit;

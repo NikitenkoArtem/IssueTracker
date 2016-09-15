@@ -4,10 +4,11 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DBConnection {
     public DBConnection() {
@@ -26,37 +27,39 @@ public class DBConnection {
         return conn;
     }
 
-    public boolean executeUpdate(Connection conn, String sql) throws SQLException {
-        PreparedStatement stmt = null;
-        int insert = 0;
-        try {
-            stmt = conn.prepareStatement(sql);
-            insert = stmt.executeUpdate();
-        } finally {
-            stmt.close();
+    public PreparedStatement prepareUpdate(Connection conn, String sql, Map<Integer, String> table) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        for (Map.Entry<Integer, String> entry : table.entrySet()) {
+            stmt.setString(entry.getKey().intValue(), entry.getValue());
         }
-        if (insert > 0) {
-            return true;
-        } else {
-            return false;
+        return stmt;
+    }
+
+    public void execUpdate(Connection conn, String sql, Map<Integer, String> table) throws SQLException {
+        try (PreparedStatement stmt = prepareUpdate(conn, sql, table)) {
+            stmt.executeUpdate();
+            conn.commit();
         }
     }
 
-    public ResultSet executeQuery(Connection conn, String sql) throws SQLException {
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.prepareStatement(sql);
-            rs = stmt.executeQuery();
-        } finally {
-            stmt.close();
-        }
-        return rs;
-    }
-
-    public ResultSet getInfo(Connection conn, String sql) throws SQLException {
+    public ArrayList<HashMap<String, Object>> execQuery(Connection conn, String sql) throws SQLException {
+        HashMap<String, Object> values = null;
+        ArrayList<HashMap<String, Object>> table = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            return stmt.executeQuery();
+            try (ResultSet rs = stmt.executeQuery()) {
+                final ResultSetMetaData metaData = rs.getMetaData();
+                final int columnCount = metaData.getColumnCount();
+                while (rs.next()) {
+                    values = new HashMap<>();
+                    for (int i = 1; i <= columnCount; i++) {
+                        final String label = metaData.getColumnLabel(i);
+                        final Object value = rs.getObject(label);
+                        values.put(label, value);
+                    }
+                    table.add(values);
+                }
+            }
         }
+        return table;
     }
 }

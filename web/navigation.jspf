@@ -1,18 +1,18 @@
 <nav>
     <ul>
         <li><a href="/login.jsp">Login</a></li>
-        <li><a href="admin/users/user.jsp">Edit profile</a></li>
+        <li><a href="/user">Edit profile</a></li>
         <li><input type="submit" value="Submit Issue"/></li>
         <li><input type="search" value="Search"/></li>
     </ul>
     <div class="admin">
         <a href="#">Admin</a>
         <ul class="admin-content">
-            <li><a href="admin/projects/project.jsp">Projects</a></li>
-            <li><a href="admin/statuses/status.jsp">Statuses</a></li>
-            <li><a href="admin/resolutions/resolution.jsp">Resolutions</a></li>
-            <li><a href="admin/priorities/priority.jsp">Priorities</a></li>
-            <li><a href="admin/types/type.jsp">Types</a></li>
+            <li><a href="/project">Projects</a></li>
+            <li><a href="/status">Statuses</a></li>
+            <li><a href="/resolution">Resolutions</a></li>
+            <li><a href="/priority">Priorities</a></li>
+            <li><a href="/type">Types</a></li>
         </ul>
     </div>
 </nav>

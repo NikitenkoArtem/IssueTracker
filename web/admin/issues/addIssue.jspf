@@ -16,38 +16,42 @@
         </tr>
         </thead>
         <tbody>
-        <c:if test="${param.editissue == true}">
-            <%@ include file="editIssue.jspf" %>
-        </c:if>
+        <%--<c:if test="${param.editissue == true}">--%>
+            <%--<%@ include file="editIssue.jspf" %>--%>
+        <%--</c:if>--%>
         <tr>
             <td><input type="text" name="summary" required/></td>
             <td><textarea cols="15" name="desc" required></textarea></td>
             <td>
                 <select>
-                    <c:forEach var="row" items="${statuses.rows}">
-                        <option name="status" required><c:out value="${row.status_name}"/></option>
-                    </c:forEach>
+                    <%
+                        final StringBuffer statuses = (StringBuffer) request.getAttribute("statuses");
+                        out.print(statuses);
+                    %>
                 </select>
             </td>
             <td>
                 <select>
-                    <c:forEach var="row" items="${resolutions.rows}">
-                        <option name="resolution" required><c:out value="${row.resolution_name}"/></option>
-                    </c:forEach>
+                    <%
+                        final StringBuffer resolutions = (StringBuffer) request.getAttribute("resolituons");
+                        out.print(resolutions);
+                    %>
                 </select>
             </td>
             <td>
                 <select>
-                    <c:forEach var="row" items="${types.rows}">
-                        <option name="type" required><c:out value="${row.type_name}"/></option>
-                    </c:forEach>
+                    <%
+                        final StringBuffer priorities = (StringBuffer) request.getAttribute("priorities");
+                        out.print(priorities);
+                    %>
                 </select>
             </td>
             <td>
                 <select>
-                    <c:forEach var="row" items="${priorities.rows}">
-                        <option name="priority" required><c:out value="${row.priority_name}"/></option>
-                    </c:forEach>
+                    <%
+                        final StringBuffer types = (StringBuffer) request.getAttribute("types");
+                        out.print(types);
+                    %>
                 </select>
             </td>
             <td>
