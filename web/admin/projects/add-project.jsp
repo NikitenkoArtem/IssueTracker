@@ -1,6 +1,6 @@
-<%@ page import="java.util.HashMap" %>
+<%@ page import="by.epam.View" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.HashMap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -19,14 +19,9 @@
                 <select><%
                     final ArrayList<HashMap<String, Object>> managers =
                             (ArrayList<HashMap<String, Object>>) request.getAttribute("managers");
-                    Iterator<HashMap<String, Object>> iterator = managers.iterator();
                     String openTag = "<option>";
-                    String closeTag = "</option>";
-                    while (iterator.hasNext()) {
-                        for (Object o : iterator.next().values()) {
-                            out.print(openTag + o.toString() + closeTag);
-                        }
-                    }
+                    final StringBuffer buffer = new View().display(managers, openTag);
+                    out.print(buffer);
                 %></select>
             </td>
             <td><input type="submit" name="add" value="Add project"/></td>

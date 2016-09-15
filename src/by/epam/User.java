@@ -17,9 +17,9 @@ import java.sql.SQLException;
  */
 @WebServlet(name = "User")
 public class User extends HttpServlet {
-    private final String addUser = "insert into users values(?, ?, ?, 1, ?)";
-    private final String password = "update users set password = ?";
-    private final String editUser = "update users set ? = ?";
+    private final String addUser = "INSERT INTO users VALUES(?, ?, ?, 1, ?)";
+    private final String password = "UPDATE users SET password = ?";
+    private final String editUser = "UPDATE users SET ? = ?";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        addUser(request);

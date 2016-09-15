@@ -6,6 +6,15 @@
     <title>Title</title>
 </head>
 <body>
+<%
+    final ArrayList<HashMap<String, Object>> projects = (ArrayList<HashMap<String, Object>>) request.getAttribute("projects");
+    if (projects == null) {
+        out.print("<h1>No projects found</h1>");
+    } else {
+%>
+<%--<%@include file="headerProject.jspf"%>--%>
+<% } %>
+<form method="post" action="project">
 <table>
     <thead>
     <tr>
@@ -16,10 +25,6 @@
     </thead>
     <tbody>
     <%
-        final ArrayList<HashMap<String, Object>> projects = (ArrayList<HashMap<String, Object>>) request.getAttribute("projects");
-        if (projects == null) {
-//            request.getRequestDispatcher("/project?action=list").forward(request, response);
-        }
         final Iterator<HashMap<String, Object>> iterator = projects.iterator();
         String openTr = "<tr>";
         String closeTr = "</tr>";
@@ -41,7 +46,8 @@
     %>
     </tbody>
 </table>
-<form method="post" action="/project">
+</form>
+<form method="post" action="project">
     <input type="submit" name="newProject" value="New project"/>
 </form>
 </body>

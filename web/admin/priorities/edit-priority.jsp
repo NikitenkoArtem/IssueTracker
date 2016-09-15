@@ -4,6 +4,8 @@
     <title>Title</title>
 </head>
 <body>
-<%@ include file="add-edit-priority.jspf" %>
+<form method="post" action="status">
+    <input type="text" name="status_name" value=""/>
+</form>
 </body>
 </html>

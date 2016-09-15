@@ -57,9 +57,9 @@ public class Project extends HttpServlet {
 //                try (PreparedStatement stmt = new DBConnection().prepareUpdate(conn, selectProject, table)) {
 //                    final ResultSet rs = stmt.executeQuery();
 //                }
-                final ArrayList<HashMap<String, Object>> project = new DBConnection().execQuery(conn, selectProject);
+//                final ArrayList<HashMap<String, Object>> project = new DBConnection().execQuery(conn, selectProject);
                 final ArrayList<HashMap<String, Object>> builds = new DBConnection().execQuery(conn, selectBuilds);
-                request.setAttribute("project", project);
+//                request.setAttribute("project", project);
                 request.setAttribute("builds", builds);
                 request.getRequestDispatcher("/admin/projects/edit-project.jsp").forward(request, response);
             } else {

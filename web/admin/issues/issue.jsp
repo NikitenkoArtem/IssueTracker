@@ -1,10 +1,6 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="by.epam.DBConnection" %>
-<%@ page import="java.sql.Connection" %>
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.util.HashMap" %>
+<%@ page import="by.epam.View" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.HashMap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -13,14 +9,9 @@
 </head>
 <body>
 <%
-//    final String action = request.getParameter("action");
-//    final String issueId = request.getParameter("issueId");
     String url = null;
-//    if (action.equals("add")) {
         url = "/issue?action=add";
-//    } else if (action.equals("edit")) {
 //        url = "/issue?issueId=" + issueId;
-//    }
 %>
 <form method="post" action="<%=url%>">
     <table>
@@ -39,30 +30,16 @@
         </tr>
         </thead>
         <tbody>
-        <%--<c:if test="${param.editissue == true}">--%>
-        <%--<%@ include file="editIssue.jspf" %>--%>
-        <%--</c:if>--%>
         <tr>
             <td><input type="text" name="summary" required/></td>
             <td><textarea cols="15" name="desc" required></textarea></td>
             <td>
-                <%
-                    final ArrayList<HashMap<String, Object>> statuses = (ArrayList<HashMap<String, Object>>) request.getAttribute("statuses");
-                    final ArrayList<HashMap<String, Object>> resolutions = (ArrayList<HashMap<String, Object>>) request.getAttribute("resolutions");
-                    final ArrayList<HashMap<String, Object>> priorities = (ArrayList<HashMap<String, Object>>) request.getAttribute("priorities");
-                    final ArrayList<HashMap<String, Object>> types = (ArrayList<HashMap<String, Object>>) request.getAttribute("types");
-                %>
                 <select><%
+                    final ArrayList<HashMap<String, Object>> statuses = (ArrayList<HashMap<String, Object>>) request.getAttribute("statuses");
                     String openTag = "<option>";
-                    String closeTag = "</option>";
-                    Iterator<HashMap<String, Object>> iterator = statuses.iterator();
-                    while (iterator.hasNext()) {
-//                        out.print(openTag);
-                        for (Object o : iterator.next().values()) {
-                            out.print(openTag + o.toString() + closeTag);
-                        }
-//                        out.print(closeTag);
-                    }
+//                    openTag = "<option name='manager'>";
+                    StringBuffer buffer = new View().display(statuses, openTag);
+                    out.print(buffer);
 //                    out.print(openTd + priorityName + closeTd);
 //                    out.print(openTd + "<a href='/issue?issueId=" + issueId + "'>" + issueId + "</a>" + closeTd);
 //                    out.print(openTd + priorityName + closeTd);
@@ -76,15 +53,9 @@
                 <select>
                     <%
 //                        openTag = "<option>";
-//                        closeTag = "</option>";
-                        iterator = resolutions.iterator();
-                        while (iterator.hasNext()) {
-//                            out.print(openTag);
-                            for (Object o : iterator.next().values()) {
-                                out.print(openTag + o.toString() + closeTag);
-                            }
-//                            out.print(closeTag);
-                        }
+                        final ArrayList<HashMap<String, Object>> resolutions = (ArrayList<HashMap<String, Object>>) request.getAttribute("resolutions");
+                        buffer = new View().display(resolutions, openTag);
+                        out.print(buffer);
                     %>
                 </select>
             </td>
@@ -92,15 +63,9 @@
                 <select>
                     <%
 //                        openTag = "<option>";
-//                        closeTag = "</option>";
-                        iterator = priorities.iterator();
-                        while (iterator.hasNext()) {
-//                            out.print(openTag);
-                            for (Object o : iterator.next().values()) {
-                                out.print(openTag + o.toString() + closeTag);
-                            }
-//                            out.print(closeTag);
-                        }
+                        final ArrayList<HashMap<String, Object>> priorities = (ArrayList<HashMap<String, Object>>) request.getAttribute("priorities");
+                        buffer = new View().display(priorities, openTag);
+                        out.print(buffer);
                     %>
                 </select>
             </td>
@@ -108,15 +73,9 @@
                 <select>
                     <%
 //                        openTag = "<option name>";
-//                        closeTag = "</option>";
-                        iterator = types.iterator();
-                        while (iterator.hasNext()) {
-//                            out.print(openTag);
-                            for (Object o : iterator.next().values()) {
-                                out.print(openTag + o.toString() + closeTag);
-                            }
-//                            out.print(closeTag);
-                        }
+                        final ArrayList<HashMap<String, Object>> types = (ArrayList<HashMap<String, Object>>) request.getAttribute("types");
+                        buffer = new View().display(types, openTag);
+                        out.print(buffer);
                     %>
                 </select>
             </td>
