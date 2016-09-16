@@ -42,7 +42,9 @@ public class DBConnection {
     public void execUpdate(Connection conn, String sql, Map<Integer, String> table) throws SQLException {
         try (PreparedStatement stmt = prepareUpdate(conn, sql, table)) {
             stmt.executeUpdate();
-            conn.commit();
+            if (!conn.getAutoCommit()) {
+                conn.commit();
+            }
         }
     }
 

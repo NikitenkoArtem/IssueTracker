@@ -11,13 +11,13 @@ public class View {
     public View() {
     }
 
-    public StringBuffer displayTableRow(ArrayList<HashMap<String, Object>> list) {
+    public StringBuffer displayTableRow(ArrayList<HashMap<String, Object>> list, String href) {
         StringBuffer buffer = null;
         if (list != null) {
             String openTr = "<tr>";
             String closeTr = "</tr>";
-            String openTd = "<td><a href='/status?statusName=";
-            String closeTd = "</td>";
+            String openTd = "<td><a href='" + href;
+            String closeTd = "</a></td>";
             Iterator<HashMap<String, Object>> iterator = list.iterator();
             buffer = new StringBuffer();
             while (iterator.hasNext()) {

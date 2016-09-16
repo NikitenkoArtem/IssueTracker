@@ -45,7 +45,7 @@ public class Status extends HttpServlet {
 
     private void editStatus(Connection conn, HttpServletRequest request) throws SQLException {
         HashMap<Integer, String> table = new HashMap<>();
-        final String statusName = (String) request.getParameter("statusName");
+        final String statusName = request.getParameter("statusName");
         final String newStatus = request.getParameter("newStatus");
         table.put(1, newStatus);
         table.put(2, statusName);

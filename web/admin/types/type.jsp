@@ -1,17 +1,29 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Price
-  Date: 07.09.2016
-  Time: 19:40
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="by.epam.View" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Issue Tracker</title>
 </head>
 <body>
-<%@ include file="add-edit-type.jspf" %>
-<%@ include file="typeList.jspf" %>
+<table>
+    <thead>
+    <tr>
+        <td>Type name</td>
+    </tr>
+    </thead>
+    <tbody>
+    <%
+        final ArrayList<HashMap<String, Object>> types = (ArrayList<HashMap<String, Object>>) request.getAttribute("types");
+        final StringBuffer buffer = new View().displayTableRow(types, "/type?typeName=");
+        out.print(buffer);
+    %>
+    </tbody>
+</table>
+<form method="post" action="type">
+    <input type="submit" name="addType" value="New type"/>
+</form>
 </body>
 </html>

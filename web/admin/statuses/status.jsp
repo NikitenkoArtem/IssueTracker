@@ -17,7 +17,7 @@
     <tbody>
     <%
         final ArrayList<HashMap<String, Object>> statuses = (ArrayList<HashMap<String, Object>>) request.getAttribute("statuses");
-        final StringBuffer buffer = new View().displayTableRow(statuses);
+        final StringBuffer buffer = new View().displayTableRow(statuses, "/status?statusName=");
         out.print(buffer);
     %>
     </tbody>
