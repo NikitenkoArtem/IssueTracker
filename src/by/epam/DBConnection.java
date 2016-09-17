@@ -4,11 +4,10 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import java.io.Serializable;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Date;
+import java.util.*;
 
 public class DBConnection {
     public DBConnection() {
@@ -31,6 +30,37 @@ public class DBConnection {
         return new DBConnection().execQuery(conn, sql);
     }
 
+//    public static List<? extends Serializable> getEntityList(Connection conn, String sql) throws SQLException {
+//        return new DBConnection().execQuery(conn, sql);
+//    }
+
+    private PreparedStatement getPreparedUpdate(Connection conn, String sql, Map<Integer, Object> params) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        for (Map.Entry<Integer, Object> entry : params.entrySet()) {
+            final int index = entry.getKey().intValue();
+            final Object value = entry.getValue();
+            if (value instanceof Integer) {
+                stmt.setInt(index, ((Integer) value).intValue());
+            }
+            if (value instanceof Date) {
+                stmt.setDate(index, (Date) value);
+            }
+            if (value instanceof String) {
+                stmt.setString(index, value.toString());
+            }
+        }
+        return stmt;
+    }
+
+    public void executeUpdate(Connection conn, String sql, Map<Integer, Object> params) throws SQLException {
+        try (PreparedStatement stmt = getPreparedUpdate(conn, sql, params)) {
+            stmt.executeUpdate();
+            if (!conn.getAutoCommit()) {
+                conn.commit();
+            }
+        }
+    }
+
     public PreparedStatement prepareUpdate(Connection conn, String sql, Map<Integer, String> table) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement(sql);
         for (Map.Entry<Integer, String> entry : table.entrySet()) {
@@ -39,7 +69,7 @@ public class DBConnection {
         return stmt;
     }
 
-    public void execUpdate(Connection conn, String sql, Map<Integer, String> table) throws SQLException {
+    private void execUpdate(Connection conn, String sql, Map<Integer, String> table) throws SQLException {
         try (PreparedStatement stmt = prepareUpdate(conn, sql, table)) {
             stmt.executeUpdate();
             if (!conn.getAutoCommit()) {

@@ -1,14 +1,39 @@
 package by.epam;
 
+import by.epam.entity.Priority;
+
+import javax.management.openmbean.TabularData;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Price on 15.09.2016.
  */
 public class View {
     public View() {
+    }
+
+    public StringBuffer displayTableRow(List<Priority> list, String href) {
+        StringBuffer buffer = null;
+        if (list != null) {
+            String openTr = "<tr>";
+            String closeTr = "</tr>";
+            String openTd = "<td><a href='" + href;
+            String closeTd = "</a></td>";
+            Iterator<Priority> iterator = list.iterator();
+            buffer = new StringBuffer();
+            while (iterator.hasNext()) {
+                buffer.append(openTr);
+                final Priority next = iterator.next();
+                final String value = next.getPriorityName();
+                buffer.append(openTd + value + "'>" + value + closeTd);
+                buffer.append(closeTr);
+            }
+        }
+        return buffer;
     }
 
     public StringBuffer displayTableRow(ArrayList<HashMap<String, Object>> list, String href) {
