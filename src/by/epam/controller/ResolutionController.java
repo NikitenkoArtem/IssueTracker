@@ -1,4 +1,8 @@
-package by.epam;
+package by.epam.controller;
+
+import by.epam.DBConnection;
+import by.epam.dao.ResolutionDao;
+import by.epam.entity.Resolution;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,12 +17,8 @@ import java.util.HashMap;
 /**
  * Created by Price on 07.09.2016.
  */
-@WebServlet(name = "Resolution")
-public class Resolution extends HttpServlet {
-    private final String insertResolution = "INSERT INTO resolutions VALUES(?)";
-    private final String updateResolution = "UPDATE resolutions SET resolution_name = ? WHERE resolution_name = ?";
-    private final String selectResolutions = "SELECT resolution_name FROM resolutions";
-
+@WebServlet(name = "ResolutionController")
+public class ResolutionController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final String addResolution = request.getParameter("addResolution");
         final String added = request.getParameter("added");
@@ -48,7 +48,7 @@ public class Resolution extends HttpServlet {
             request.getRequestDispatcher("admin/resolutions/edit-resolution.jsp").forward(request, response);
         } else {
             try (Connection conn = DBConnection.getConnection()) {
-                request.setAttribute("resolutions", DBConnection.getList(conn, selectResolutions));
+                request.setAttribute("resolutions", new ResolutionDao(conn).readAll());
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -56,20 +56,16 @@ public class Resolution extends HttpServlet {
         }
     }
 
-    private void addResolution(Connection conn, String sqlParam) throws SQLException {
-        HashMap<Integer, String> table = new HashMap<>();
-        table.put(1, sqlParam);
-        new DBConnection().execUpdate(conn, insertResolution, table);
+    private void addResolution(Connection conn, String resolutionName) throws SQLException {
+        Resolution resolution = new Resolution();
+        resolution.setResolutionName(resolutionName);
+        new ResolutionDao(conn).create(resolution);
     }
 
     private void editResolution(Connection conn, String[] sqlParams) throws SQLException {
-        HashMap<Integer, String> table = new HashMap<>();
-//        for (String str : sqlParams) {
-            table.put(1, sqlParams[0]);
-            table.put(2, sqlParams[1]);
-//            table.put(1, edited);
-//            table.put(2, resolutionName);
-//        }
-        new DBConnection().execUpdate(conn, updateResolution, table);
+        Resolution resolution = new Resolution();
+        resolution.setResolutionName(sqlParams[0]);
+        resolution.setId(Integer.parseInt(sqlParams[1]));
+        new ResolutionDao(conn).update(resolution);
     }
 }

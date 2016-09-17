@@ -1,4 +1,8 @@
-package by.epam;
+package by.epam.controller;
+
+import by.epam.DBConnection;
+import by.epam.dao.PriorityDao;
+import by.epam.entity.Priority;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,16 +13,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Price on 07.09.2016.
  */
-@WebServlet(name = "Priority")
-public class Priority extends HttpServlet {
-    private final String insertPriority = "INSERT INTO priority VALUES(?)";
-    private final String updatePriority = "UPDATE projects SET priority_name = ? WHERE priority_name = ?";
-    private final String selectPriorities = "SELECT priority_name FROM priorities";
-
+@WebServlet(name = "PriorityController")
+public class PriorityController extends HttpServlet {
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final String addPriority = request.getParameter("addPriority");
         final String added = request.getParameter("added");
@@ -41,6 +43,7 @@ public class Priority extends HttpServlet {
         }
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final String priorityName = request.getParameter("priorityName");
         if (priorityName != null) {
@@ -48,7 +51,8 @@ public class Priority extends HttpServlet {
             request.getRequestDispatcher("admin/priorities/edit-priority.jsp").forward(request, response);
         } else {
             try (Connection conn = DBConnection.getConnection()) {
-                request.setAttribute("priorities", DBConnection.getList(conn, selectPriorities));
+                final List<Priority> priorities = new PriorityDao(conn).readAll();
+                request.setAttribute("priorities", priorities);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -57,19 +61,15 @@ public class Priority extends HttpServlet {
     }
 
     private void addPriority(Connection conn, String sqlParam) throws SQLException {
-        HashMap<Integer, String> table = new HashMap<>();
-        table.put(1, sqlParam);
-        new DBConnection().execUpdate(conn, insertPriority, table);
+        Priority priority = new Priority();
+        priority.setPriorityName(sqlParam);
+        new PriorityDao(conn).create(priority);
     }
 
     private void editPriority(Connection conn, String[] sqlParams) throws SQLException {
-        HashMap<Integer, String> table = new HashMap<>();
-//        for (String str : sqlParams) {
-        table.put(1, sqlParams[0]);
-        table.put(2, sqlParams[1]);
-//            table.put(1, edited);
-//            table.put(2, resolutionName);
-//        }
-        new DBConnection().execUpdate(conn, updatePriority, table);
+        Priority priority = new Priority();
+        priority.setId(Integer.parseInt(sqlParams[0]));
+        priority.setPriorityName(sqlParams[1]);
+        new PriorityDao(conn).update(priority);
     }
 }

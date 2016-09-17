@@ -1,4 +1,8 @@
-package by.epam;
+package by.epam.controller;
+
+import by.epam.DBConnection;
+import by.epam.dao.TypeDao;
+import by.epam.entity.Type;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,12 +17,8 @@ import java.util.HashMap;
 /**
  * Created by Price on 07.09.2016.
  */
-@WebServlet(name = "Type")
-public class Type extends HttpServlet {
-    private final String insertType = "INSERT INTO types VALUES(?)";
-    private final String updateType = "UPDATE types SET type_name = ? WHERE type_name = ?";
-    private final String selectTypes = "SELECT type_name FROM types";
-
+@WebServlet(name = "TypeController")
+public class TypeController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final String addType = request.getParameter("addType");
         final String added = request.getParameter("added");
@@ -48,7 +48,7 @@ public class Type extends HttpServlet {
             request.getRequestDispatcher("admin/types/edit-type.jsp").forward(request, response);
         } else {
             try (Connection conn = DBConnection.getConnection()) {
-                request.setAttribute("types", DBConnection.getList(conn, selectTypes));
+                request.setAttribute("types", new TypeDao(conn).readAll());
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -56,20 +56,16 @@ public class Type extends HttpServlet {
         }
     }
 
-    private void addType(Connection conn, String sqlParam) throws SQLException {
-        HashMap<Integer, String> table = new HashMap<>();
-        table.put(1, sqlParam);
-        new DBConnection().execUpdate(conn, insertType, table);
+    private void addType(Connection conn, String typeName) throws SQLException {
+        Type type = new Type();
+        type.setTypeName(typeName);
+        new TypeDao(conn).create(type);
     }
 
     private void editType(Connection conn, String[] sqlParams) throws SQLException {
-        HashMap<Integer, String> table = new HashMap<>();
-//        for (String str : sqlParams) {
-        table.put(1, sqlParams[0]);
-        table.put(2, sqlParams[1]);
-//            table.put(1, edited);
-//            table.put(2, resolutionName);
-//        }
-        new DBConnection().execUpdate(conn, updateType, table);
+        Type type = new Type();
+        type.setTypeName(sqlParams[0]);
+        type.setId(Integer.parseInt(sqlParams[1]));
+        new TypeDao(conn).update(type);
     }
 }
