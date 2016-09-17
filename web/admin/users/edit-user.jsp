@@ -1,6 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    final Object typeName = request.getAttribute("typeName");
+    final Object firstName = request.getAttribute("firstName");
+    final Object lastName = request.getAttribute("lastName");
+    final Object email = request.getAttribute("email");
+    final Object oldFirstName = request.getAttribute("oldFirstName");
+    final Object oldLastName = request.getAttribute("oldLastName");
+    final Object oldEmail = request.getAttribute("oldEmail");
+    final Object oldRole = request.getAttribute("oldRole");
 %>
 <!DOCTYPE html>
 <html>
@@ -21,9 +27,9 @@
         </thead>
         <tbody>
         <tr>
-            <td><input type="text" name="firstName"/></td>
-            <td><input type="text" name="lastName"/></td>
-            <td><input type="email" name="email"/></td>
+            <td><input type="text" name="firstName"/><%=firstName%></td>
+            <td><input type="text" name="lastName"/><%=lastName%></td>
+            <td><input type="email" name="email"/><%=email%></td>
             <td>
                 <select>
                     <option>Guest</option>
@@ -35,10 +41,10 @@
         </tr>
         </tbody>
     </table>
-    <input type="hidden" name="oldFirstName" value="<%=typeName%>"/>
-    <input type="hidden" name="oldLastName" value="<%=typeName%>"/>
-    <input type="hidden" name="oldEmail" value="<%=typeName%>"/>
-    <input type="hidden" name="oldRole" value="<%=typeName%>"/>
+    <input type="hidden" name="oldFirstName" value="<%=oldFirstName%>"/>
+    <input type="hidden" name="oldLastName" value="<%=oldLastName%>"/>
+    <input type="hidden" name="oldEmail" value="<%=oldEmail%>"/>
+    <input type="hidden" name="oldRole" value="<%=oldRole%>"/>
 </form>
 </body>
 </html>

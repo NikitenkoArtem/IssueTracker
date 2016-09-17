@@ -15,7 +15,7 @@
             //            final ArrayList<HashMap<String, Object>> project =
 //                    (ArrayList<HashMap<String, Object>>) request.getAttribute("project");
 //            Iterator<HashMap<String, Object>> iterator = project.iterator();
-            Object projectName = null;
+            Object id = null;
             Object description = null;
             Object manager = null;
 //            while (iterator.hasNext()) {
@@ -24,14 +24,14 @@
 //                description = next.get("description");
 //                manager = next.get("manager");
 //            }
-            projectName = request.getParameter("project_name");
+            id = request.getParameter("project_name");
             description = request.getParameter("description");
 //            manager = request.getParameter("manager");
             manager = "manager";
         %>
         <tbody>
         <tr>
-            <td><input type="text" name="name" value="<%=projectName%>" required/></td>
+            <td><input type="text" name="name" value="<%=id%>" required/></td>
             <td><input type="text" name="desc" value="<%=description%>" required/></td>
             <td>
                 <select required><%

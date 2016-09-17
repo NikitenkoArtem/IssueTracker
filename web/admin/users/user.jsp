@@ -17,8 +17,8 @@
     </thead>
     <tbody>
     <%
-        final ArrayList<HashMap<String, Object>> types = (ArrayList<HashMap<String, Object>>) request.getAttribute("types");
-        final StringBuffer buffer = new View().displayTableRow(types, "/type?typeName=");
+        final ArrayList<HashMap<String, Object>> users = (ArrayList<HashMap<String, Object>>) request.getAttribute("users");
+        final StringBuffer buffer = new View().displayTableRow(users, "/user?userName=");
         out.print(buffer);
     %>
     </tbody>

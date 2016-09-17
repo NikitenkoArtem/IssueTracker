@@ -60,7 +60,7 @@
 
     <servlet>
         <servlet-name>Issue</servlet-name>
-        <servlet-class>by.epam.Issue</servlet-class>
+        <servlet-class>by.epam.controller.IssueController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Issue</servlet-name>
@@ -68,7 +68,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>LoginCheck</servlet-name>
-        <servlet-class>by.epam.LoginCheck</servlet-class>
+        <servlet-class>by.epam.controller.LoginCheckController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginCheck</servlet-name>
@@ -76,7 +76,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Priority</servlet-name>
-        <servlet-class>by.epam.Priority</servlet-class>
+        <servlet-class>by.epam.controller.PriorityController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Priority</servlet-name>
@@ -84,7 +84,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Project</servlet-name>
-        <servlet-class>by.epam.Project</servlet-class>
+        <servlet-class>by.epam.controller.ProjectController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Project</servlet-name>
@@ -92,7 +92,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Resolution</servlet-name>
-        <servlet-class>by.epam.Resolution</servlet-class>
+        <servlet-class>by.epam.controller.ResolutionController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Resolution</servlet-name>
@@ -100,7 +100,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Status</servlet-name>
-        <servlet-class>by.epam.Status</servlet-class>
+        <servlet-class>by.epam.controller.StatusController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Status</servlet-name>
@@ -108,7 +108,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Type</servlet-name>
-        <servlet-class>by.epam.Type</servlet-class>
+        <servlet-class>by.epam.controller.TypeController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Type</servlet-name>
@@ -116,7 +116,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>User</servlet-name>
-        <servlet-class>by.epam.User</servlet-class>
+        <servlet-class>by.epam.controller.UserController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>User</servlet-name>

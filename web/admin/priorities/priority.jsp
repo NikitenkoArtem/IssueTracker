@@ -1,6 +1,7 @@
 <%@ page import="by.epam.View" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="by.epam.entity.Priority" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -16,8 +17,11 @@
     </thead>
     <tbody>
     <%
-        final ArrayList<HashMap<String, Object>> priority = (ArrayList<HashMap<String, Object>>) request.getAttribute("priority");
-        final StringBuffer buffer = new View().displayTableRow(priority, "/priority?priorityName=");
+//        final ArrayList<HashMap<String, Object>> priorities = (ArrayList<HashMap<String, Object>>) request.getAttribute("priorities");
+//        final StringBuffer buffer = new View().displayTableRow(priorities, "/priority?priorityName=");
+//        out.print(buffer);
+        final ArrayList<Priority> priorities = (ArrayList<Priority>) request.getAttribute("priorities");
+        final StringBuffer buffer = new View().displayTableRow(priorities, "/priority?priorityName=");
         out.print(buffer);
     %>
     </tbody>
