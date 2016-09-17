@@ -1,4 +1,6 @@
-package by.epam;
+package by.epam.controller;
+
+import by.epam.DBConnection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,8 +16,8 @@ import java.sql.SQLException;
 /**
  * Created by Price on 09.09.2016.
  */
-@WebServlet(name = "LoginCheck")
-public class LoginCheck extends HttpServlet {
+@WebServlet(name = "LoginCheckController")
+public class LoginCheckController extends HttpServlet {
     private final String credentials = "select email, password from users WHERE email = ? AND password = ?";
 
     @Override
