@@ -6,18 +6,17 @@ import java.io.Serializable;
  * Created by Price on 17.09.2016.
  */
 public class Project implements Serializable {
-    private int id;
+    private int projectId;
     private String projectName;
     private String description;
-    private String build;
-    private String manager;
+    private int manager;
 
-    public int getId() {
-        return id;
+    public int getProjectId() {
+        return projectId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public String getProjectName() {
@@ -36,19 +35,11 @@ public class Project implements Serializable {
         this.description = description;
     }
 
-    public String getBuild() {
-        return build;
-    }
-
-    public void setBuild(String build) {
-        this.build = build;
-    }
-
-    public String getManager() {
+    public int getManager() {
         return manager;
     }
 
-    public void setManager(String manager) {
+    public void setManager(int manager) {
         this.manager = manager;
     }
 }

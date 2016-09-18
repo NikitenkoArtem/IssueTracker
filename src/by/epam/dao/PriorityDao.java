@@ -29,7 +29,7 @@ public class PriorityDao implements GenericDao<Priority, Integer> {
         final String  priorityName = entity.getPriorityName();
         params.put(1, priorityName);
         new DBConnection().executeUpdate(connection, insertPriority, params);
-        return entity.getId();
+        return entity.getPriorityId();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class PriorityDao implements GenericDao<Priority, Integer> {
         final String updatePriority = "UPDATE projects SET priority_name = ? WHERE priority_id = ?";
         HashMap<Integer, Object> params = new HashMap<>();
         params.put(1, entity.getPriorityName());
-        params.put(2, entity.getId());
+        params.put(2, entity.getPriorityId());
         new DBConnection().executeUpdate(connection, updatePriority, params);
     }
 

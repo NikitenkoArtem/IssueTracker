@@ -9,7 +9,7 @@ public class User implements Serializable {
     private String email;
     private String firstName;
     private String lastName;
-    private String role;
+    private int role;
     private String password;
 
     public String getEmail() {
@@ -36,11 +36,11 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getRole() {
+    public int getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(int role) {
         this.role = role;
     }
 

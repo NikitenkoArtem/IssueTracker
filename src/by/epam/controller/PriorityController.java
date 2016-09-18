@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,6 +35,7 @@ public class PriorityController extends HttpServlet {
                 if (edited != null && priorityName != null) {
                     editPriority(conn, new String[]{edited, priorityName});
                 }
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -68,7 +68,7 @@ public class PriorityController extends HttpServlet {
 
     private void editPriority(Connection conn, String[] sqlParams) throws SQLException {
         Priority priority = new Priority();
-        priority.setId(Integer.parseInt(sqlParams[0]));
+        priority.setPriorityId(Integer.parseInt(sqlParams[0]));
         priority.setPriorityName(sqlParams[1]);
         new PriorityDao(conn).update(priority);
     }

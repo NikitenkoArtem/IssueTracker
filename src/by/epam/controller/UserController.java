@@ -76,7 +76,7 @@ public class UserController extends HttpServlet {
         user.setEmail(sqlParams[0]);
         user.setFirstName(sqlParams[1]);
         user.setLastName(sqlParams[2]);
-        user.setRole(sqlParams[3]);
+        user.setRole(Integer.parseInt(sqlParams[3]));
         user.setPassword(sqlParams[4]);
         new UserDao(conn).create(user);
     }
@@ -86,7 +86,7 @@ public class UserController extends HttpServlet {
         user.setEmail(sqlParams[0]);
         user.setFirstName(sqlParams[1]);
         user.setLastName(sqlParams[2]);
-        user.setRole(sqlParams[3]);
+        user.setRole(Integer.parseInt(sqlParams[3]));
         new UserDao(conn).update(user);
     }
 }

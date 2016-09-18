@@ -6,15 +6,16 @@ import java.io.Serializable;
  * Created by Price on 17.09.2016.
  */
 public class Build implements Serializable {
-    private int projectId;
+    private int buildId;
     private String build;
+    private int project;
 
-    public int getProjectId() {
-        return projectId;
+    public int getBuildId() {
+        return buildId;
     }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
+    public void setBuildId(int buildId) {
+        this.buildId = buildId;
     }
 
     public String getBuild() {
@@ -23,5 +24,13 @@ public class Build implements Serializable {
 
     public void setBuild(String build) {
         this.build = build;
+    }
+
+    public int getProject() {
+        return project;
+    }
+
+    public void setProject(int project) {
+        this.project = project;
     }
 }

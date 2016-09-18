@@ -6,15 +6,15 @@ import java.io.Serializable;
  * Created by Price on 17.09.2016.
  */
 public class Priority implements Serializable {
-    private int id;
+    private int priorityId;
     private String priorityName;
 
-    public int getId() {
-        return id;
+    public int getPriorityId() {
+        return priorityId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPriorityId(int priorityId) {
+        this.priorityId = priorityId;
     }
 
     public String getPriorityName() {

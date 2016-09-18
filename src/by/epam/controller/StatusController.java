@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 /**
  * Created by Price on 07.09.2016.
@@ -48,7 +47,7 @@ public class StatusController extends HttpServlet {
     private void editStatus(Connection conn, String[] sqlParams) throws SQLException {
         Status status = new Status();
         status.setStatusName(sqlParams[0]);
-        status.setId(Integer.parseInt(sqlParams[1]));
+        status.setStatusId(Integer.parseInt(sqlParams[1]));
         new StatusDao(conn).update(status);
     }
 }

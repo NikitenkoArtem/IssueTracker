@@ -81,8 +81,7 @@ public class ProjectController extends HttpServlet {
         Project project = new Project();
         project.setProjectName(params[0]);
         project.setDescription(params[1]);
-        project.setBuild(params[2]);
-        project.setManager(params[3]);
+        project.setManager(Integer.parseInt(params[2]));
         new ProjectDao(conn).update(project);
     }
 
@@ -90,8 +89,7 @@ public class ProjectController extends HttpServlet {
         Project project = new Project();
         project.setProjectName(params[0]);
         project.setDescription(params[1]);
-        project.setBuild(params[2]);
-        project.setManager(params[3]);
+        project.setManager(Integer.parseInt(params[2]));
         new ProjectDao(conn).create(project);
     }
 }

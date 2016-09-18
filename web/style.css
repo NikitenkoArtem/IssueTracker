@@ -25,16 +25,16 @@ li a{
 li a:hover {
     background-color: green;
 }
-.admin{
+.user {
     display: inline;
     float: left;
 }
-.admin-content{
+.content {
     display: none;
     position: absolute;
     background-color: green;
     z-index: 1;
 }
-.admin:hover .admin-content{
+.user:hover .content {
     display: inline;
 }

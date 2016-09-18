@@ -93,12 +93,11 @@ public class IssueController extends HttpServlet {
         Issue issue = new Issue();
         issue.setSummary(sqlParams[0]);
         issue.setDescription(sqlParams[1]);
-        issue.setStatus(sqlParams[2]);
-        issue.setType(sqlParams[3]);
-        issue.setPriority(sqlParams[4]);
-        issue.setProject(sqlParams[5]);
-        issue.setBuild(sqlParams[6]);
-        issue.setAssignee(sqlParams[7]);
+        issue.setStatus(Integer.parseInt(sqlParams[2]));
+        issue.setType(Integer.parseInt(sqlParams[3]));
+        issue.setPriority(Integer.parseInt(sqlParams[4]));
+        issue.setProject(Integer.parseInt(sqlParams[5]));
+        issue.setAssignee(sqlParams[6]);
         new IssueDao(conn).create(issue);
     }
 
@@ -106,13 +105,12 @@ public class IssueController extends HttpServlet {
         Issue issue = new Issue();
         issue.setSummary(sqlParams[0]);
         issue.setDescription(sqlParams[1]);
-        issue.setStatus(sqlParams[2]);
-        issue.setResolution(sqlParams[3]);
-        issue.setType(sqlParams[4]);
-        issue.setPriority(sqlParams[5]);
-        issue.setProject(sqlParams[6]);
-        issue.setBuild(sqlParams[7]);
-        issue.setAssignee(sqlParams[8]);
+        issue.setStatus(Integer.parseInt(sqlParams[2]));
+        issue.setResolution(Integer.parseInt(sqlParams[3]));
+        issue.setType(Integer.parseInt(sqlParams[4]));
+        issue.setPriority(Integer.parseInt(sqlParams[5]));
+        issue.setProject(Integer.parseInt(sqlParams[6]));
+        issue.setAssignee(sqlParams[7]);
         new IssueDao(conn).update(issue);
     }
 }

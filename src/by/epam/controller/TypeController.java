@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 /**
  * Created by Price on 07.09.2016.
@@ -65,7 +64,7 @@ public class TypeController extends HttpServlet {
     private void editType(Connection conn, String[] sqlParams) throws SQLException {
         Type type = new Type();
         type.setTypeName(sqlParams[0]);
-        type.setId(Integer.parseInt(sqlParams[1]));
+        type.setTypeId(Integer.parseInt(sqlParams[1]));
         new TypeDao(conn).update(type);
     }
 }

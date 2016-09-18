@@ -14,13 +14,14 @@ public class Issue implements Serializable {
     private String modifiedBy;
     private String summary;
     private String description;
-    private String status;
-    private String resolution;
-    private String type;
-    private String priority;
-    private String project;
-    private String build;
+    private int status;
+    private int resolution;
+    private int type;
+    private int priority;
+    private int project;
     private String assignee;
+    private int comment;
+    private int file;
 
     public int getIssueId() {
         return issueId;
@@ -78,52 +79,44 @@ public class Issue implements Serializable {
         this.description = description;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
-    public String getResolution() {
+    public int getResolution() {
         return resolution;
     }
 
-    public void setResolution(String resolution) {
+    public void setResolution(int resolution) {
         this.resolution = resolution;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 
-    public String getPriority() {
+    public int getPriority() {
         return priority;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(int priority) {
         this.priority = priority;
     }
 
-    public String getProject() {
+    public int getProject() {
         return project;
     }
 
-    public void setProject(String project) {
+    public void setProject(int project) {
         this.project = project;
-    }
-
-    public String getBuild() {
-        return build;
-    }
-
-    public void setBuild(String build) {
-        this.build = build;
     }
 
     public String getAssignee() {
@@ -132,5 +125,21 @@ public class Issue implements Serializable {
 
     public void setAssignee(String assignee) {
         this.assignee = assignee;
+    }
+
+    public int getComment() {
+        return comment;
+    }
+
+    public void setComment(int comment) {
+        this.comment = comment;
+    }
+
+    public int getFile() {
+        return file;
+    }
+
+    public void setFile(int file) {
+        this.file = file;
     }
 }

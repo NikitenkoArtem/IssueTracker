@@ -6,15 +6,15 @@ import java.io.Serializable;
  * Created by Price on 17.09.2016.
  */
 public class Type implements Serializable {
-    private int id;
+    private int typeId;
     private String typeName;
 
-    public int getId() {
-        return id;
+    public int getTypeId() {
+        return typeId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 
     public String getTypeName() {

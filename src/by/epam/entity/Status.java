@@ -6,15 +6,15 @@ import java.io.Serializable;
  * Created by Price on 17.09.2016.
  */
 public class Status implements Serializable {
-    private int id;
+    private int statusId;
     private String statusName;
 
-    public int getId() {
-        return id;
+    public int getStatusId() {
+        return statusId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setStatusId(int statusId) {
+        this.statusId = statusId;
     }
 
     public String getStatusName() {

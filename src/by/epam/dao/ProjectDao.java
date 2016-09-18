@@ -24,14 +24,13 @@ public class ProjectDao implements GenericDao<Project, Integer> {
 
     @Override
     public Integer create(Project entity) throws SQLException {
-        final String sql = "INSERT INTO projects VALUES(?, ?, ?, ?)";
+        final String sql = "INSERT INTO projects VALUES(?, ?, ?)";
         HashMap<Integer, Object> params = new HashMap<>();
         params.put(1, entity.getProjectName());
         params.put(2, entity.getDescription());
-        params.put(3, entity.getBuild());
-        params.put(4, entity.getManager());
+        params.put(3, entity.getManager());
         new DBConnection().executeUpdate(connection, sql, params);
-        return entity.getId();
+        return entity.getProjectId();
     }
 
     @Override
@@ -58,13 +57,12 @@ public class ProjectDao implements GenericDao<Project, Integer> {
 
     @Override
     public void update(Project entity) throws SQLException {
-        final String sql = "UPDATE projects SET project_name=?, description=?, build=?, manager=? WHERE project_id=?";
+        final String sql = "UPDATE projects SET project_name=?, description=?, manager=? WHERE project_id=?";
         HashMap<Integer, Object> params = new HashMap<>();
         params.put(1, entity.getProjectName());
         params.put(2, entity.getDescription());
-        params.put(3, entity.getBuild());
-        params.put(4, entity.getManager());
-        params.put(5, entity.getId());
+        params.put(3, entity.getManager());
+        params.put(4, entity.getProjectId());
         new DBConnection().executeUpdate(connection, sql, params);
     }
 

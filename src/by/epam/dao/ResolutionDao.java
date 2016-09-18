@@ -57,7 +57,7 @@ public class ResolutionDao implements GenericDao<Resolution, Integer> {
         final String sql = "UPDATE resolutions SET resolution_name = ? WHERE resolution_id = ?";
         HashMap<Integer, Object> params = new HashMap<>();
         params.put(1, entity.getResolutionName());
-        params.put(2, entity.getId());
+        params.put(2, entity.getResolutionId());
         new DBConnection().executeUpdate(connection, sql, params);
     }
 

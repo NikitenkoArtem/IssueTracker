@@ -28,7 +28,7 @@ public class TypeDao implements GenericDao<Type, Integer> {
         HashMap<Integer, Object> param = new HashMap<>();
         param.put(1, entity.getTypeName());
         new DBConnection().executeUpdate(connection, sql, param);
-        return entity.getId();
+        return entity.getTypeId();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class TypeDao implements GenericDao<Type, Integer> {
         final String sql = "UPDATE types SET type_name = ? WHERE type_id = ?";
         HashMap<Integer, Object> params = new HashMap<>();
         params.put(1, entity.getTypeName());
-        params.put(2, entity.getId());
+        params.put(2, entity.getTypeId());
         new DBConnection().executeUpdate(connection, sql, params);
     }
 

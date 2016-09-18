@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 /**
  * Created by Price on 07.09.2016.
@@ -65,7 +64,7 @@ public class ResolutionController extends HttpServlet {
     private void editResolution(Connection conn, String[] sqlParams) throws SQLException {
         Resolution resolution = new Resolution();
         resolution.setResolutionName(sqlParams[0]);
-        resolution.setId(Integer.parseInt(sqlParams[1]));
+        resolution.setResolutionId(Integer.parseInt(sqlParams[1]));
         new ResolutionDao(conn).update(resolution);
     }
 }

@@ -37,7 +37,20 @@ public class UserDao implements GenericDao<User, String> {
 
     @Override
     public User read(String id) throws SQLException {
-        return null;
+        final String sql = "SELECT * FROM users WHERE email='" + id + "'";
+        User user = new User();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    user.setEmail(rs.getString("email"));
+                    user.setFirstName(rs.getString("first_name"));
+                    user.setLastName(rs.getString("last_name"));
+                    user.setRole(rs.getInt("role"));
+                    user.setPassword(rs.getString("password"));
+                }
+            }
+        }
+        return user;
     }
 
     @Override

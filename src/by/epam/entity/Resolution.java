@@ -6,15 +6,15 @@ import java.io.Serializable;
  * Created by Price on 17.09.2016.
  */
 public class Resolution implements Serializable {
-    private int id;
+    private int resolutionId;
     private String resolutionName;
 
-    public int getId() {
-        return id;
+    public int getResolutionId() {
+        return resolutionId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setResolutionId(int resolutionId) {
+        this.resolutionId = resolutionId;
     }
 
     public String getResolutionName() {

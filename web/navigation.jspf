@@ -1,18 +1,38 @@
 <nav>
-    <ul>
-        <li><a href="/login.jsp">Login</a></li>
-        <li><a href="/user">Edit profile</a></li>
-        <li><input type="submit" value="Submit Issue"/></li>
-        <li><input type="search" value="Search"/></li>
-    </ul>
-    <div class="admin">
-        <a href="#">Admin</a>
-        <ul class="admin-content">
-            <li><a href="/project">Projects</a></li>
-            <li><a href="/status">Statuses</a></li>
-            <li><a href="/resolution">Resolutions</a></li>
-            <li><a href="/priority">Priorities</a></li>
-            <li><a href="/type">Types</a></li>
-        </ul>
-    </div>
+    <c:choose>
+        <c:when test='${username != null}'>
+            <div class="user">
+                <a href="#">${username}</a>
+                <ul class="content">
+                    <li><a href="/user">Profile</a></li>
+                    <li><a href="/logout">Log out</a></li>
+                    <c:if test="${role == 'administrator'}">
+                        <li><a href="/project">Projects</a></li>
+                        <li><a href="/status">Statuses</a></li>
+                        <li><a href="/resolution">Resolutions</a></li>
+                        <li><a href="/priority">Priorities</a></li>
+                        <li><a href="/type">Types</a></li>
+                        <li><a href="/project?action=add">Add project</a></li>
+                        <li><a href="/resolution?action=add">Add resolution</a></li>
+                        <li><a href="/priority?action=add">Add priority</a></li>
+                        <li><a href="/type?action=add">Add type</a></li>
+                        <li><a href="/user?action=search">Find user</a></li>
+                        <li><a href="/user?action=add">Add user</a></li>
+                    </c:if>
+                </ul>
+            <ul>
+                <li><input type="submit" value="Submit issue"/></li>
+                <li><input type="search" value="Search"/></li>
+            </ul>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <ul>
+                <li><a href="/login">Login</a></li>
+            </ul>
+            <ul>
+                <li><input type="search" value="Search"/></li>
+            </ul>
+        </c:otherwise>
+    </c:choose>
 </nav>
