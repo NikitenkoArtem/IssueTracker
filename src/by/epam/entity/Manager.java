@@ -7,7 +7,6 @@ import java.io.Serializable;
  */
 public class Manager implements Serializable {
     private int managerId;
-    private String managerName;
     private String email;
 
     public int getManagerId() {
@@ -16,14 +15,6 @@ public class Manager implements Serializable {
 
     public void setManagerId(int managerId) {
         this.managerId = managerId;
-    }
-
-    public String getManagerName() {
-        return managerName;
-    }
-
-    public void setManagerName(String managerName) {
-        this.managerName = managerName;
     }
 
     public String getEmail() {

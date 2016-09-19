@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="by.epam.View" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.HashMap" %>
@@ -16,13 +17,18 @@
             <td><input type="text" name="desc" required/></td>
             <td><input type="text" name="build" required/></td>
             <td><input type="text" name="manager" required/>
-                <select><%
-                    final ArrayList<HashMap<String, Object>> managers =
-                            (ArrayList<HashMap<String, Object>>) request.getAttribute("managers");
-                    String openTag = "<option>";
-                    final StringBuffer buffer = new View().display(managers, openTag);
-                    out.print(buffer);
-                %></select>
+                <select>
+                    <c:forEach var="row" items="${managers}">
+                        <option name="manager">${row.email}</option>
+                    </c:forEach>
+                    <%
+//                        final ArrayList<HashMap<String, Object>> managers =
+//                                (ArrayList<HashMap<String, Object>>) request.getAttribute("managers");
+//                        String openTag = "<option>";
+//                        final StringBuffer buffer = new View().display(managers, openTag);
+//                        out.print(buffer);
+                    %>
+                </select>
             </td>
             <td><input type="submit" name="add" value="Add project"/></td>
         </tr>

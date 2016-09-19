@@ -1,5 +1,6 @@
 package by.epam.controller;
 
+import by.epam.Auth;
 import by.epam.DBConnection;
 import by.epam.dao.UserDao;
 import by.epam.entity.User;
@@ -8,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Logger;
@@ -27,11 +29,20 @@ public class LoginController extends HttpServlet {
                     User user = new UserDao(conn).read(username);
                     final String pwd = user.getPassword();
                     if (pwd != null) {
+                        String sessionId = "";
                         if (pwd.equals(password)) {
-                            Cookie cookie = new Cookie(username, username);
+                            sessionId = new Auth(request).getCookieValue("JSESSIONID");
+                            if (sessionId == null) {
+                                MessageDigest md5 = MessageDigest.getInstance("MD5");
+                                md5.update(username.getBytes());
+                                sessionId = md5.digest().toString();
+                            }
+                            Cookie cookie = new Cookie("SESSIONID", sessionId);
+                            cookie.setMaxAge(1800);
                             response.addCookie(cookie);
-                            request.setAttribute("username", user.getFirstName());
-                            request.getRequestDispatcher("/index.jsp").forward(request, response);
+                            HttpSession session = request.getSession(true);
+                            session.setAttribute("username", user.getFirstName());
+                            response.sendRedirect("index.jsp");
                         } else {
                             loginFailed(request, response);
                         }
@@ -51,14 +62,14 @@ public class LoginController extends HttpServlet {
         }
     }
 
-    private void loginFailed(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String failed = "Log in failed. Try again";
-        request.setAttribute("failed", failed);
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void loginFailed(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String failed = "Log in failed. Try again";
+        request.setAttribute("failed", failed);
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 }

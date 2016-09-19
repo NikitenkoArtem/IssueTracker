@@ -1,20 +1,11 @@
-<%@ page import="java.util.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Title</title>
+    <title>Project</title>
 </head>
 <body>
-<%
-    final ArrayList<HashMap<String, Object>> projects = (ArrayList<HashMap<String, Object>>) request.getAttribute("projects");
-    if (projects == null) {
-        out.print("<h1>No projects found</h1>");
-    } else {
-%>
-<%--<%@include file="headerProject.jspf"%>--%>
-<% } %>
-<form method="post" action="project">
 <table>
     <thead>
     <tr>
@@ -24,29 +15,28 @@
     </tr>
     </thead>
     <tbody>
-    <%
-        final Iterator<HashMap<String, Object>> iterator = projects.iterator();
-        String openTr = "<tr>";
-        String closeTr = "</tr>";
-        String closeTd = "</td>";
-        while (iterator.hasNext()) {
-            out.print(openTr);
-            final HashMap<String, Object> next = iterator.next();
-            final Object projectName = next.get("project_name");
-            final Object description = next.get("description");
-            final Object manager = next.get("manager");
-            String openTd = "<td name='" + projectName + "'>";
-            out.print(openTd + "<a href='/project?projectName=" + projectName + "'>" + projectName + "</a>" + closeTd);
-            openTd = "<td name='" + description + "'>";
-            out.print(openTd + description + closeTd);
-            openTd = "<td name='" + manager + "'>";
-            out.print(openTd + manager + closeTd);
-            out.print(closeTr);
-        }
-    %>
+    <c:choose>
+        <c:when test="${project == null}">
+            <h1>No projects found</h1>
+        </c:when>
+        <c:otherwise>
+            <c:forEach var="row" items="${projects}">
+                <tr>
+                    <td><a href="/project?projectId=${row.projectId}">${row.projectName}</a></td>
+                    <td>${row.description}</td>
+                    <td>
+                        <c:forEach var="mgr" items="${managers}">
+                            <c:if test="${row.manager == mgr.managerId}">
+                                ${mgr.email}
+                            </c:if>
+                        </c:forEach>
+                    </td>
+                </tr>
+            </c:forEach>
+        </c:otherwise>
+    </c:choose>
     </tbody>
 </table>
-</form>
 <form method="post" action="project">
     <input type="submit" name="newProject" value="New project"/>
 </form>

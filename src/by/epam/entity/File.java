@@ -13,7 +13,7 @@ public class File implements Serializable {
     private Date addDate;
     private String fileName;
     private String contentType;
-    private int size;
+    private int fileSize;
     private Blob data;
 
     public int getFileId() {
@@ -56,12 +56,12 @@ public class File implements Serializable {
         this.contentType = contentType;
     }
 
-    public int getSize() {
-        return size;
+    public int getFileSize() {
+        return fileSize;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void setFileSize(int fileSize) {
+        this.fileSize = fileSize;
     }
 
     public Blob getData() {

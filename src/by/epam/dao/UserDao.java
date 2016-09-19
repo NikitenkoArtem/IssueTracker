@@ -24,29 +24,25 @@ public class UserDao implements GenericDao<User, String> {
 
     @Override
     public String create(User entity) throws SQLException {
-        final String sql = "INSERT INTO users VALUES(?, ?, ?, 1, ?)";
-        HashMap<Integer, Object> params = new HashMap<>();
-        params.put(1, entity.getEmail());
-        params.put(2, entity.getFirstName());
-        params.put(3, entity.getLastName());
-        params.put(4, entity.getRole());
-        params.put(5, entity.getPassword());
-        new DBConnection().executeUpdate(connection, sql, params);
+        final String sql = "INSERT INTO users VALUES(?, ?, ?, ?, ?)";
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getEmail());
+        sqlParams.put(2, entity.getFirstName());
+        sqlParams.put(3, entity.getLastName());
+        sqlParams.put(4, entity.getRole());
+        sqlParams.put(5, entity.getPassword());
+        new DBConnection().executeUpdate(connection, sql, sqlParams);
         return null;
     }
 
     @Override
     public User read(String id) throws SQLException {
-        final String sql = "SELECT * FROM users WHERE email='" + id + "'";
+        final String sql = "SELECT * FROM users WHERE email = '" + id + "'";
         User user = new User();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    user.setEmail(rs.getString("email"));
-                    user.setFirstName(rs.getString("first_name"));
-                    user.setLastName(rs.getString("last_name"));
-                    user.setRole(rs.getInt("role"));
-                    user.setPassword(rs.getString("password"));
+                    selectRow(rs, user);
                 }
             }
         }
@@ -61,7 +57,7 @@ public class UserDao implements GenericDao<User, String> {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     User user = new User();
-                    user.setEmail(rs.getString("resolution_name"));
+                    selectRow(rs, user);
                     list.add(user);
                 }
             }
@@ -71,13 +67,13 @@ public class UserDao implements GenericDao<User, String> {
 
     @Override
     public void update(User entity) throws SQLException {
-        final String sql = "UPDATE users SET ? = ?";
-        HashMap<Integer, Object> params = new HashMap<>();
-        params.put(1, entity.getEmail());
-        params.put(2, entity.getFirstName());
-        params.put(3, entity.getLastName());
-        params.put(4, entity.getRole());
-        new DBConnection().executeUpdate(connection, sql, params);
+        final String sql = "UPDATE users SET first_name = ?, last_name = ?, role = ? WHERE email = ?";
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getFirstName());
+        sqlParams.put(2, entity.getLastName());
+        sqlParams.put(3, entity.getRole());
+        sqlParams.put(4, entity.getEmail());
+        new DBConnection().executeUpdate(connection, sql, sqlParams);
     }
 
     @Override
@@ -87,9 +83,17 @@ public class UserDao implements GenericDao<User, String> {
 
     public void updatePassword(User entity) throws SQLException {
         final String sql = "UPDATE users SET password = ? WHERE email = ?";
-        HashMap<Integer, Object> params = new HashMap<>();
-        params.put(1, entity.getEmail());
-        params.put(2, entity.getPassword());
-        new DBConnection().executeUpdate(connection, sql, params);
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getPassword());
+        sqlParams.put(2, entity.getEmail());
+        new DBConnection().executeUpdate(connection, sql, sqlParams);
+    }
+
+    private void selectRow(ResultSet rs, User user) throws SQLException {
+        user.setEmail(rs.getString("email"));
+        user.setFirstName(rs.getString("first_name"));
+        user.setLastName(rs.getString("last_name"));
+        user.setRole(rs.getInt("role"));
+        user.setPassword(rs.getString("password"));
     }
 }

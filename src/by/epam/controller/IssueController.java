@@ -49,10 +49,7 @@ public class IssueController extends HttpServlet {
                 if (edited != null && priorityName != null) {
                     editIssue(conn, new String[] {summary, description, status, resolution, type, priority, project, build, assignee});
                 }
-                request.setAttribute("statuses", new StatusDao(conn).readAll());
-                request.setAttribute("resolutions", new ResolutionDao(conn).readAll());
-                request.setAttribute("priorities", new PriorityDao(conn).readAll());
-                request.setAttribute("types", new TypeDao(conn).readAll());
+
                 request.getRequestDispatcher("/admin/issues/issue.jsp").forward(request, response);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -75,10 +72,22 @@ public class IssueController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final String priorityName = request.getParameter("priorityName");
-        if (priorityName != null) {
-            request.setAttribute("priorityName", priorityName);
-            request.getRequestDispatcher("admin/users/edit-user.jsp").forward(request, response);
+        final String issueId = request.getParameter("issueId");
+        if (issueId != null) {
+            try (Connection conn = DBConnection.getConnection()) {
+                final Issue issue = new IssueDao(conn).read(Integer.parseInt(issueId));
+                request.setAttribute("issue", issue);
+                request.setAttribute("statuses", new StatusDao(conn).readAll());
+                request.setAttribute("resolutions", new ResolutionDao(conn).readAll());
+                request.setAttribute("types", new TypeDao(conn).readAll());
+                request.setAttribute("priorities", new PriorityDao(conn).readAll());
+                request.setAttribute("projects", new ProjectDao(conn).readAll());
+                request.setAttribute("builds", new BuildDao(conn).readByFK(issue.getProject()));
+                request.setAttribute("users", new UserDao(conn).readAll());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            request.getRequestDispatcher("content/auth/issue/edit-issue.jsp").forward(request, response);
         } else {
             try (Connection conn = DBConnection.getConnection()) {
                 request.setAttribute("users", new IssueDao(conn).readAll());

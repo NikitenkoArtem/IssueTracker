@@ -13,10 +13,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Price on 07.09.2016.
@@ -25,44 +27,52 @@ import java.util.List;
 public class ProjectController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        final HttpSession session = request.getSession();
         final String newProject = request.getParameter("newProject");
         final String add = request.getParameter("add");
-        final String edit = request.getParameter("edit");
-        try (Connection conn = DBConnection.getConnection()) {
-            final String name = request.getParameter("name");
-            final String desc = request.getParameter("desc");
-            final String build = request.getParameter("build");
-            final String manager = request.getParameter("manager");
-            if (newProject != null) {
-                final List<Manager> managers = new ManagerDao(conn).readAll();
-                request.setAttribute("managers", managers);
-                request.getRequestDispatcher("/admin/projects/add-project.jsp").forward(request, response);
-            } else if (edit != null) {
-                updateProject(conn, new String[] {name, desc, build, manager});
-            } else if (add != null) {
-                updateProject(conn, new String[] {name, desc, build, manager});
+        final String projectId = request.getParameter("projectId");
+        try {
+            try (Connection conn = DBConnection.getConnection()) {
+                final String name = request.getParameter("name");
+                final String desc = request.getParameter("desc");
+                final String build = request.getParameter("build");
+                final String manager = request.getParameter("manager");
+                if (newProject != null) {
+                    final List<Manager> managers = new ManagerDao(conn).readAll();
+                    session.setAttribute("managers", managers);
+                    request.getRequestDispatcher("/content/admin/project/add-project.jsp").forward(request, response);
+                } else if (projectId != null) {
+                    updateProject(conn, new String[] {name, desc, build, manager});
+                } else if (add != null) {
+                    updateProject(conn, new String[] {name, desc, build, manager});
+                }
+            } catch (SQLException e) {
+                throw new Exception(e);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger logger = Logger.getLogger(e.getClass().getName());
+            logger.severe(e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        final HttpSession session = request.getSession();
         final String projectName = request.getParameter("projectName");
         try (Connection conn = DBConnection.getConnection()) {
             if (projectName != null) {
                 final String description = request.getParameter("description");
                 final String manager = request.getParameter("manager");
-                request.setAttribute("description", description);
-                request.setAttribute("manager", manager);
+                session.setAttribute("description", description);
+                session.setAttribute("manager", new ManagerDao(conn).readAll());
 
                 final List<Build> builds = new BuildDao(conn).readAll();
-                request.setAttribute("builds", builds);
-                request.getRequestDispatcher("/admin/projects/edit-project.jsp").forward(request, response);
+                session.setAttribute("builds", builds);
+                request.getRequestDispatcher("/content/admin/project/edit-project.jsp").forward(request, response);
             } else {
                 getProjects(conn, request);
-                request.getRequestDispatcher("/admin/projects/project.jsp").forward(request, response);
+                request.getRequestDispatcher("/content/admin/project/project.jsp").forward(request, response);
             }
         } catch (SQLException e) {
             e.printStackTrace();

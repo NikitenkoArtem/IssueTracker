@@ -24,28 +24,37 @@ public class TypeDao implements GenericDao<Type, Integer> {
 
     @Override
     public Integer create(Type entity) throws SQLException {
-        final String sql = "INSERT INTO types VALUES(?)";
-        HashMap<Integer, Object> param = new HashMap<>();
-        param.put(1, entity.getTypeName());
-        new DBConnection().executeUpdate(connection, sql, param);
-        return entity.getTypeId();
-    }
-
-    @Override
-    public Type read(Integer id) throws SQLException {
+        final String sql = "INSERT INTO types(type_name) VALUES(?)";
+        HashMap<Integer, Object> sqlParam = new HashMap<>();
+        sqlParam.put(1, entity.getTypeName());
+        new DBConnection().executeUpdate(connection, sql, sqlParam);
         return null;
     }
 
     @Override
+    public Type read(Integer id) throws SQLException {
+        final String sql = "SELECT * FROM types WHERE type_id = " + id;
+        Type type = new Type();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    selectRow(rs, type);
+                }
+            }
+        }
+        return type;
+    }
+
+    @Override
     public List<Type> readAll() throws SQLException {
-        final String sql = "SELECT type_name FROM types";
+        final String sql = "SELECT * FROM types";
         ArrayList<Type> list = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    Type resolution = new Type();
-                    resolution.setTypeName(rs.getString("type_name"));
-                    list.add(resolution);
+                    Type type = new Type();
+                    selectRow(rs, type);
+                    list.add(type);
                 }
             }
         }
@@ -55,14 +64,19 @@ public class TypeDao implements GenericDao<Type, Integer> {
     @Override
     public void update(Type entity) throws SQLException {
         final String sql = "UPDATE types SET type_name = ? WHERE type_id = ?";
-        HashMap<Integer, Object> params = new HashMap<>();
-        params.put(1, entity.getTypeName());
-        params.put(2, entity.getTypeId());
-        new DBConnection().executeUpdate(connection, sql, params);
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getTypeName());
+        sqlParams.put(2, entity.getTypeId());
+        new DBConnection().executeUpdate(connection, sql, sqlParams);
     }
 
     @Override
     public void delete(Type entity) throws SQLException {
 
+    }
+
+    private void selectRow(ResultSet rs, Type type) throws SQLException {
+        type.setTypeId(rs.getInt("type_id"));
+        type.setTypeName(rs.getString("type_name"));
     }
 }
