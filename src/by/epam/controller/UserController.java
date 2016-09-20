@@ -9,11 +9,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * Created by Price on 07.09.2016.
@@ -21,72 +21,87 @@ import java.util.HashMap;
 @WebServlet(name = "UserController")
 public class UserController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final String addPriority = request.getParameter("addPriority");
-        final String added = request.getParameter("added");
-        final String edited = request.getParameter("edited");
-        final String priorityName = request.getParameter("priorityName");
-
-        final String firstName = request.getParameter("firstName");
-        final String lastName = request.getParameter("lastName");
-        final String email = request.getParameter("email");
-        final String password = request.getParameter("password");
-        final String role = request.getParameter("role");
-//        String[] role = request.getParameterValues("role");
-        if (addPriority != null) {
-            request.getRequestDispatcher("admin/users/add-user.jsp").forward(request, response);
-        } else {
+        final HttpSession session = request.getSession();
+        final String action = request.getParameter("action");
+        try {
             try (Connection conn = DBConnection.getConnection()) {
-                if (added != null) {
-                    addUser(conn, new String[] {email, firstName, lastName, role, password});
-                }
-                if (edited != null && priorityName != null) {
-                    editUser(conn, new String[] {email, firstName, lastName, role});
+                switch (action) {
+                    case "add": {
+                        User user = getUser(request);
+                        new UserDao(conn).create(user);
+                        break;
+                    }
+                    case "edit": {
+                        User user = getUser(request);
+                        new UserDao(conn).update(user);
+                        break;
+                    }
+                    case "find": {
+                        User user = getUser(request);
+                        User read = null;
+                        read = new UserDao(conn).read(user.getUserId());
+                        if (read == null) {
+                            read = new UserDao(conn).read(user.getEmail());
+                        }
+                        session.setAttribute("users", read);
+                        request.getRequestDispatcher("/content/admin/user/user.jsp").forward(request, response);
+                        break;
+                    }
+                    case "pwd": {
+                        final int userId = Integer.parseInt(request.getParameter("userId"));
+                        User user = new UserDao(conn).read(userId);
+                        new UserDao(conn).updatePassword(user);
+                        break;
+                    }
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new Exception(e);
             }
-            request.getRequestDispatcher("admin/users/user.jsp").forward(request, response);
+        } catch (Exception e) {
+            Logger logger = Logger.getLogger(e.getClass().getName());
+            logger.severe(e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final String priorityName = request.getParameter("priorityName");
-        if (priorityName != null) {
-            request.setAttribute("priorityName", priorityName);
-            request.getRequestDispatcher("admin/users/edit-user.jsp").forward(request, response);
-        } else {
-            try (Connection conn = DBConnection.getConnection()) {
-                request.setAttribute("users", new UserDao(conn).readAll());
-            } catch (SQLException e) {
-                e.printStackTrace();
+        final HttpSession session = request.getSession();
+        final String action = request.getParameter("action");
+        try {
+            switch (action) {
+                case "search": {
+                    request.getRequestDispatcher("/content/admin/user/search.jsp").forward(request, response);
+                    break;
+                }
+                case "new": {
+                    request.getRequestDispatcher("/content/admin/user/add-user.jsp").forward(request, response);
+                    break;
+                }
+                case "list": {
+                    try (Connection conn = DBConnection.getConnection()) {
+                        session.setAttribute("users", new UserDao(conn).readAll());
+                        request.getRequestDispatcher("/content/admin/user/user.jsp").forward(request, response);
+                    } catch (SQLException e) {
+                        throw new Exception(e);
+                    }
+                }
             }
-            request.getRequestDispatcher("admin/users/user.jsp").forward(request, response);
+        } catch (Exception e) {
+            Logger logger = Logger.getLogger(e.getClass().getName());
+            logger.severe(e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
-    private void changePassword(Connection conn, String[] sqlParams) throws SQLException {
+    private User getUser(HttpServletRequest request) {
         User user = new User();
-        user.setEmail(sqlParams[0]);
-        user.setPassword(sqlParams[1]);
-        new UserDao(conn).updatePassword(user);
-    }
-
-    private void addUser(Connection conn, String[] sqlParams) throws SQLException {
-        User user = new User();
-        user.setEmail(sqlParams[0]);
-        user.setFirstName(sqlParams[1]);
-        user.setLastName(sqlParams[2]);
-        user.setRole(Integer.parseInt(sqlParams[3]));
-        user.setPassword(sqlParams[4]);
-        new UserDao(conn).create(user);
-    }
-
-    private void editUser(Connection conn, String[] sqlParams) throws SQLException {
-        User user = new User();
-        user.setEmail(sqlParams[0]);
-        user.setFirstName(sqlParams[1]);
-        user.setLastName(sqlParams[2]);
-        user.setRole(Integer.parseInt(sqlParams[3]));
-        new UserDao(conn).update(user);
+        user.setUserId(Integer.parseInt(request.getParameter("userId")));
+        user.setFirstName(request.getParameter("firstName"));
+        user.setLastName(request.getParameter("lastName"));
+        user.setEmail(request.getParameter("email"));
+//        String[] roles = request.getParameterValues("role");
+        user.setRole(Integer.parseInt(request.getParameter("role")));
+        user.setPassword(request.getParameter("password"));
+        return user;
     }
 }

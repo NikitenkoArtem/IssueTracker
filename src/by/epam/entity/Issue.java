@@ -9,9 +9,9 @@ import java.sql.Date;
 public class Issue implements Serializable {
     private int issueId;
     private Date createDate;
-    private String createdBy;
+    private int createdBy;
     private Date modifyDate;
-    private String modifiedBy;
+    private int modifiedBy;
     private String summary;
     private String description;
     private int status;
@@ -19,7 +19,7 @@ public class Issue implements Serializable {
     private int type;
     private int priority;
     private int project;
-    private String assignee;
+    private int assignee;
     private int comment;
     private int file;
 
@@ -39,11 +39,11 @@ public class Issue implements Serializable {
         this.createDate = createDate;
     }
 
-    public String getCreatedBy() {
+    public int getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(String createdBy) {
+    public void setCreatedBy(int createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -55,11 +55,11 @@ public class Issue implements Serializable {
         this.modifyDate = modifyDate;
     }
 
-    public String getModifiedBy() {
+    public int getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(String modifiedBy) {
+    public void setModifiedBy(int modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
@@ -119,11 +119,11 @@ public class Issue implements Serializable {
         this.project = project;
     }
 
-    public String getAssignee() {
+    public int getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(String assignee) {
+    public void setAssignee(int assignee) {
         this.assignee = assignee;
     }
 

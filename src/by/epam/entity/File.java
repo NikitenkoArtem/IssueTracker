@@ -9,7 +9,7 @@ import java.sql.Date;
  */
 public class File implements Serializable {
     private int fileId;
-    private String addedBy;
+    private int addedBy;
     private Date addDate;
     private String fileName;
     private String contentType;
@@ -24,11 +24,11 @@ public class File implements Serializable {
         this.fileId = fileId;
     }
 
-    public String getAddedBy() {
+    public int getAddedBy() {
         return addedBy;
     }
 
-    public void setAddedBy(String addedBy) {
+    public void setAddedBy(int addedBy) {
         this.addedBy = addedBy;
     }
 

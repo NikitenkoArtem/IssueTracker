@@ -1,29 +1,26 @@
-<%@ page import="by.epam.View" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Title</title>
+    <title>Issue Tracker</title>
+    <link rel="stylesheet" type="text/css" href="/style.css"/>
 </head>
 <body>
+<%@include file="/navigation.jspf" %>
 <table>
     <thead>
     <tr>
-        <td>Resolution name</td>
+        <th>Resolution name</th>
     </tr>
     </thead>
     <tbody>
-    <%
-        final ArrayList<HashMap<String, Object>> resolutions = (ArrayList<HashMap<String, Object>>) request.getAttribute("resolutions");
-        final StringBuffer buffer = new View().displayTableRow(resolutions, "/resolution?resolutionName=");
-        out.print(buffer);
-    %>
+    <c:forEach var="row" items="resolutions">
+        <tr>
+            <td><a href="/resolution?resolutionId=${row.resolutionId}">${row.resolutionName}</a></td>
+        </tr>
+    </c:forEach>
     </tbody>
 </table>
-<form method="post" action="resolution">
-    <input type="submit" name="addResolution" value="New resolution"/>
-</form>
 </body>
 </html>

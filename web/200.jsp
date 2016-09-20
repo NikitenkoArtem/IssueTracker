@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
 <html>
 <head>
     <title>Issue Tracker</title>
@@ -7,9 +6,10 @@
 </head>
 <body>
 <%@include file="/navigation.jspf"%>
-<form method="post" action="type">
-    <input type="text" name="typeName"/>
-    <input type="submit" value="Add type"/>
+<h3>Command complete successfully</h3>
+<form method="get" action="${servlet}">
+    <input type="hidden" name="action" value="goBack"/>
+    <input type="submit" value="OK"/>
 </form>
 </body>
 </html>

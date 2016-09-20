@@ -79,7 +79,7 @@ public class CommentDao implements GenericDao<Comment, Integer> {
 
     private void selectRow(ResultSet rs, Comment comment) throws SQLException {
         comment.setCommentId(rs.getInt("comment_id"));
-        comment.setAddedBy(rs.getString("added_by"));
+        comment.setAddedBy(rs.getInt("added_by"));
         comment.setAddDate(rs.getDate("add_date"));
         comment.setComment(rs.getString("comment"));
     }

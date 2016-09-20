@@ -9,9 +9,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 /**
  * Created by Price on 07.09.2016.
@@ -20,34 +22,53 @@ import java.sql.SQLException;
 public class StatusController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try (Connection conn = DBConnection.getConnection()) {
-            final String statusName = request.getParameter("statusName");
-            final String newStatus = request.getParameter("statusName");
-            editStatus(conn, new String[]{newStatus, statusName});
-        } catch (SQLException e) {
-            e.printStackTrace();
+        final String action = request.getParameter("action");
+        try {
+            try (Connection conn = DBConnection.getConnection()) {
+                switch (action) {
+                    case "edit": {
+                        Status status = getStatus(request);
+                        new StatusDao(conn).update(status);
+                        request.getRequestDispatcher("admin/statuses/status.jsp").forward(request, response);
+                        break;
+                    }
+                }
+            } catch (SQLException e) {
+                throw new Exception(e);
+            }
+        } catch (Exception e) {
+            Logger logger = Logger.getLogger(e.getClass().getName());
+            logger.severe(e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        request.getRequestDispatcher("admin/statuses/status.jsp").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final String statusName = request.getParameter("statusName");
-        if (statusName != null) {
-            request.setAttribute("statusName", statusName);
-            request.getRequestDispatcher("admin/statuses/edit-status.jsp").forward(request, response);
+        final HttpSession session = request.getSession();
+        try {
+            try (Connection conn = DBConnection.getConnection()) {
+                final Integer statusId = Integer.parseInt(request.getParameter("statusId"));
+                if (statusId != null) {
+                    session.setAttribute("status", new StatusDao(conn).read(statusId));
+                    request.getRequestDispatcher("/content/admin/status/edit-status.jsp").forward(request, response);
+                } else {
+                    session.setAttribute("statuses", new StatusDao(conn).readAll());
+                    request.getRequestDispatcher("admin/statuses/status.jsp").forward(request, response);
+                }
+            } catch (SQLException e) {
+                throw new Exception(e);
+            }
+        } catch (Exception e) {
+            Logger logger = Logger.getLogger(e.getClass().getName());
+            logger.severe(e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        try (Connection conn = DBConnection.getConnection()) {
-            request.setAttribute("statuses", new StatusDao(conn).readAll());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        request.getRequestDispatcher("admin/statuses/status.jsp").forward(request, response);
     }
 
-    private void editStatus(Connection conn, String[] sqlParams) throws SQLException {
+    private Status getStatus(HttpServletRequest request) {
         Status status = new Status();
-        status.setStatusName(sqlParams[0]);
-        status.setStatusId(Integer.parseInt(sqlParams[1]));
-        new StatusDao(conn).update(status);
+        status.setStatusId(Integer.parseInt(request.getParameter("statusId")));
+        status.setStatusName(request.getParameter("statusName"));
+        return status;
     }
 }

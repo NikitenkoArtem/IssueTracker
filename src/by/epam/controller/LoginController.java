@@ -29,7 +29,7 @@ public class LoginController extends HttpServlet {
                     User user = new UserDao(conn).read(username);
                     final String pwd = user.getPassword();
                     if (pwd != null) {
-                        String sessionId = "";
+                        String sessionId;
                         if (pwd.equals(password)) {
                             sessionId = new Auth(request).getCookieValue("JSESSIONID");
                             if (sessionId == null) {
@@ -38,11 +38,12 @@ public class LoginController extends HttpServlet {
                                 sessionId = md5.digest().toString();
                             }
                             Cookie cookie = new Cookie("SESSIONID", sessionId);
+                            cookie.setPath("/");
                             cookie.setMaxAge(1800);
                             response.addCookie(cookie);
                             HttpSession session = request.getSession(true);
                             session.setAttribute("username", user.getFirstName());
-                            response.sendRedirect("index.jsp");
+                            response.sendRedirect("/");
                         } else {
                             loginFailed(request, response);
                         }

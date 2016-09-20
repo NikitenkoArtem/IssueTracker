@@ -1,25 +1,25 @@
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="by.epam.View" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Title</title>
+    <title>Issue Tracker</title>
+    <link rel="stylesheet" type="text/css" href="/style.css"/>
 </head>
 <body>
+<%@include file="/navigation.jspf" %>
 <table>
     <thead>
     <tr>
-        <td>Status name</td>
+        <th>Status name</th>
     </tr>
     </thead>
     <tbody>
-    <%
-        final ArrayList<HashMap<String, Object>> statuses = (ArrayList<HashMap<String, Object>>) request.getAttribute("statuses");
-        final StringBuffer buffer = new View().displayTableRow(statuses, "/status?statusName=");
-        out.print(buffer);
-    %>
+    <c:forEach var="row" items="statuses">
+        <tr>
+            <td><a href="/status?statusId=${row.statusId}">${row.statusName}</a></td>
+        </tr>
+    </c:forEach>
     </tbody>
 </table>
 </body>

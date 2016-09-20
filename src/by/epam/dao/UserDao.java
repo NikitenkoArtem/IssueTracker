@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Price on 17.09.2016.
  */
-public class UserDao implements GenericDao<User, String> {
+public class UserDao implements GenericDao<User, Integer> {
     private Connection connection;
 
     public UserDao(Connection connection) {
@@ -23,7 +23,7 @@ public class UserDao implements GenericDao<User, String> {
     }
 
     @Override
-    public String create(User entity) throws SQLException {
+    public Integer create(User entity) throws SQLException {
         final String sql = "INSERT INTO users VALUES(?, ?, ?, ?, ?)";
         HashMap<Integer, Object> sqlParams = new HashMap<>();
         sqlParams.put(1, entity.getEmail());
@@ -36,8 +36,8 @@ public class UserDao implements GenericDao<User, String> {
     }
 
     @Override
-    public User read(String id) throws SQLException {
-        final String sql = "SELECT * FROM users WHERE email = '" + id + "'";
+    public User read(Integer id) throws SQLException {
+        final String sql = "SELECT * FROM users WHERE user_id = " + id;
         User user = new User();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
@@ -67,18 +67,32 @@ public class UserDao implements GenericDao<User, String> {
 
     @Override
     public void update(User entity) throws SQLException {
-        final String sql = "UPDATE users SET first_name = ?, last_name = ?, role = ? WHERE email = ?";
+        final String sql = "UPDATE users SET first_name = ?, last_name = ?, email = ?, role = ? WHERE user_id = ?";
         HashMap<Integer, Object> sqlParams = new HashMap<>();
         sqlParams.put(1, entity.getFirstName());
         sqlParams.put(2, entity.getLastName());
         sqlParams.put(3, entity.getRole());
         sqlParams.put(4, entity.getEmail());
+        sqlParams.put(5, entity.getUserId());
         new DBConnection().executeUpdate(connection, sql, sqlParams);
     }
 
     @Override
     public void delete(User entity) throws SQLException {
 
+    }
+
+    public User read(String email) throws SQLException {
+        final String sql = "SELECT * FROM users WHERE email = '" + email + "'";
+        User user = new User();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    selectRow(rs, user);
+                }
+            }
+        }
+        return user;
     }
 
     public void updatePassword(User entity) throws SQLException {
@@ -90,6 +104,7 @@ public class UserDao implements GenericDao<User, String> {
     }
 
     private void selectRow(ResultSet rs, User user) throws SQLException {
+        user.setUserId(rs.getInt("user_id"));
         user.setEmail(rs.getString("email"));
         user.setFirstName(rs.getString("first_name"));
         user.setLastName(rs.getString("last_name"));

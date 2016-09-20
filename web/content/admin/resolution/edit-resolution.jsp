@@ -1,16 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    final Object resolutionName = request.getAttribute("resolutionName");
-%>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Title</title>
+    <title>Issue Tracker</title>
+    <link rel="stylesheet" type="text/css" href="/style.css"/>
 </head>
 <body>
+<%@include file="/navigation.jspf" %>
 <form method="post" action="resolution">
-    <input type="text" name="edited" value="<%=resolutionName%>"/>
-    <input type="hidden" name="resolutionName" value="<%=resolutionName%>"/>
+    <input type="text" name="resolutionName" value="${resolution.resolutionName}"/>
+    <input type="hidden" name="resolutionId" value="${resolution.resolutionId}"/>
+    <input type="hidden" name="action" value="edit"/>
     <input type="submit" value="Apply"/>
 </form>
 </body>

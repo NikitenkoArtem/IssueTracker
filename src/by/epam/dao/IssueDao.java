@@ -100,9 +100,9 @@ public class IssueDao implements GenericDao<Issue, Integer> {
     private void selectRow(ResultSet rs, Issue issue) throws SQLException {
         issue.setIssueId(rs.getInt("issue_id"));
         issue.setCreateDate(rs.getDate("create_date"));
-        issue.setCreatedBy(rs.getString("created_by"));
+        issue.setCreatedBy(rs.getInt("created_by"));
         issue.setModifyDate(rs.getDate("modify_date"));
-        issue.setModifiedBy(rs.getString("modified_by"));
+        issue.setModifiedBy(rs.getInt("modified_by"));
         issue.setSummary(rs.getString("summary"));
         issue.setDescription(rs.getString("description"));
         issue.setStatus(rs.getInt("status"));
@@ -110,7 +110,7 @@ public class IssueDao implements GenericDao<Issue, Integer> {
         issue.setType(rs.getInt("type"));
         issue.setPriority(rs.getInt("priority"));
         issue.setProject(rs.getInt("project"));
-        issue.setAssignee(rs.getString("assignee"));
+        issue.setAssignee(rs.getInt("assignee"));
         issue.setComment(rs.getInt("comment"));
         issue.setFile(rs.getInt("file"));
     }

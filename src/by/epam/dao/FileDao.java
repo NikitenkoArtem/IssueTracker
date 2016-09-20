@@ -85,7 +85,7 @@ public class FileDao implements GenericDao<File, Integer> {
 
     private void selectRow(ResultSet rs, File file) throws SQLException {
         file.setFileId(rs.getInt("file_id"));
-        file.setAddedBy(rs.getString("added_by"));
+        file.setAddedBy(rs.getInt("added_by"));
         file.setAddDate(rs.getDate("add_date"));
         file.setFileName(rs.getString("file_name"));
         file.setContentType(rs.getString("content_type"));

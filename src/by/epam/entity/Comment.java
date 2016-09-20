@@ -8,7 +8,7 @@ import java.sql.Date;
  */
 public class Comment implements Serializable {
     private int commentId;
-    private String addedBy;
+    private int addedBy;
     private Date addDate;
     private String comment;
 
@@ -20,11 +20,11 @@ public class Comment implements Serializable {
         this.commentId = commentId;
     }
 
-    public String getAddedBy() {
+    public int getAddedBy() {
         return addedBy;
     }
 
-    public void setAddedBy(String addedBy) {
+    public void setAddedBy(int addedBy) {
         this.addedBy = addedBy;
     }
 

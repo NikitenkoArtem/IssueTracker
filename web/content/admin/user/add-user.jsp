@@ -1,8 +1,9 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Title</title>
+    <title>Issue Tracker</title>
     <link rel="stylesheet" type="text/css" href="../../style.css">
 </head>
 <body>
@@ -10,12 +11,12 @@
     <table>
         <thead>
         <tr>
-            <td>First name</td>
-            <td>Last name</td>
-            <td>Email address</td>
-            <td>Role</td>
-            <td>Password</td>
-            <td>Password confirmation</td>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Password</th>
+            <th>Password confirmation</th>
         </tr>
         </thead>
         <tbody>
@@ -25,9 +26,9 @@
             <td><input type="email" name="email"/></td>
             <td>
                 <select>
-                    <option>Guest</option>
-                    <option>User</option>
-                    <option>Administrator</option>
+                    <c:forEach var="row" items="${roles}">
+                        <option name="role">${row.roleName}</option>
+                    </c:forEach>
                 </select>
             </td>
             <td><input type="password" name="password"/></td>
@@ -36,6 +37,7 @@
         </tr>
         </tbody>
     </table>
+    <input type="hidden" name="action" value="add"/>
 </form>
 </body>
 </html>

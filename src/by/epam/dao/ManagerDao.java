@@ -25,9 +25,9 @@ public class ManagerDao implements GenericDao<Manager, Integer> {
 
     @Override
     public Integer create(Manager entity) throws SQLException {
-        final String sql = "INSERT INTO managers(email) VALUES(?)";
+        final String sql = "INSERT INTO managers(user) VALUES(?)";
         HashMap<Integer, Object> sqlParam = new HashMap<>();
-        sqlParam.put(1, entity.getEmail());
+        sqlParam.put(1, entity.getUser());
         new DBConnection().executeUpdate(connection, sql, sqlParam);
         return null;
     }
@@ -64,9 +64,9 @@ public class ManagerDao implements GenericDao<Manager, Integer> {
 
     @Override
     public void update(Manager entity) throws SQLException {
-        final String sql = "UPDATE managers SET email = ? WHERE manager_id = ?";
+        final String sql = "UPDATE managers SET user = ? WHERE manager_id = ?";
         HashMap<Integer, Object> sqlParams = new HashMap<>();
-        sqlParams.put(1, entity.getEmail());
+        sqlParams.put(1, entity.getUser());
         sqlParams.put(2, entity.getManagerId());
         new DBConnection().executeUpdate(connection, sql, sqlParams);
     }
@@ -78,6 +78,6 @@ public class ManagerDao implements GenericDao<Manager, Integer> {
 
     private void selectRow(ResultSet rs, Manager manager) throws SQLException {
         manager.setManagerId(rs.getInt("manager_id"));
-        manager.setEmail(rs.getString("email"));
+        manager.setUser(rs.getInt("user"));
     }
 }

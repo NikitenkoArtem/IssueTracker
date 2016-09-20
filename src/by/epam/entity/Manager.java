@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class Manager implements Serializable {
     private int managerId;
-    private String email;
+    private int user;
 
     public int getManagerId() {
         return managerId;
@@ -17,11 +17,11 @@ public class Manager implements Serializable {
         this.managerId = managerId;
     }
 
-    public String getEmail() {
-        return email;
+    public int getUser() {
+        return user;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUser(int user) {
+        this.user = user;
     }
 }

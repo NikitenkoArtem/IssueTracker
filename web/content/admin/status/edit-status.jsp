@@ -1,16 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    final Object statusName = request.getAttribute("statusName");
-%>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Title</title>
+    <title>Issue Tracker</title>
+    <link rel="stylesheet" type="text/css" href="/style.css"/>
 </head>
 <body>
+<%@include file="/navigation.jspf" %>
 <form method="post" action="status">
-    <input type="text" name="newStatus" value="<%=statusName%>"/>
-    <input type="hidden" name="statusName" value="<%=statusName%>"/>
+    <input type="text" name="statusName" value="${status.statusName}"/>
+    <input type="hidden" name="statusId" value="${status.statusId}"/>
+    <input type="hidden" name="action" value="edit"/>
     <input type="submit" value="Apply"/>
 </form>
 </body>

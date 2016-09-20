@@ -6,11 +6,20 @@ import java.io.Serializable;
  * Created by Price on 17.09.2016.
  */
 public class User implements Serializable {
+    private int userId;
     private String email;
     private String firstName;
     private String lastName;
     private int role;
     private String password;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public String getEmail() {
         return email;

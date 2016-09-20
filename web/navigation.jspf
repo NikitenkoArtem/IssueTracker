@@ -1,37 +1,74 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <nav>
     <c:choose>
         <c:when test='${username != null}'>
-            <div class="user">
-                <a href="#">${username}</a>
-                <ul class="content">
-                    <li><a href="/user">Profile</a></li>
-                    <li><a href="/logout">Log out</a></li>
-                    <c:if test="${role == 'administrator'}">
-                        <li><a href="/project">Projects</a></li>
-                        <li><a href="/status">Statuses</a></li>
-                        <li><a href="/resolution">Resolutions</a></li>
-                        <li><a href="/priority">Priorities</a></li>
-                        <li><a href="/type">Types</a></li>
-                        <li><a href="/project?action=add">Add project</a></li>
-                        <li><a href="/resolution?action=add">Add resolution</a></li>
-                        <li><a href="/priority?action=add">Add priority</a></li>
-                        <li><a href="/type?action=add">Add type</a></li>
-                        <li><a href="/user?action=search">Find user</a></li>
-                        <li><a href="/user?action=add">Add user</a></li>
-                    </c:if>
+            <c:set var="admin" value="${roles.roleName}"/>
+            <c:if test="${role == admin}">
+                <ul class="adminMenu">
+                    <li class="issue">
+                        <a href="#">Issue</a>
+                        <div class="issue-content">
+                            <a href="/issue?action=list">Issue list</a>
+                            <a href="/issue?action=new">Submit issue</a>
+                        </div>
+                    </li>
+                    <li class="project">
+                        <a href="#">Project</a>
+                        <div class="project-content">
+                            <a href="/project?action=list">Project list</a>
+                            <a href="/project?action=new">Add project</a>
+                        </div>
+                    </li>
+                    <li class="status">
+                        <a href="#">Status</a>
+                        <div class="status-content">
+                            <a href="/status?action=list">Status list</a>
+                        </div>
+                    </li>
+                    <li class="resolution">
+                        <a href="#">Resolution</a>
+                        <div class="resolution-content">
+                            <a href="/resolution?action=list">Resolution list</a>
+                            <a href="/resolution?action=new">Add resolution</a>
+                        </div>
+                    </li>
+                    <li class="priority">
+                        <a href="#">Priority</a>
+                        <div class="priority-content">
+                            <a href="/priority?action=list">Priority list</a>
+                            <a href="/priority?action=new">Add priority</a>
+                        </div>
+                    </li>
+                    <li class="type">
+                        <a href="#">Type</a>
+                        <div class="type-content">
+                            <a href="/type?action=list">Type list</a>
+                            <a href="/type?action=new">Add type</a>
+                        </div>
+                    </li>
+                    <li class="user">
+                        <a href="#">User</a>
+                        <div class="usr-content">
+                            <a href="/user?action=list">User list</a>
+                            <a href="/user?action=search">Find user</a>
+                            <a href="/user?action=new">Add user</a>
+                        </div>
+                    </li>
+                    <li class="login">
+                        <a href="#">${username}</a>
+                        <div class="login-content">
+                            <a href="/user?action=edit">Profile</a>
+                            <a href="/logout">Log out</a>
+                        </div>
+                    </li>
                 </ul>
-            <ul>
-                <li><input type="submit" value="Submit issue"/></li>
-                <li><input type="search" value="Search"/></li>
-            </ul>
-            </div>
+            </c:if>
         </c:when>
         <c:otherwise>
-            <ul>
-                <li><a href="/login">Login</a></li>
-            </ul>
-            <ul>
-                <li><input type="search" value="Search"/></li>
+            <ul class="userMenu">
+                <li class="login">
+                    <a href="/login">Log in</a>
+                </li>
             </ul>
         </c:otherwise>
     </c:choose>

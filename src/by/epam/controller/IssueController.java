@@ -106,7 +106,7 @@ public class IssueController extends HttpServlet {
         issue.setType(Integer.parseInt(sqlParams[3]));
         issue.setPriority(Integer.parseInt(sqlParams[4]));
         issue.setProject(Integer.parseInt(sqlParams[5]));
-        issue.setAssignee(sqlParams[6]);
+        issue.setAssignee(Integer.parseInt(sqlParams[6]));
         new IssueDao(conn).create(issue);
     }
 
@@ -119,7 +119,7 @@ public class IssueController extends HttpServlet {
         issue.setType(Integer.parseInt(sqlParams[4]));
         issue.setPriority(Integer.parseInt(sqlParams[5]));
         issue.setProject(Integer.parseInt(sqlParams[6]));
-        issue.setAssignee(sqlParams[7]);
+        issue.setAssignee(Integer.parseInt(sqlParams[7]));
         new IssueDao(conn).update(issue);
     }
 }

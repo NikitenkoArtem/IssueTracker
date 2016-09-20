@@ -26,7 +26,7 @@ public class LogoutController extends HttpServlet {
                 response.addCookie(login);
             }
             request.getSession().invalidate();
-            response.sendRedirect("index.jsp");
+            response.sendRedirect("/");
         } catch (Exception e) {
             Logger logger = Logger.getLogger(e.getClass().getName());
             logger.severe(e.getMessage());
