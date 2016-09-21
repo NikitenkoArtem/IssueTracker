@@ -1,5 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,9 +15,9 @@
     </tr>
     </thead>
     <tbody>
-    <c:forEach var="row" items="resolutions">
+    <c:forEach var="resolution" items="${resolutions}">
         <tr>
-            <td><a href="/resolution?resolutionId=${row.resolutionId}">${row.resolutionName}</a></td>
+            <td><a href="/resolution?resolutionId=${resolution.resolutionId}">${resolution.resolutionName}</a></td>
         </tr>
     </c:forEach>
     </tbody>

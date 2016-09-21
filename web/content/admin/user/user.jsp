@@ -4,9 +4,10 @@
 <html>
 <head>
     <title>Issue Tracker</title>
-    <link rel="stylesheet" type="text/css" href="../../style.css">
+    <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
 <body>
+<%@include file="/navigation.jspf" %>
 <table>
     <thead>
     <tr>
@@ -18,20 +19,17 @@
     </thead>
     <tbody>
     <c:set var="roleId" value="${roles.roleId}"/>
-    <c:forEach var="row" items="${users}">
+    <c:forEach var="resolution" items="${users}">
         <tr>
-            <td name="firstName">${row.firstName}</td>
-            <td name="lastName">${row.lastName}</td>
-            <td name="email"><a href="/user?email=${row.email}">${row.email}</a></td>
-            <c:if test="${row.role == roleId}">
-                <td>${role.roleName}</td>
+            <td name="email"><a href="/user?email=${resolution.email}">${resolution.email}</a></td>
+            <td name="firstName">${resolution.firstName}</td>
+            <td name="lastName">${resolution.lastName}</td>
+            <c:if test="${resolution.role == roleId}">
+                <td>${resolution.roleName}</td>
             </c:if>
         </tr>
     </c:forEach>
     </tbody>
 </table>
-<form method="post" action="user">
-    <input type="submit" name="new" value="New user"/>
-</form>
 </body>
 </html>

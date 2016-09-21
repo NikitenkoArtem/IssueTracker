@@ -15,9 +15,9 @@
     </tr>
     </thead>
     <tbody>
-    <c:forEach var="row" items="statuses">
+    <c:forEach var="resolution" items="statuses">
         <tr>
-            <td><a href="/status?statusId=${row.statusId}">${row.statusName}</a></td>
+            <td><a href="/status?statusId=${resolution.statusId}">${resolution.statusName}</a></td>
         </tr>
     </c:forEach>
     </tbody>

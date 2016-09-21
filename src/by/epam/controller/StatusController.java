@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 public class StatusController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        final HttpSession session = request.getSession();
         final String action = request.getParameter("action");
         try {
             try (Connection conn = DBConnection.getConnection()) {
@@ -29,7 +30,8 @@ public class StatusController extends HttpServlet {
                     case "edit": {
                         Status status = getStatus(request);
                         new StatusDao(conn).update(status);
-                        request.getRequestDispatcher("admin/statuses/status.jsp").forward(request, response);
+                        session.setAttribute("servlet", "issue");
+                        response.sendRedirect("/200.jsp");
                         break;
                     }
                 }
@@ -45,18 +47,32 @@ public class StatusController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final HttpSession session = request.getSession();
+        final String action = request.getParameter("action");
+        final String statusId = request.getParameter("statusId");
         try {
-            try (Connection conn = DBConnection.getConnection()) {
-                final Integer statusId = Integer.parseInt(request.getParameter("statusId"));
-                if (statusId != null) {
-                    session.setAttribute("status", new StatusDao(conn).read(statusId));
+            if (statusId != null) {
+                try (Connection conn = DBConnection.getConnection()) {
+                    session.setAttribute("status", new StatusDao(conn).read(Integer.parseInt(statusId)));
                     request.getRequestDispatcher("/content/admin/status/edit-status.jsp").forward(request, response);
-                } else {
-                    session.setAttribute("statuses", new StatusDao(conn).readAll());
-                    request.getRequestDispatcher("admin/statuses/status.jsp").forward(request, response);
+                } catch (SQLException e) {
+                    throw new Exception(e);
                 }
-            } catch (SQLException e) {
-                throw new Exception(e);
+            } else {
+                switch (action) {
+                    case "new": {
+                        request.getRequestDispatcher("/content/admin/resolution/add-resolution.jsp").forward(request, response);
+                        break;
+                    }
+                    case "goBack":
+                    case "list": {
+                        try (Connection conn = DBConnection.getConnection()) {
+                            session.setAttribute("statuses", new StatusDao(conn).readAll());
+                            request.getRequestDispatcher("/content/admin/status/status.jsp").forward(request, response);
+                        } catch (SQLException e) {
+                            throw new Exception(e);
+                        }
+                    }
+                }
             }
         } catch (Exception e) {
             Logger logger = Logger.getLogger(e.getClass().getName());
@@ -67,7 +83,10 @@ public class StatusController extends HttpServlet {
 
     private Status getStatus(HttpServletRequest request) {
         Status status = new Status();
-        status.setStatusId(Integer.parseInt(request.getParameter("statusId")));
+        final String statusId = request.getParameter("statusId");
+        if (statusId != null) {
+            status.setStatusId(Integer.parseInt(statusId));
+        }
         status.setStatusName(request.getParameter("statusName"));
         return status;
     }

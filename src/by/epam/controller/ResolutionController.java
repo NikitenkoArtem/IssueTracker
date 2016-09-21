@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -29,11 +30,15 @@ public class ResolutionController extends HttpServlet {
                         case "add": {
                             Resolution resolution = getResolution(request);
                             new ResolutionDao(conn).create(resolution);
+                            session.setAttribute("servlet", "issue");
+                            response.sendRedirect("/200.jsp");
                             break;
                         }
                         case "edit": {
                             Resolution resolution = getResolution(request);
                             new ResolutionDao(conn).update(resolution);
+                            session.setAttribute("servlet", "issue");
+                            response.sendRedirect("/200.jsp");
                             break;
                         }
                     }
@@ -55,7 +60,7 @@ public class ResolutionController extends HttpServlet {
         try {
             if (resolutionId != null) {
                 try (Connection conn = DBConnection.getConnection()) {
-                    session.setAttribute("resolutionId", new ResolutionDao(conn).read(Integer.parseInt(resolutionId)));
+                    session.setAttribute("resolution", new ResolutionDao(conn).read(Integer.parseInt(resolutionId)));
                     request.getRequestDispatcher("/content/admin/resolution/edit-resolution.jsp").forward(request, response);
                 } catch (SQLException e) {
                     throw new Exception(e);
@@ -66,6 +71,7 @@ public class ResolutionController extends HttpServlet {
                         request.getRequestDispatcher("/content/admin/resolution/add-resolution.jsp").forward(request, response);
                         break;
                     }
+                    case "goBack":
                     case "list": {
                         try (Connection conn = DBConnection.getConnection()) {
                             session.setAttribute("resolutions", new ResolutionDao(conn).readAll());
@@ -85,7 +91,10 @@ public class ResolutionController extends HttpServlet {
 
     private Resolution getResolution(HttpServletRequest request) {
         Resolution resolution = new Resolution();
-        resolution.setResolutionId(Integer.parseInt(request.getParameter("resolutionId")));
+        final String resolutionId = request.getParameter("resolutionId");
+        if (resolutionId != null) {
+            resolution.setResolutionId(Integer.parseInt(resolutionId));
+        }
         resolution.setResolutionName(request.getParameter("resolutionName"));
         return resolution;
     }

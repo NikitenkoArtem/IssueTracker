@@ -95,12 +95,18 @@ public class UserController extends HttpServlet {
 
     private User getUser(HttpServletRequest request) {
         User user = new User();
-        user.setUserId(Integer.parseInt(request.getParameter("userId")));
+        final String userId = request.getParameter("userId");
+        final String role = request.getParameter("role");
+        if (userId != null) {
+            user.setUserId(Integer.parseInt(userId));
+        }
         user.setFirstName(request.getParameter("firstName"));
         user.setLastName(request.getParameter("lastName"));
         user.setEmail(request.getParameter("email"));
 //        String[] roles = request.getParameterValues("role");
-        user.setRole(Integer.parseInt(request.getParameter("role")));
+        if (role != null) {
+            user.setRole(Integer.parseInt(role));
+        }
         user.setPassword(request.getParameter("password"));
         return user;
     }

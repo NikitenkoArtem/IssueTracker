@@ -1,39 +1,56 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="by.epam.View" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.HashMap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Issue Tracker</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
 <body>
-<form method="post" action="/project">
+<%@include file="/navigation.jspf" %>
+<form method="post" action="project">
     <table>
-        <%@ include file="headerProject.jspf" %>
+        <thead>
+        <tr>
+            <th>Project name</th>
+        </tr>
+        <tr>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <th>Build</th>
+        </tr>
+        <tr>
+            <th>Manager</th>
+        </tr>
+        </thead>
         <tbody>
         <tr>
-            <td><input type="text" name="name" required/></td>
-            <td><input type="text" name="desc" required/></td>
+            <td><input type="text" name="projectName" required/></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="description" required/></td>
+        </tr>
+        <tr>
             <td><input type="text" name="build" required/></td>
+            </tr>
+        <tr>
             <td><input type="text" name="manager" required/>
+                </td>
                 <select>
-                    <c:forEach var="row" items="${managers}">
-                        <option name="manager">${row.email}</option>
+                    <c:forEach var="mgr" items="${managers}">
+                        <c:forEach var="resolution" items="${users}">
+                            <c:if test="${resolution.userId == mgr.user}">
+                                <option name="manager">${resolution.firstName}</option>
+                            </c:if>
+                        </c:forEach>
                     </c:forEach>
-                    <%
-//                        final ArrayList<HashMap<String, Object>> managers =
-//                                (ArrayList<HashMap<String, Object>>) request.getAttribute("managers");
-//                        String openTag = "<option>";
-//                        final StringBuffer buffer = new View().display(managers, openTag);
-//                        out.print(buffer);
-                    %>
                 </select>
             </td>
             <td><input type="submit" name="add" value="Add project"/></td>
         </tr>
         </tbody>
     </table>
+    <input type="hidden" name="action" value="add"/>
 </form>
 </body>
 </html>

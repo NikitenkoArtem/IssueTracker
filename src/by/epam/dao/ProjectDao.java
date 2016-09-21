@@ -35,7 +35,7 @@ public class ProjectDao implements GenericDao<Project, Integer> {
 
     @Override
     public Project read(Integer id) throws SQLException {
-        final String sql = "SELECT * FROM projects WHERE project_id = ?";
+        final String sql = "SELECT * FROM projects WHERE project_id = " + id;
         Project project = new Project();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {

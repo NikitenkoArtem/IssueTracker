@@ -77,7 +77,7 @@ public class BuildDao implements GenericDao<Build, Integer> {
 
     }
 
-    public List<Build> readByFK(Integer id) throws SQLException {
+    public List<Build> readByProject(Integer id) throws SQLException {
         final String sql = "SELECT * FROM builds WHERE project = " + id;
         ArrayList<Build> list = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

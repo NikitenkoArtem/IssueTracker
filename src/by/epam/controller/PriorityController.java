@@ -9,67 +9,91 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
-/**
- * Created by Price on 07.09.2016.
- */
 @WebServlet(name = "PriorityController")
 public class PriorityController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final String addPriority = request.getParameter("addPriority");
-        final String added = request.getParameter("added");
-        final String edited = request.getParameter("edited");
-        final String priorityName = request.getParameter("priorityName");
-        if (addPriority != null) {
-            request.getRequestDispatcher("admin/priorities/add-priority.jsp").forward(request, response);
-        } else {
+        final HttpSession session = request.getSession();
+        final String action = request.getParameter("action");
+        try {
             try (Connection conn = DBConnection.getConnection()) {
-                if (added != null) {
-                    addPriority(conn, added);
+                switch (action) {
+                    case "add": {
+                        Priority priority = getPriority(request);
+                        new PriorityDao(conn).create(priority);
+                        session.setAttribute("servlet", "priority");
+                        response.sendRedirect("/200.jsp");
+                        break;
+                    }
+                    case "edit": {
+                        Priority priority = getPriority(request);
+                        new PriorityDao(conn).update(priority);
+                        session.setAttribute("servlet", "priority");
+                        response.sendRedirect("/200.jsp");
+                        break;
+                    }
                 }
-                if (edited != null && priorityName != null) {
-                    editPriority(conn, new String[]{edited, priorityName});
-                }
-
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new Exception(e);
             }
-            request.getRequestDispatcher("admin/priorities/priority.jsp").forward(request, response);
+        } catch (Exception e) {
+            Logger logger = Logger.getLogger(e.getClass().getName());
+            logger.severe(e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final String priorityName = request.getParameter("priorityName");
-        if (priorityName != null) {
-            request.setAttribute("priorityName", priorityName);
-            request.getRequestDispatcher("admin/priorities/edit-priority.jsp").forward(request, response);
-        } else {
-            try (Connection conn = DBConnection.getConnection()) {
-                final List<Priority> priorities = new PriorityDao(conn).readAll();
-                request.setAttribute("priorities", priorities);
-            } catch (SQLException e) {
-                e.printStackTrace();
+        final HttpSession session = request.getSession();
+        final String action = request.getParameter("action");
+        final String priorityId = request.getParameter("priorityId");
+        try {
+            if (priorityId != null) {
+                try (Connection conn = DBConnection.getConnection()) {
+                    session.setAttribute("priority", new PriorityDao(conn).read(Integer.parseInt(priorityId)));
+                    request.getRequestDispatcher("admin/priority/edit-priority.jsp").forward(request, response);
+                } catch (SQLException e) {
+                    throw new Exception(e);
+                }
+            } else {
+                switch (action) {
+                    case "new": {
+                        request.getRequestDispatcher("/content/admin/priority/add-priority.jsp").forward(request, response);
+                        break;
+                    }
+                    case "goBack":
+                    case "list": {
+                        try (Connection conn = DBConnection.getConnection()) {
+                            session.setAttribute("priorities", new PriorityDao(conn).readAll());
+                            request.getRequestDispatcher("/content/admin/priority/priority.jsp").forward(request, response);
+                        } catch (SQLException e) {
+                            throw new Exception(e);
+                        }
+                    }
+                }
             }
-            request.getRequestDispatcher("admin/priorities/priority.jsp").forward(request, response);
+        } catch (Exception e) {
+            Logger logger = Logger.getLogger(e.getClass().getName());
+            logger.severe(e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
-    private void addPriority(Connection conn, String sqlParam) throws SQLException {
+    private Priority getPriority(HttpServletRequest request) throws SQLException {
         Priority priority = new Priority();
-        priority.setPriorityName(sqlParam);
-        new PriorityDao(conn).create(priority);
-    }
-
-    private void editPriority(Connection conn, String[] sqlParams) throws SQLException {
-        Priority priority = new Priority();
-        priority.setPriorityId(Integer.parseInt(sqlParams[0]));
-        priority.setPriorityName(sqlParams[1]);
-        new PriorityDao(conn).update(priority);
+        final String priorityId = request.getParameter("priorityId");
+        if (priorityId != null) {
+            priority.setPriorityId(Integer.parseInt(priorityId));
+        }
+        priority.setPriorityName(request.getParameter("priorityName"));
+        return priority;
     }
 }

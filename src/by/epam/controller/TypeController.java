@@ -29,7 +29,7 @@ public class TypeController extends HttpServlet {
                     case "add": {
                         Type type = getType(request);
                         new TypeDao(conn).create(type);
-                        session.setAttribute("servlet", "type");
+                        session.setAttribute("servlet", type);
                         response.sendRedirect("/200.jsp");
                         break;
                     }
@@ -53,12 +53,16 @@ public class TypeController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final HttpSession session = request.getSession();
-        Integer typeId = Integer.parseInt(request.getParameter("typeId"));
+        final String typeId = request.getParameter("typeId");
         final String action = request.getParameter("action");
         try {
             if (typeId != null) {
-                session.setAttribute("typeId", typeId);
-                request.getRequestDispatcher("/content/admin/type/edit-type.jsp").forward(request, response);
+                try (Connection conn = DBConnection.getConnection()) {
+                    session.setAttribute("type", new TypeDao(conn).read(Integer.parseInt(typeId)));
+                    request.getRequestDispatcher("/content/admin/type/edit-type.jsp").forward(request, response);
+                } catch (SQLException e) {
+                    throw new Exception(e);
+                }
             } else {
                 switch (action) {
                     case "new": {
@@ -84,7 +88,10 @@ public class TypeController extends HttpServlet {
 
     private Type getType(HttpServletRequest request) {
         Type type = new Type();
-        type.setTypeId(Integer.parseInt(request.getParameter("typeId")));
+        final String typeId = request.getParameter("typeId");
+        if (typeId != null) {
+            type.setTypeId(Integer.parseInt(typeId));
+        }
         type.setTypeName(request.getParameter("typeName"));
         return type;
     }

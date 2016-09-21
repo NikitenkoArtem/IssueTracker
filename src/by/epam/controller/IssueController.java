@@ -9,9 +9,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.*;
-import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * Created by Price on 07.09.2016.
@@ -20,106 +21,124 @@ import java.util.HashMap;
 public class IssueController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final String addPriority = request.getParameter("addPriority");
-        final String added = request.getParameter("added");
-        final String edited = request.getParameter("edited");
-        final String priorityName = request.getParameter("priorityName");
-
-        final String issueId = request.getParameter("issue_id");
-        final String status = request.getParameter("status");
-        final String summary = request.getParameter("summary");
-        final String description = request.getParameter("description");
-        final String statuses = request.getParameter("statuses");
-        final String resolution = request.getParameter("resolution");
-        final String type = request.getParameter("type");
-        final String priority = request.getParameter("priority");
-        final String project = request.getParameter("project");
-        final String build = request.getParameter("build");
-        final String assignee = request.getParameter("assignee");
-
-
-//        String[] role = request.getParameterValues("role");
-        if (addPriority != null) {
-            request.getRequestDispatcher("admin/issues/add-issue.jsp").forward(request, response);
-        } else {
+        final HttpSession session = request.getSession();
+        final String action = request.getParameter("action");
+        try {
             try (Connection conn = DBConnection.getConnection()) {
-                if (added != null) {
-                    addIssue(conn, new String[] {summary, description, status, type, priority, project});
+                switch (action) {
+                    case "add": {
+                        Issue issue = getIssue(request);
+                        new IssueDao(conn).create(issue);
+                        session.setAttribute("servlet", "issue");
+                        response.sendRedirect("/200.jsp");
+                        break;
+                    }
+                    case "edit": {
+                        Issue issue = getIssue(request);
+                        new IssueDao(conn).update(issue);
+                        session.setAttribute("servlet", "issue");
+                        response.sendRedirect("/200.jsp");
+                        break;
+                    }
                 }
-                if (edited != null && priorityName != null) {
-                    editIssue(conn, new String[] {summary, description, status, resolution, type, priority, project, build, assignee});
-                }
-
-                request.getRequestDispatcher("/admin/issues/issue.jsp").forward(request, response);
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new Exception(e);
             }
-            request.getRequestDispatcher("admin/users/user.jsp").forward(request, response);
+        } catch (Exception e) {
+            Logger logger = Logger.getLogger(e.getClass().getName());
+            logger.severe(e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-//        try (Connection conn = DBConnection.getConnection()) {
-//            String action = request.getParameter("action");
-//            String issueId = request.getParameter("issueId");
-//            if (action.equals("add")) {
-//                addIssue(conn, request);
-//            }
-//            if (action.equals("issueId")) {
-//                editIssue(conn, request);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        final HttpSession session = request.getSession();
+        String action = request.getParameter("action");
         final String issueId = request.getParameter("issueId");
-        if (issueId != null) {
-            try (Connection conn = DBConnection.getConnection()) {
-                final Issue issue = new IssueDao(conn).read(Integer.parseInt(issueId));
-                request.setAttribute("issue", issue);
-                request.setAttribute("statuses", new StatusDao(conn).readAll());
-                request.setAttribute("resolutions", new ResolutionDao(conn).readAll());
-                request.setAttribute("types", new TypeDao(conn).readAll());
-                request.setAttribute("priorities", new PriorityDao(conn).readAll());
-                request.setAttribute("projects", new ProjectDao(conn).readAll());
-                request.setAttribute("builds", new BuildDao(conn).readByFK(issue.getProject()));
-                request.setAttribute("users", new UserDao(conn).readAll());
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try {
+            if (issueId != null) {
+                try (Connection conn = DBConnection.getConnection()) {
+                    final Issue issue = new IssueDao(conn).read(Integer.parseInt(issueId));
+                    session.setAttribute("issue", issue);
+                    session.setAttribute("statuses", new StatusDao(conn).readAll());
+                    session.setAttribute("resolutions", new ResolutionDao(conn).readAll());
+                    session.setAttribute("types", new TypeDao(conn).readAll());
+                    session.setAttribute("priorities", new PriorityDao(conn).readAll());
+                    session.setAttribute("projects", new ProjectDao(conn).readAll());
+                    session.setAttribute("builds", new BuildDao(conn).readByProject(issue.getProject()));
+                    session.setAttribute("users", new UserDao(conn).readAll());
+                    request.getRequestDispatcher("content/auth/issue/edit-issue.jsp").forward(request, response);
+                } catch (SQLException e) {
+                    throw new Exception(e);
+                }
+            } else {
+                if (action == null) {
+                    action = "list";
+                }
+                switch (action) {
+                    case "new": {
+                        request.getRequestDispatcher("/content/auth/issue/add-issue.jsp").forward(request, response);
+                        break;
+                    }
+                    case "goBack":
+                    case "list": {
+                        try (Connection conn = DBConnection.getConnection()) {
+                            session.setAttribute("issues", new IssueDao(conn).readAll());
+                            session.setAttribute("statuses", new StatusDao(conn).readAll());
+                            session.setAttribute("resolutions", new ResolutionDao(conn).readAll());
+                            session.setAttribute("types", new TypeDao(conn).readAll());
+                            session.setAttribute("priorities", new PriorityDao(conn).readAll());
+                            session.setAttribute("projects", new ProjectDao(conn).readAll());
+//                            session.setAttribute("builds", new BuildDao(conn).readByProject(issue.getProject()));
+                            session.setAttribute("users", new UserDao(conn).readAll());
+                            request.getRequestDispatcher("index.jsp").forward(request, response);
+//                            request.getRequestDispatcher("/content/auth/issue/issue.jsp").forward(request, response);
+                        } catch (SQLException e) {
+                            throw new Exception(e);
+                        }
+                    }
+                }
             }
-            request.getRequestDispatcher("content/auth/issue/edit-issue.jsp").forward(request, response);
-        } else {
-            try (Connection conn = DBConnection.getConnection()) {
-                request.setAttribute("users", new IssueDao(conn).readAll());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            request.getRequestDispatcher("admin/users/user.jsp").forward(request, response);
+        } catch (Exception e) {
+            Logger logger = Logger.getLogger(e.getClass().getName());
+            logger.severe(e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
-    private void addIssue(Connection conn, String[] sqlParams) throws SQLException {
+    private Issue getIssue(HttpServletRequest request) throws SQLException {
         Issue issue = new Issue();
-        issue.setSummary(sqlParams[0]);
-        issue.setDescription(sqlParams[1]);
-        issue.setStatus(Integer.parseInt(sqlParams[2]));
-        issue.setType(Integer.parseInt(sqlParams[3]));
-        issue.setPriority(Integer.parseInt(sqlParams[4]));
-        issue.setProject(Integer.parseInt(sqlParams[5]));
-        issue.setAssignee(Integer.parseInt(sqlParams[6]));
-        new IssueDao(conn).create(issue);
-    }
-
-    private void editIssue(Connection conn, String[] sqlParams) throws SQLException {
-        Issue issue = new Issue();
-        issue.setSummary(sqlParams[0]);
-        issue.setDescription(sqlParams[1]);
-        issue.setStatus(Integer.parseInt(sqlParams[2]));
-        issue.setResolution(Integer.parseInt(sqlParams[3]));
-        issue.setType(Integer.parseInt(sqlParams[4]));
-        issue.setPriority(Integer.parseInt(sqlParams[5]));
-        issue.setProject(Integer.parseInt(sqlParams[6]));
-        issue.setAssignee(Integer.parseInt(sqlParams[7]));
-        new IssueDao(conn).update(issue);
+        final String issueId = request.getParameter("issueId");
+        final String status = request.getParameter("status");
+        final String resolution = request.getParameter("resolution");
+        final String type = request.getParameter("type");
+        final String priority = request.getParameter("priority");
+        final String project = request.getParameter("project");
+        final String assignee = request.getParameter("assignee");
+        if (issueId != null) {
+            issue.setIssueId(Integer.parseInt(issueId));
+        }
+        issue.setSummary(request.getParameter("summary"));
+        issue.setDescription(request.getParameter("description"));
+        if (status != null) {
+            issue.setStatus(Integer.parseInt(status));
+        }
+        if (resolution != null) {
+            issue.setResolution(Integer.parseInt(resolution));
+        }
+        if (type != null) {
+            issue.setType(Integer.parseInt(type));
+        }
+        if (priority != null) {
+            issue.setPriority(Integer.parseInt(priority));
+        }
+        if (project != null) {
+            issue.setProject(Integer.parseInt(project));
+        }
+        if (assignee != null) {
+            issue.setAssignee(Integer.parseInt(assignee));
+        }
+        return issue;
     }
 }

@@ -9,6 +9,7 @@
 <%@include file="/navigation.jspf"%>
 <form method="post" action="type">
     <input type="text" name="typeName"/>
+    <input type="hidden" name="action" value="add"/>
     <input type="submit" value="Add type"/>
 </form>
 </body>

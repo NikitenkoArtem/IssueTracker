@@ -10,35 +10,35 @@
         <res-auth>Container</res-auth>
     </resource-ref>
 
-    <!--<security-constraint>-->
-        <!--<web-resource-collection>-->
-            <!--<web-resource-name>admin</web-resource-name>-->
-            <!--<url-pattern>/admin/*</url-pattern>-->
-        <!--</web-resource-collection>-->
-        <!--<auth-constraint>-->
-            <!--<role-name>ADMINISTRATOR</role-name>-->
-        <!--</auth-constraint>-->
-    <!--</security-constraint>-->
+    <!--<security-constraint>
+        <web-resource-collection>
+            <web-resource-name>admin</web-resource-name>
+            <url-pattern>/content/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMINISTRATOR</role-name>
+        </auth-constraint>
+    </security-constraint>
 
-    <!--<security-constraint>-->
-        <!--<web-resource-collection>-->
-            <!--<web-resource-name>user</web-resource-name>-->
-            <!--<url-pattern>/auth/*</url-pattern>-->
-        <!--</web-resource-collection>-->
-        <!--<auth-constraint>-->
-            <!--<role-name>USER</role-name>-->
-        <!--</auth-constraint>-->
-    <!--</security-constraint>-->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>user</web-resource-name>
+            <url-pattern>/content/auth/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>USER</role-name>
+        </auth-constraint>
+    </security-constraint>
 
-    <!--<security-constraint>-->
-        <!--<web-resource-collection>-->
-            <!--<web-resource-name>guest</web-resource-name>-->
-            <!--<url-pattern>/share/*</url-pattern>-->
-        <!--</web-resource-collection>-->
-        <!--<auth-constraint>-->
-            <!--<role-name>GUEST</role-name>-->
-        <!--</auth-constraint>-->
-    <!--</security-constraint>-->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>guest</web-resource-name>
+            <url-pattern>/index.jsp</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>GUEST</role-name>
+        </auth-constraint>
+    </security-constraint>-->
 
     <login-config>
         <auth-method>FORM</auth-method>
@@ -48,15 +48,15 @@
         </form-login-config>
     </login-config>
 
-    <!--<security-role>-->
-        <!--<role-name>GUEST</role-name>-->
-    <!--</security-role>-->
-    <!--<security-role>-->
-        <!--<role-name>USER</role-name>-->
-    <!--</security-role>-->
-    <!--<security-role>-->
-        <!--<role-name>ADMINISTRATOR</role-name>-->
-    <!--</security-role>-->
+    <security-role>
+        <role-name>GUEST</role-name>
+    </security-role>
+    <security-role>
+        <role-name>USER</role-name>
+    </security-role>
+    <security-role>
+        <role-name>ADMINISTRATOR</role-name>
+    </security-role>
 
     <servlet>
         <servlet-name>Issue</servlet-name>

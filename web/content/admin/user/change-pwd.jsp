@@ -28,7 +28,7 @@
             <td><input type="password" name="confirm"/></td>
         </tr>
         <tr>
-            <td colspan="2"><input type="submit" value="Apply"/></td>
+            <td><input type="submit" value="Apply"/></td>
         </tr>
         </tbody>
     </table>

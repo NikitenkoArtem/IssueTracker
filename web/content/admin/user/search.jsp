@@ -2,8 +2,10 @@
 <html>
 <head>
     <title>Issue Tracker</title>
+    <link rel="stylesheet" type="text/css" href="/style.css"/>
 </head>
 <body>
+<%@include file="/navigation.jspf" %>
     <span>Enter user email or identifier</span>
     <form method="post" action="user">
         <input type="search" name="email" placeholder="Search" required/>

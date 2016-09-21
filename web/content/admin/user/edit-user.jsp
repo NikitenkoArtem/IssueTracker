@@ -23,27 +23,27 @@
             <td><input type="text" name="lastName" value="${user.lastName}"/></td>
             <td>
                 <input type="email" name="email" value="${user.email}"/>
-                <input type="hidden" name="oldEmail" value="${user.email}"/>
             </td>
             <td>
                 <select>
-                    <c:set var="roleId" value="${users.role}"/>
-                    <c:forEach var="row" items="${roles}">
+                    <c:set var="roleId" value="${user.role}"/>
+                    <c:forEach var="resolution" items="${roles}">
                         <c:choose>
-                            <c:when test="${row.roleId == roleId}">
-                                <option name="role" selected>${row.roleName}</option>
+                            <c:when test="${resolution.roleId == roleId}">
+                                <option name="role" selected>${resolution.roleName}</option>
                             </c:when>
                             <c:otherwise>
-                                <option name="role">${row.roleName}</option>
+                                <option name="role">${resolution.roleName}</option>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>
                 </select>
             </td>
-            <td colspan="2"><input type="submit" value="Apply"/></td>
+            <td><input type="submit" value="Apply"/></td>
         </tr>
         </tbody>
     </table>
+    <input type="hidden" name="userId" value="${user.userId}"/>
     <input type="hidden" name="action" value="edit"/>
 </form>
 </body>

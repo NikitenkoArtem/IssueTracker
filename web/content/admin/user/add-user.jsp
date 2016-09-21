@@ -26,14 +26,14 @@
             <td><input type="email" name="email"/></td>
             <td>
                 <select>
-                    <c:forEach var="row" items="${roles}">
-                        <option name="role">${row.roleName}</option>
+                    <c:forEach var="resolution" items="${roles}">
+                        <option name="role">${resolution.roleName}</option>
                     </c:forEach>
                 </select>
             </td>
             <td><input type="password" name="password"/></td>
             <td><input type="password" name="confirm"/></td>
-            <td colspan="2"><input type="submit" value="Add user"/></td>
+            <td><input type="submit" value="Add user"/></td>
         </tr>
         </tbody>
     </table>

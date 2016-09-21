@@ -29,24 +29,26 @@ li a{
 li a:hover {
     background-color: red;
 }
-.login-content, .issue-content, .project-content, .status-content, .resolution-content, .priority-content, .type-content, .usr-content{
+.issue-content, .project-content, .status-content, .resolution-content, .priority-content,
+.type-content, .login-content, .user-content{
     display: none;
     position: absolute;
     background-color: #f9f9f9;
     z-index: 1;
 }
-.login-content a, .issue-content, .project-content a, .status-content a, .resolution-content a, .priority-content a, .type-content a, .usr-content a{
+.issue-content a, .project-content a, .status-content a, .resolution-content a, .priority-content a, .type-content a,
+.user-content a, .login-content a, .user-content a{
     display: block;
     padding: 12px 16px;
     text-decoration: none;
     color: black;
     text-align: left;
 }
-.login-content a:hover, .issue-content a:hover, .project-content a:hover, .status-content a:hover, .resolution-content a:hover, .priority-content a:hover,
-.type-content a:hover, .usr-content a:hover{
+.issue-content a:hover, .project-content a:hover, .status-content a:hover, .resolution-content a:hover, .priority-content a:hover,
+.type-content a:hover, .login-content a:hover, .user-content a:hover{
     background: #f1f1f1;
 }
-.login:hover .login-content, .issue:hover .issue-content, .project:hover .project-content, .status:hover .status-content, .resolution:hover .resolution-content,
-.priority:hover .priority-content, .type:hover .type-content, .usr:hover .usr-content {
+.issue:hover .issue-content, .project:hover .project-content, .status:hover .status-content, .resolution:hover .resolution-content,
+.priority:hover .priority-content, .type:hover .type-content, .user:hover .user-content, .login:hover .login-content{
     display: block;
 }

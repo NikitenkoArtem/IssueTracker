@@ -3,9 +3,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Project</title>
+    <title>Issue Tracker</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
 <body>
+<%@include file="/navigation.jspf" %>
 <table>
     <thead>
     <tr>
@@ -16,18 +18,22 @@
     </thead>
     <tbody>
     <c:choose>
-        <c:when test="${project == null}">
+        <c:when test="${projects == null}">
             <h1>No projects found</h1>
         </c:when>
         <c:otherwise>
-            <c:forEach var="row" items="${projects}">
+            <c:forEach var="project" items="${projects}">
                 <tr>
-                    <td><a href="/project?projectId=${row.projectId}">${row.projectName}</a></td>
-                    <td>${row.description}</td>
+                    <td><a href="/project?projectId=${project.projectId}">${project.projectName}</a></td>
+                    <td>${project.description}</td>
                     <td>
                         <c:forEach var="mgr" items="${managers}">
-                            <c:if test="${row.manager == mgr.managerId}">
-                                ${mgr.email}
+                            <c:if test="${project.manager == mgr.managerId}">
+                                <c:forEach var="user" items="${users}">
+                                    <c:if test="${user.userId == mgr.user}">
+                                        ${user.firstName}
+                                    </c:if>
+                                </c:forEach>
                             </c:if>
                         </c:forEach>
                     </td>
@@ -37,8 +43,5 @@
     </c:choose>
     </tbody>
 </table>
-<form method="post" action="project">
-    <input type="submit" name="newProject" value="New project"/>
-</form>
 </body>
 </html>

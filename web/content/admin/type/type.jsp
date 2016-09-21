@@ -15,9 +15,9 @@
     </tr>
     </thead>
     <tbody>
-    <c:forEach var="row" items="types">
+    <c:forEach var="resolution" items="types">
         <tr>
-            <td><a href="/type?typeId=${row.typeId}">${row.typeName}</a></td>
+            <td><a href="/type?typeId=${resolution.typeId}">${resolution.typeName}</a></td>
         </tr>
     </c:forEach>
     </tbody>
