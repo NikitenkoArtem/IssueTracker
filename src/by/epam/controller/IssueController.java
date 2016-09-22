@@ -1,15 +1,13 @@
 package by.epam.controller;
 
+import by.epam.Auth;
 import by.epam.DBConnection;
 import by.epam.dao.*;
 import by.epam.entity.Issue;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.*;
 import java.util.logging.Logger;
@@ -22,27 +20,45 @@ public class IssueController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final HttpSession session = request.getSession();
-        final String action = request.getParameter("action");
+        Cookie userRole = new Auth(request).getCookieByName("userRole");
+        final String search = request.getParameter("search");
         try {
-            try (Connection conn = DBConnection.getConnection()) {
-                switch (action) {
-                    case "add": {
-                        Issue issue = getIssue(request);
-                        new IssueDao(conn).create(issue);
-                        session.setAttribute("servlet", "issue");
-                        response.sendRedirect("/200.jsp");
-                        break;
-                    }
-                    case "edit": {
-                        Issue issue = getIssue(request);
-                        new IssueDao(conn).update(issue);
-                        session.setAttribute("servlet", "issue");
-                        response.sendRedirect("/200.jsp");
-                        break;
+            if (search != null) {
+                try (Connection conn = DBConnection.getConnection()) {
+                    final Issue issue = new IssueDao(conn).read(Integer.parseInt(search));
+                    session.setAttribute("issues", issue);
+                    getList(session, conn);
+                    request.getRequestDispatcher("index.jsp").forward(request, response);
+                } catch (SQLException e) {
+                    throw new Exception(e);
+                }
+            } else if (userRole != null) {
+                final String role = userRole.getValue();
+                if (!role.equals("USER") && !role.equals("ADMINISTRATOR")) {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                } else {
+                    final String action = request.getParameter("action");
+                    try (Connection conn = DBConnection.getConnection()) {
+                        switch (action) {
+                            case "add": {
+                                Issue issue = getIssue(request);
+                                new IssueDao(conn).create(issue);
+                                session.setAttribute("servlet", "issue");
+                                response.sendRedirect("/200.jsp");
+                                break;
+                            }
+                            case "edit": {
+                                Issue issue = getIssue(request);
+                                new IssueDao(conn).update(issue);
+                                session.setAttribute("servlet", "issue");
+                                response.sendRedirect("/200.jsp");
+                                break;
+                            }
+                        }
+                    } catch (SQLException e) {
+                        throw new Exception(e);
                     }
                 }
-            } catch (SQLException e) {
-                throw new Exception(e);
             }
         } catch (Exception e) {
             Logger logger = Logger.getLogger(e.getClass().getName());
@@ -53,50 +69,71 @@ public class IssueController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final HttpSession session = request.getSession();
-        String action = request.getParameter("action");
-        final String issueId = request.getParameter("issueId");
         try {
-            if (issueId != null) {
+            final HttpSession session = request.getSession();
+            Cookie userRole = new Auth(request).getCookieByName("userRole");
+            if (userRole == null) {
                 try (Connection conn = DBConnection.getConnection()) {
-                    final Issue issue = new IssueDao(conn).read(Integer.parseInt(issueId));
-                    session.setAttribute("issue", issue);
-                    session.setAttribute("statuses", new StatusDao(conn).readAll());
-                    session.setAttribute("resolutions", new ResolutionDao(conn).readAll());
-                    session.setAttribute("types", new TypeDao(conn).readAll());
-                    session.setAttribute("priorities", new PriorityDao(conn).readAll());
-                    session.setAttribute("projects", new ProjectDao(conn).readAll());
-                    session.setAttribute("builds", new BuildDao(conn).readByProject(issue.getProject()));
-                    session.setAttribute("users", new UserDao(conn).readAll());
-                    request.getRequestDispatcher("content/auth/issue/edit-issue.jsp").forward(request, response);
-                } catch (SQLException e) {
-                    throw new Exception(e);
+                    session.setAttribute("issues", new IssueDao(conn).readAll());
+                    getList(session, conn);
                 }
+                request.setAttribute("isComeBack", true);
+                request.getRequestDispatcher("index.jsp").forward(request, response);
             } else {
-                if (action == null) {
-                    action = "list";
-                }
-                switch (action) {
-                    case "new": {
-                        request.getRequestDispatcher("/content/auth/issue/add-issue.jsp").forward(request, response);
-                        break;
-                    }
-                    case "goBack":
-                    case "list": {
+                String action = request.getParameter("action");
+                final String issueId = request.getParameter("issueId");
+                if (issueId != null) {
+                    final String role = userRole.getValue();
+                    if (!role.equals("USER") && !role.equals("ADMINISTRATOR")) {
+                        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                    } else {
                         try (Connection conn = DBConnection.getConnection()) {
-                            session.setAttribute("issues", new IssueDao(conn).readAll());
+                            final Issue issue = new IssueDao(conn).read(Integer.parseInt(issueId));
+                            session.setAttribute("issue", issue);
                             session.setAttribute("statuses", new StatusDao(conn).readAll());
                             session.setAttribute("resolutions", new ResolutionDao(conn).readAll());
                             session.setAttribute("types", new TypeDao(conn).readAll());
                             session.setAttribute("priorities", new PriorityDao(conn).readAll());
                             session.setAttribute("projects", new ProjectDao(conn).readAll());
-//                            session.setAttribute("builds", new BuildDao(conn).readByProject(issue.getProject()));
                             session.setAttribute("users", new UserDao(conn).readAll());
-                            request.getRequestDispatcher("index.jsp").forward(request, response);
-//                            request.getRequestDispatcher("/content/auth/issue/issue.jsp").forward(request, response);
+                            request.getRequestDispatcher("/content/auth/issue/edit-issue.jsp").forward(request, response);
                         } catch (SQLException e) {
                             throw new Exception(e);
                         }
+                    }
+                } else {
+                    try (Connection conn = DBConnection.getConnection()) {
+                        if (action == null) {
+                            action = "list";
+                        }
+                        switch (action) {
+                            case "new": {
+                                final String role = userRole.getValue();
+                                if (!role.equals("USER") && !role.equals("ADMINISTRATOR")) {
+                                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                                    break;
+                                } else {
+                                    session.setAttribute("statuses", new StatusDao(conn).readAll());
+                                    session.setAttribute("resolutions", new ResolutionDao(conn).readAll());
+                                    session.setAttribute("types", new TypeDao(conn).readAll());
+                                    session.setAttribute("priorities", new PriorityDao(conn).readAll());
+                                    session.setAttribute("projects", new ProjectDao(conn).readAll());
+                                    session.setAttribute("builds", new BuildDao(conn).readAll());
+                                    session.setAttribute("users", new UserDao(conn).readAll());
+                                    request.getRequestDispatcher("/content/auth/issue/add-issue.jsp").forward(request, response);
+                                    break;
+                                }
+                            }
+                            case "goBack":
+                            case "list": {
+                                session.setAttribute("issues", new IssueDao(conn).readAll());
+                                getList(session, conn);
+                                request.getRequestDispatcher("/content/auth/issue/issue.jsp").forward(request, response);
+                                break;
+                            }
+                        }
+                    } catch (SQLException e) {
+                        throw new Exception(e);
                     }
                 }
             }
@@ -105,6 +142,16 @@ public class IssueController extends HttpServlet {
             logger.severe(e.getMessage());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private void getList(HttpSession session, Connection conn) throws SQLException {
+        session.setAttribute("statuses", new StatusDao(conn).readAll());
+        session.setAttribute("resolutions", new ResolutionDao(conn).readAll());
+        session.setAttribute("types", new TypeDao(conn).readAll());
+        session.setAttribute("priorities", new PriorityDao(conn).readAll());
+        session.setAttribute("projects", new ProjectDao(conn).readAll());
+        session.setAttribute("builds", new BuildDao(conn).readAll());
+        session.setAttribute("users", new UserDao(conn).readAll());
     }
 
     private Issue getIssue(HttpServletRequest request) throws SQLException {

@@ -25,7 +25,7 @@ public class IssueDao implements GenericDao<Issue, Integer> {
     @Override
     public Integer create(Issue entity) throws SQLException {
         final String sql = "INSERT INTO issues(create_date, created_by, modify_date, modified_by, summary, description, " +
-                "status, resolution, type, priority, project, assignee, comment, file) " +
+                "status, resolution, type, priority, project, build, assignee, comment, file) " +
                 "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         HashMap<Integer, Object> sqlParams = new HashMap<>();
         sqlParams.put(1, entity.getCreateDate());
@@ -39,9 +39,10 @@ public class IssueDao implements GenericDao<Issue, Integer> {
         sqlParams.put(9, entity.getType());
         sqlParams.put(10, entity.getPriority());
         sqlParams.put(11, entity.getProject());
-        sqlParams.put(12, entity.getAssignee());
-        sqlParams.put(13, entity.getComment());
-        sqlParams.put(14, entity.getFile());
+        sqlParams.put(12, entity.getBuild());
+        sqlParams.put(13, entity.getAssignee());
+        sqlParams.put(14, entity.getComment());
+        sqlParams.put(15, entity.getFile());
         new DBConnection().executeUpdate(connection, sql, sqlParams);
         return null;
     }
@@ -79,7 +80,7 @@ public class IssueDao implements GenericDao<Issue, Integer> {
     @Override
     public void update(Issue entity) throws SQLException {
         final String updateIssue = "UPDATE issues SET summary = ?, description = ?, status = ?, resolution = ?, " +
-                "type = ?, priority = ?, project = ?, assignee = ?";
+                "type = ?, priority = ?, project = ?, build = ?, assignee = ?";
         HashMap<Integer, Object> sqlParams = new HashMap<>();
         sqlParams.put(1, entity.getSummary());
         sqlParams.put(2, entity.getDescription());
@@ -87,6 +88,7 @@ public class IssueDao implements GenericDao<Issue, Integer> {
         sqlParams.put(4, entity.getResolution());
         sqlParams.put(5, entity.getType());
         sqlParams.put(6, entity.getPriority());
+        sqlParams.put(6, entity.getBuild());
         sqlParams.put(7, entity.getProject());
         sqlParams.put(8, entity.getAssignee());
         new DBConnection().executeUpdate(connection, updateIssue, sqlParams);
@@ -110,6 +112,7 @@ public class IssueDao implements GenericDao<Issue, Integer> {
         issue.setType(rs.getInt("type"));
         issue.setPriority(rs.getInt("priority"));
         issue.setProject(rs.getInt("project"));
+        issue.setBuild(rs.getInt("build"));
         issue.setAssignee(rs.getInt("assignee"));
         issue.setComment(rs.getInt("comment"));
         issue.setFile(rs.getInt("file"));

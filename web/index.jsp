@@ -8,10 +8,9 @@
 </head>
 <body>
 <%@ include file="/navigation.jspf" %>
-<section>
-    <input type="submit" value="Submit issue"/>
-    <input type="search" value="Search"/>
-</section>
+<form method="post" action="issue">
+    <input type="search" name="search" placeholder="Search"/>
+</form>
 <table border="1px">
     <thead>
     <tr>
@@ -24,7 +23,6 @@
     </tr>
     </thead>
     <tbody>
-    <%--<c:set var="priority" value="${priorities}"/>--%>
     <c:forEach var="issue" items="${issues}">
         <tr>
             <td>${issue.issueId}</td>

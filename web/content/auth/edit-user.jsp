@@ -3,32 +3,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="/style.css">
+    <title>Issue Tracker</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
 </head>
 <body>
 <%@include file="/navigation.jspf" %>
-<form method="post" action="type">
+<form method="post" action="user">
     <table>
         <thead>
         <tr>
             <th>First name</th>
-            <th>Last name</th>
-            <th>Email address</th>
-            <th>Role</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
             <td><input type="text" name="firstName" value="${user.firstName}"/></td>
+        </tr>
+        <tr>
+            <th>Last name</th>
             <td><input type="text" name="lastName" value="${user.lastName}"/></td>
+        </tr>
+        <tr>
+            <th>Email address</th>
             <td><input type="email" name="email" value="${user.email}"/></td>
+        </tr>
+        <tr>
+            <th>Role</th>
             <td>
                 <select>
-                    <c:set var="userRole" value="${user.role}"/>
+                    <c:set var="roleId" value="${user.role}"/>
                     <c:forEach var="resolution" items="${roles}">
                         <c:choose>
-                            <c:when test="${resolution.roleId == userRole}">
+                            <c:when test="${resolution.roleId == roleId}">
                                 <option name="role" selected>${resolution.roleName}</option>
                             </c:when>
                             <c:otherwise>
@@ -38,11 +40,14 @@
                     </c:forEach>
                 </select>
             </td>
+        </tr>
+        <tr>
+            <td></td>
             <td><input type="submit" value="Apply"/></td>
         </tr>
-        </tbody>
     </table>
     <input type="hidden" name="userId" value="${user.userId}"/>
+    <input type="hidden" name="action" value="edit"/>
 </form>
 </body>
 </html>

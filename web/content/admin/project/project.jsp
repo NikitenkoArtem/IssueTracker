@@ -8,7 +8,7 @@
 </head>
 <body>
 <%@include file="/navigation.jspf" %>
-<table>
+<table border="1px">
     <thead>
     <tr>
         <th>Project name</th>

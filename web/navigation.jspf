@@ -1,9 +1,10 @@
 <nav>
     <c:choose>
-        <c:when test="${username != null}">
-            <c:set var="admin" value="${roles.roleName}"/>
-            <c:if test="${role == admin}">
+        <c:when test="${cookie['userName'].value != null && cookie['userRole'].value == 'ADMINISTRATOR'}">
                 <ul class="adminMenu">
+                    <li class="home">
+                        <a href="/">Home</a>
+                    </li>
                     <li class="issue">
                         <a href="#">Issue</a>
                         <div class="issue-content">
@@ -53,18 +54,38 @@
                             <a href="/user?action=new">Add user</a>
                         </div>
                     </li>
-                    <li class="login">
-                        <a href="#">${username}</a>
-                        <div class="login-content">
-                            <a href="/user?action=edit">Profile</a>
+                    <li class="logout">
+                        <a href="#">${cookie['userName'].value}</a>
+                        <div class="logout-content">
+                            <a href="/user?userId=${cookie['userId'].value}">Profile</a>
                             <a href="/logout">Log out</a>
                         </div>
                     </li>
                 </ul>
-            </c:if>
+        </c:when>
+        <c:when test="${cookie['userName'].value != null && cookie['userRole'].value == 'USER'}">
+            <ul class="userMenu">
+                <li class="home">
+                    <a href="/">Home</a>
+                </li>
+                <li class="issue">
+                    <a href="#">Issue</a>
+                    <div class="issue-content">
+                        <a href="/issue?action=list">Issue list</a>
+                        <a href="/issue?action=new">Submit issue</a>
+                    </div>
+                </li>
+                <li class="logout">
+                    <a href="#">${cookie['userName'].value}</a>
+                    <div class="logout-content">
+                        <a href="/user?action=edit">Profile</a>
+                        <a href="/logout">Log out</a>
+                    </div>
+                </li>
+            </ul>
         </c:when>
         <c:otherwise>
-            <ul class="userMenu">
+            <ul class="loginMenu">
                 <li class="login">
                     <a href="/login">Log in</a>
                 </li>

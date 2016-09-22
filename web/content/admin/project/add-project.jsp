@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Issue Tracker</title>
@@ -9,33 +10,21 @@
 <%@include file="/navigation.jspf" %>
 <form method="post" action="project">
     <table>
-        <thead>
         <tr>
             <th>Project name</th>
-        </tr>
-        <tr>
-            <th>Description</th>
-        </tr>
-        <tr>
-            <th>Build</th>
-        </tr>
-        <tr>
-            <th>Manager</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
             <td><input type="text" name="projectName" required/></td>
         </tr>
         <tr>
+            <th>Description</th>
             <td><input type="text" name="description" required/></td>
         </tr>
         <tr>
+            <th>Build</th>
             <td><input type="text" name="build" required/></td>
-            </tr>
+        </tr>
         <tr>
-            <td><input type="text" name="manager" required/>
-                </td>
+            <th>Manager</th>
+            <td>
                 <select>
                     <c:forEach var="mgr" items="${managers}">
                         <c:forEach var="resolution" items="${users}">
@@ -46,9 +35,10 @@
                     </c:forEach>
                 </select>
             </td>
-            <td><input type="submit" name="add" value="Add project"/></td>
         </tr>
-        </tbody>
+        <tr>
+            <td colspan="2"><input type="submit" name="add" value="Add project"/></td>
+        </tr>
     </table>
     <input type="hidden" name="action" value="add"/>
 </form>

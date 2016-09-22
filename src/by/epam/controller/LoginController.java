@@ -2,7 +2,9 @@ package by.epam.controller;
 
 import by.epam.Auth;
 import by.epam.DBConnection;
+import by.epam.dao.RoleDao;
 import by.epam.dao.UserDao;
+import by.epam.entity.Role;
 import by.epam.entity.User;
 
 import javax.servlet.ServletException;
@@ -37,12 +39,22 @@ public class LoginController extends HttpServlet {
                                 md5.update(username.getBytes());
                                 sessionId = md5.digest().toString();
                             }
-                            Cookie cookie = new Cookie("SESSIONID", sessionId);
-                            cookie.setPath("/");
-                            cookie.setMaxAge(1800);
-                            response.addCookie(cookie);
+                            Cookie sessionid = new Cookie("SESSIONID", sessionId);
+                            Cookie userName = new Cookie("userName", user.getFirstName());
+                            Role role = new RoleDao(conn).read(user.getRole());
+                            Cookie userRole = new Cookie("userRole", role.getRoleName());
+                            final int id = user.getUserId();
+                            Cookie userId = new Cookie("userId", Integer.toString(id));
+                            sessionid.setPath("/");
+                            sessionid.setMaxAge(1800);
+                            userId.setMaxAge(1800);
+                            userName.setMaxAge(1800);
+                            userRole.setMaxAge(1800);
+                            response.addCookie(sessionid);
+                            response.addCookie(userId);
+                            response.addCookie(userName);
+                            response.addCookie(userRole);
                             HttpSession session = request.getSession(true);
-                            session.setAttribute("username", user.getFirstName());
                             response.sendRedirect("/");
                         } else {
                             loginFailed(request, response);

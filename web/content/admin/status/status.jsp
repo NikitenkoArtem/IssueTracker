@@ -8,16 +8,16 @@
 </head>
 <body>
 <%@include file="/navigation.jspf" %>
-<table>
+<table border="1px">
     <thead>
     <tr>
         <th>Status name</th>
     </tr>
     </thead>
     <tbody>
-    <c:forEach var="resolution" items="statuses">
+    <c:forEach var="status" items="${statuses}">
         <tr>
-            <td><a href="/status?statusId=${resolution.statusId}">${resolution.statusName}</a></td>
+            <td><a href="/status?statusId=${status.statusId}">${status.statusName}</a></td>
         </tr>
     </c:forEach>
     </tbody>

@@ -4,26 +4,26 @@
 <html>
 <head>
     <title>Issue Tracker</title>
-    <link rel="stylesheet" type="text/css" href="../../style.css">
+    <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
 <body>
+<%@include file="/navigation.jspf" %>
 <form method="post" action="user">
     <table>
-        <thead>
         <tr>
             <th>First name</th>
-            <th>Last name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Password</th>
-            <th>Password confirmation</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
             <td><input type="text" name="firstName"/></td>
+        </tr>
+        <tr>
+            <th>Last name</th>
             <td><input type="text" name="lastName"/></td>
+        </tr>
+        <tr>
+            <th>Email</th>
             <td><input type="email" name="email"/></td>
+        </tr>
+        <tr>
+            <th>Role</th>
             <td>
                 <select>
                     <c:forEach var="resolution" items="${roles}">
@@ -31,11 +31,19 @@
                     </c:forEach>
                 </select>
             </td>
+        </tr>
+        <tr>
+            <th>Password</th>
             <td><input type="password" name="password"/></td>
+        </tr>
+        <tr>
+            <th>Password confirmation</th>
             <td><input type="password" name="confirm"/></td>
+        </tr>
+        <tr>
+            <td></td>
             <td><input type="submit" value="Add user"/></td>
         </tr>
-        </tbody>
     </table>
     <input type="hidden" name="action" value="add"/>
 </form>

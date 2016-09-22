@@ -21,9 +21,24 @@ public class LogoutController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             Cookie login = new Auth(request).getCookieByName("SESSIONID");
+            Cookie userName = new Auth(request).getCookieByName("userName");
+            Cookie userRole = new Auth(request).getCookieByName("userRole");
+            Cookie userId = new Auth(request).getCookieByName("userId");
             if (login != null) {
                 login.setMaxAge(0);
                 response.addCookie(login);
+            }
+            if (userName != null) {
+                userName.setMaxAge(0);
+                response.addCookie(userName);
+            }
+            if (userRole != null) {
+                userRole.setMaxAge(0);
+                response.addCookie(userRole);
+            }
+            if (userId != null) {
+                userId.setMaxAge(0);
+                response.addCookie(userId);
             }
             request.getSession().invalidate();
             response.sendRedirect("/");

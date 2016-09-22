@@ -10,23 +10,16 @@
 <%@include file="/navigation.jspf" %>
 <form method="post" action="issue">
     <table>
-        <thead>
         <tr>
             <th>Summary</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Resolution</th>
-            <th>Type</th>
-            <th>Priority</th>
-            <th>Project</th>
-            <th>Build</th>
-            <th>Assignee</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
             <td><input type="text" name="summary" required/></td>
+        </tr>
+        <tr>
+            <th>Description</th>
             <td><textarea cols="15" name="description" required></textarea></td>
+        </tr>
+        <tr>
+            <th>Status</th>
             <td>
                 <select>
                     <c:forEach var="status" items="${statuses}">
@@ -34,6 +27,9 @@
                     </c:forEach>
                 </select>
             </td>
+        </tr>
+        <tr>
+            <th>Resolution</th>
             <td>
                 <select>
                     <c:forEach var="resolution" items="${resolutions}">
@@ -41,6 +37,9 @@
                     </c:forEach>
                 </select>
             </td>
+        </tr>
+        <tr>
+            <th>Type</th>
             <td>
                 <select>
                     <c:forEach var="type" items="${types}">
@@ -48,6 +47,9 @@
                     </c:forEach>
                 </select>
             </td>
+        </tr>
+        <tr>
+            <th>Priority</th>
             <td>
                 <select>
                     <c:forEach var="priority" items="${priorities}">
@@ -55,6 +57,9 @@
                     </c:forEach>
                 </select>
             </td>
+        </tr>
+        <tr>
+            <th>Project</th>
             <td>
                 <select>
                     <c:forEach var="project" items="${projects}">
@@ -62,6 +67,9 @@
                     </c:forEach>
                 </select>
             </td>
+        </tr>
+        <tr>
+            <th>Build</th>
             <td>
                 <select>
                     <c:forEach var="build" items="${builds}">
@@ -69,6 +77,9 @@
                     </c:forEach>
                 </select>
             </td>
+        </tr>
+        <tr>
+            <th>Assignee</th>
             <td>
                 <select>
                     <c:forEach var="resolution" items="${users}">
@@ -76,9 +87,10 @@
                     </c:forEach>
                 </select>
             </td>
+        </tr>
+        <tr>
             <td><input type="submit" value="Add issue"/></td>
         </tr>
-        </tbody>
     </table>
 </form>
 </body>

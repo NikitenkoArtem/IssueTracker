@@ -8,9 +8,10 @@
 </head>
 <body>
 <%@include file="/navigation.jspf" %>
-<table>
+<table border="1px">
     <thead>
     <tr>
+        <th>UserID</th>
         <th>First name</th>
         <th>Last name</th>
         <th>Email</th>
@@ -18,15 +19,17 @@
     </tr>
     </thead>
     <tbody>
-    <c:set var="roleId" value="${roles.roleId}"/>
-    <c:forEach var="resolution" items="${users}">
+    <c:forEach var="user" items="${users}">
         <tr>
-            <td name="email"><a href="/user?email=${resolution.email}">${resolution.email}</a></td>
-            <td name="firstName">${resolution.firstName}</td>
-            <td name="lastName">${resolution.lastName}</td>
-            <c:if test="${resolution.role == roleId}">
-                <td>${resolution.roleName}</td>
+            <td name="userId"><a href="/user?userId=${user.userId}">${user.userId}</a></td>
+            <td name="firstName">${user.firstName}</td>
+            <td name="lastName">${user.lastName}</td>
+            <td name="email">${user.email}</td>
+            <c:forEach var="role" items="${roles}">
+            <c:if test="${user.role == role.roleId}">
+                <td>${role.roleName}</td>
             </c:if>
+            </c:forEach>
         </tr>
     </c:forEach>
     </tbody>

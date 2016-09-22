@@ -19,6 +19,7 @@ public class Issue implements Serializable {
     private int type;
     private int priority;
     private int project;
+    private int build;
     private int assignee;
     private int comment;
     private int file;
@@ -117,6 +118,14 @@ public class Issue implements Serializable {
 
     public void setProject(int project) {
         this.project = project;
+    }
+
+    public int getBuild() {
+        return build;
+    }
+
+    public void setBuild(int build) {
+        this.build = build;
     }
 
     public int getAssignee() {

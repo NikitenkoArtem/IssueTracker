@@ -49,17 +49,7 @@ public class BuildDao implements GenericDao<Build, Integer> {
     @Override
     public List<Build> readAll() throws SQLException {
         final String sql = "SELECT * FROM builds";
-        ArrayList<Build> list = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Build build = new Build();
-                    selectRow(rs, build);
-                    list.add(build);
-                }
-            }
-        }
-        return list;
+        return getList(sql);
     }
 
     @Override
@@ -79,12 +69,17 @@ public class BuildDao implements GenericDao<Build, Integer> {
 
     public List<Build> readByProject(Integer id) throws SQLException {
         final String sql = "SELECT * FROM builds WHERE project = " + id;
+        return getList(sql);
+    }
+
+    private List<Build> getList(String sql) throws SQLException {
         ArrayList<Build> list = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Build build = new Build();
                     selectRow(rs, build);
+                    list.add(build);
                 }
             }
         }
