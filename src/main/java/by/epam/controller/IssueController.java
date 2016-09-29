@@ -78,7 +78,7 @@ public class IssueController extends HttpServlet {
                     getList(session, conn);
                 }
                 request.setAttribute("isComeBack", true);
-                request.getRequestDispatcher("index.jsp").forward(request, response);
+                request.getRequestDispatcher("/index.jsp").forward(request, response);
             } else {
                 String action = request.getParameter("action");
                 final String issueId = request.getParameter("issueId");
