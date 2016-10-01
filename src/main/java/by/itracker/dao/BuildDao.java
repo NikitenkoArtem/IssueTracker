@@ -1,28 +1,72 @@
 package by.itracker.dao;
 
-import by.itracker.DBConnection;
-import by.itracker.GenericDao;
 import by.itracker.entity.Build;
 import by.itracker.entity.Project;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Price on 17.09.2016.
  */
-public class BuildDao implements GenericDao<Build, Integer> {
-    private Connection connection;
+public class BuildDao extends AbstractGenericDaoImpl<Build, Integer> {
+//    private Connection connection;
 
-    public BuildDao(Connection connection) {
-        this.connection = connection;
+    public BuildDao(Connection connection, Class<Build> clazz) {
+        super(connection, clazz);
     }
 
+    @Override
+    public Integer create(Build entity) {
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getBuild());
+        sqlParams.put(2, entity.getProjectId());
+        super.setSql("INSERT INTO builds(build, project_id) VALUES(?, ?)");
+        super.setSqlParams(sqlParams);
+        return super.create(entity);
+    }
+
+    @Override
+    public Build read(Integer id) {
+        super.setSql("SELECT * FROM builds WHERE build_id = " + id);
+        return super.read(id);
+    }
+
+    @Override
+    public List<Build> readAll() {
+        super.setSql("SELECT * FROM builds");
+        return super.readAll();
+    }
+
+    @Override
+    public void update(Build entity) {
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getBuild());
+        sqlParams.put(2, entity.getProjectId());
+        sqlParams.put(3, entity.getBuildId());
+        super.setSql("UPDATE builds SET build = ?, project_id = ? WHERE build_id = ?");
+        super.setSqlParams(sqlParams);
+        super.update(entity);
+    }
+
+    @Override
+    protected void selectRow(ResultSet rs, Build entity) throws SQLException {
+        entity.setBuildId(rs.getInt("build_id"));
+        entity.setBuild(rs.getString("build"));
+        Project project = new Project();
+        project.setProjectId(rs.getInt("project_id"));
+        entity.setProjectId(project);
+    }
+
+    public List<Build> readByProject(Integer id) {
+        super.setSql("SELECT * FROM builds WHERE project_id = " + id);
+        return super.readAll();
+    }
+
+/*
     @Override
     public Integer create(Build entity) throws SQLException {
         final String sql = "INSERT INTO builds(build, project_id) VALUES(?, ?)";
@@ -94,4 +138,5 @@ public class BuildDao implements GenericDao<Build, Integer> {
         project.setProjectId(rs.getInt("project_id"));
         build.setProjectId(project);
     }
+*/
 }

@@ -27,7 +27,7 @@ public class LoginController extends HttpServlet {
         if (username != "" && password != "") {
             try {
                 try (Connection conn = DBConnection.getConnection()) {
-                    User user = new UserDao(conn).read(username);
+                    User user = new UserDao(conn, User.class).read(username);
                     final String pwd = user.getPassword();
                     if (pwd != null) {
 //                        String sessionId;
@@ -40,7 +40,7 @@ public class LoginController extends HttpServlet {
 //                            }
 //                            Cookie sessionid = new Cookie("SESSIONID", sessionId);
                             Cookie userName = new Cookie("userName", user.getFirstName());
-                            Role role = new RoleDao(conn).read(user.getRoleId().getRoleId());
+                            Role role = new RoleDao(conn, Role.class).read(user.getRoleId().getRoleId());
                             String roleName = role.getRoleName();
 
                             Cookie userRole = new Cookie("userRole", roleName);

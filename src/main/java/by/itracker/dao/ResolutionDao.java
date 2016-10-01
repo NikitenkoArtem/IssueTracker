@@ -1,27 +1,60 @@
 package by.itracker.dao;
 
-import by.itracker.DBConnection;
-import by.itracker.GenericDao;
 import by.itracker.entity.Resolution;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Price on 17.09.2016.
  */
-public class ResolutionDao implements GenericDao<Resolution, Integer> {
-    private Connection connection;
+public class ResolutionDao extends AbstractGenericDaoImpl<Resolution, Integer> {
+//    private Connection connection;
 
-    public ResolutionDao(Connection connection) {
-        this.connection = connection;
+    public ResolutionDao(Connection connection, Class<Resolution> clazz) {
+        super(connection, clazz);
     }
 
+    @Override
+    public Integer create(Resolution entity) {
+        HashMap<Integer, Object> sqlParam = new HashMap<>();
+        sqlParam.put(1, entity.getResolutionName());
+        super.setSql("INSERT INTO resolutions(resolution_name) VALUES(?)");
+        super.setSqlParams(sqlParam);
+        return super.create(entity);
+    }
+
+    @Override
+    public Resolution read(Integer id) {
+        super.setSql("SELECT * FROM resolutions WHERE resolution_id = " + id);
+        return super.read(id);
+    }
+
+    @Override
+    public List<Resolution> readAll() {
+        super.setSql("SELECT * FROM resolutions");
+        return super.readAll();
+    }
+
+    @Override
+    public void update(Resolution entity) {
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getResolutionName());
+        sqlParams.put(2, entity.getResolutionId());
+        super.setSql("UPDATE resolutions SET resolution_name = ? WHERE resolution_id = ?");
+        super.setSqlParams(sqlParams);
+        super.update(entity);
+    }
+
+    @Override
+    protected void selectRow(ResultSet rs, Resolution entity) throws SQLException {
+        entity.setResolutionId(rs.getInt("resolution_id"));
+        entity.setResolutionName(rs.getString("resolution_name"));
+    }
+/*
     @Override
     public Integer create(Resolution entity) throws SQLException {
         final String sql = "INSERT INTO resolutions(resolution_name) VALUES(?)";
@@ -78,5 +111,5 @@ public class ResolutionDao implements GenericDao<Resolution, Integer> {
     private void selectRow(ResultSet rs, Resolution resolution) throws SQLException {
         resolution.setResolutionId(rs.getInt("resolution_id"));
         resolution.setResolutionName(rs.getString("resolution_name"));
-    }
+    }*/
 }

@@ -1,28 +1,66 @@
 package by.itracker.dao;
 
-import by.itracker.DBConnection;
-import by.itracker.GenericDao;
 import by.itracker.entity.Privilege;
 import by.itracker.entity.Role;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Price on 19.09.2016.
  */
-public class PrivilegeDao implements GenericDao<Privilege, Integer> {
-    private Connection connection;
+public class PrivilegeDao extends AbstractGenericDaoImpl<Privilege, Integer> {
+//    private Connection connection;
 
-    public PrivilegeDao(Connection connection) {
-        this.connection = connection;
+    public PrivilegeDao(Connection connection, Class<Privilege> clazz) {
+        super(connection, clazz);
     }
 
+    @Override
+    public Integer create(Privilege entity) {
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getPrivilegeName());
+        sqlParams.put(2, entity.getRoleId());
+        super.setSql("INSERT INTO privileges(privilege_name, role_id) VALUES(?, ?)");
+        super.setSqlParams(sqlParams);
+        return super.create(entity);
+    }
+
+    @Override
+    public Privilege read(Integer id) {
+        super.setSql("SELECT * FROM privileges WHERE privilege_id = " + id);
+        return super.read(id);
+    }
+
+    @Override
+    public List<Privilege> readAll() {
+        super.setSql("SELECT * FROM privileges");
+        return super.readAll();
+    }
+
+    @Override
+    public void update(Privilege entity) {
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getPrivilegeName());
+        sqlParams.put(2, entity.getRoleId());
+        sqlParams.put(3, entity.getPrivilegeId());
+        super.setSql("UPDATE privileges SET privilege_name = ?, role_id = ? WHERE privilege_id = ?");
+        super.setSqlParams(sqlParams);
+        super.update(entity);
+    }
+
+    @Override
+    protected void selectRow(ResultSet rs, Privilege entity) throws SQLException {
+        entity.setPrivilegeId(rs.getInt("privilege_id"));
+        entity.setPrivilegeName(rs.getString("privilege_name"));
+        Role role = new Role();
+        role.setRoleId(rs.getInt("role_id"));
+        entity.setRoleId(role);
+    }
+/*
     @Override
     public Integer create(Privilege entity) throws SQLException {
         final String sql = "INSERT INTO privileges(privilege_name, role_id) VALUES(?, ?)";
@@ -84,5 +122,5 @@ public class PrivilegeDao implements GenericDao<Privilege, Integer> {
         Role role = new Role();
         role.setRoleId(rs.getInt("role_id"));
         privilege.setRoleId(role);
-    }
+    }*/
 }

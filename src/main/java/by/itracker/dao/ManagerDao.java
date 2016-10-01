@@ -1,27 +1,63 @@
 package by.itracker.dao;
 
-import by.itracker.DBConnection;
-import by.itracker.GenericDao;
 import by.itracker.entity.Manager;
 import by.itracker.entity.User;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Price on 17.09.2016.
  */
-public class ManagerDao implements GenericDao<Manager, Integer> {
-    private Connection connection;
+public class ManagerDao extends AbstractGenericDaoImpl<Manager, Integer> {
+//    private Connection connection;
 
-    public ManagerDao(Connection connection) {
-        this.connection = connection;
+    public ManagerDao(Connection connection, Class<Manager> clazz) {
+        super(connection, clazz);
     }
+
+    @Override
+    public Integer create(Manager entity) {
+        HashMap<Integer, Object> sqlParam = new HashMap<>();
+        sqlParam.put(1, entity.getUserId());
+        super.setSql("INSERT INTO managers(user_id) VALUES(?)");
+        super.setSqlParams(sqlParam);
+        return super.create(entity);
+    }
+
+    @Override
+    public Manager read(Integer id) {
+        super.setSql("SELECT * FROM managers WHERE manager_id = " + id);
+        return super.read(id);
+    }
+
+    @Override
+    public List<Manager> readAll() {
+        super.setSql("SELECT * FROM managers");
+        return super.readAll();
+    }
+
+    @Override
+    public void update(Manager entity) {
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getUserId());
+        sqlParams.put(2, entity.getManagerId());
+        super.setSql("UPDATE managers SET user_id = ? WHERE manager_id = ?");
+        super.setSqlParams(sqlParams);
+        super.update(entity);
+    }
+
+    @Override
+    protected void selectRow(ResultSet rs, Manager entity) throws SQLException {
+        entity.setManagerId(rs.getInt("manager_id"));
+        User user = new User();
+        user.setUserId(rs.getInt("user_id"));
+        entity.setUserId(user);
+    }
+/*
 
     @Override
     public Integer create(Manager entity) throws SQLException {
@@ -82,4 +118,5 @@ public class ManagerDao implements GenericDao<Manager, Integer> {
         user.setUserId(rs.getInt("user_id"));
         manager.setUserId(user);
     }
+*/
 }

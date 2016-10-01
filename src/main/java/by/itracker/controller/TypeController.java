@@ -32,21 +32,19 @@ public class TypeController extends HttpServlet {
                         switch (action) {
                             case "add": {
                                 Type type = getType(request);
-                                new TypeDao(conn).create(type);
+                                new TypeDao(conn, Type.class).create(type);
                                 session.setAttribute("servlet", type);
                                 response.sendRedirect("/200.jsp");
                                 break;
                             }
                             case "edit": {
                                 Type type = getType(request);
-                                new TypeDao(conn).update(type);
+                                new TypeDao(conn, Type.class).update(type);
                                 session.setAttribute("servlet", "type");
                                 response.sendRedirect("/200.jsp");
                                 break;
                             }
                         }
-                    } catch (SQLException e) {
-                        throw new Exception(e);
                     }
                 } catch (Exception e) {
                     Logger logger = Logger.getLogger(e.getClass().getName());
@@ -70,10 +68,8 @@ public class TypeController extends HttpServlet {
                 try {
                     if (typeId != null) {
                         try (Connection conn = DBConnection.getConnection()) {
-                            session.setAttribute("type", new TypeDao(conn).read(Integer.parseInt(typeId)));
+                            session.setAttribute("type", new TypeDao(conn, Type.class).read(Integer.parseInt(typeId)));
                             request.getRequestDispatcher("/content/admin/type/edit-type.jsp").forward(request, response);
-                        } catch (SQLException e) {
-                            throw new Exception(e);
                         }
                     } else {
                         switch (action) {
@@ -84,10 +80,8 @@ public class TypeController extends HttpServlet {
                             case "goBack":
                             case "list": {
                                 try (Connection conn = DBConnection.getConnection()) {
-                                    session.setAttribute("types", new TypeDao(conn).readAll());
+                                    session.setAttribute("types", new TypeDao(conn, Type.class).readAll());
                                     request.getRequestDispatcher("/content/admin/type/type.jsp").forward(request, response);
-                                } catch (SQLException e) {
-                                    throw new Exception(e);
                                 }
                             }
                         }

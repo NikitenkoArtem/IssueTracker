@@ -32,14 +32,14 @@ public class ResolutionController extends HttpServlet {
                         switch (action) {
                             case "add": {
                                 Resolution resolution = getResolution(request);
-                                new ResolutionDao(conn).create(resolution);
+                                new ResolutionDao(conn, Resolution.class).create(resolution);
                                 session.setAttribute("servlet", "issue");
                                 response.sendRedirect("/200.jsp");
                                 break;
                             }
                             case "edit": {
                                 Resolution resolution = getResolution(request);
-                                new ResolutionDao(conn).update(resolution);
+                                new ResolutionDao(conn, Resolution.class).update(resolution);
                                 session.setAttribute("servlet", "issue");
                                 response.sendRedirect("/200.jsp");
                                 break;
@@ -71,7 +71,7 @@ public class ResolutionController extends HttpServlet {
                 try {
                     if (resolutionId != null) {
                         try (Connection conn = DBConnection.getConnection()) {
-                            session.setAttribute("resolution", new ResolutionDao(conn).read(Integer.parseInt(resolutionId)));
+                            session.setAttribute("resolution", new ResolutionDao(conn, Resolution.class).read(Integer.parseInt(resolutionId)));
                             request.getRequestDispatcher("/content/admin/resolution/edit-resolution.jsp").forward(request, response);
                         } catch (SQLException e) {
                             throw new Exception(e);
@@ -85,7 +85,7 @@ public class ResolutionController extends HttpServlet {
                             case "goBack":
                             case "list": {
                                 try (Connection conn = DBConnection.getConnection()) {
-                                    session.setAttribute("resolutions", new ResolutionDao(conn).readAll());
+                                    session.setAttribute("resolutions", new ResolutionDao(conn, Resolution.class).readAll());
                                     request.getRequestDispatcher("/content/admin/resolution/resolution.jsp").forward(request, response);
                                 } catch (SQLException e) {
                                     throw new Exception(e);

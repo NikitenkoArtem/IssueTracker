@@ -26,7 +26,7 @@ public class IssueController extends HttpServlet {
         try {
             if (search != null) {
                 try (Connection conn = DBConnection.getConnection()) {
-                    final Issue issue = new IssueDao(conn).read(Integer.parseInt(search));
+                    final Issue issue = new IssueDao(conn, Issue.class).read(Integer.parseInt(search));
                     session.setAttribute("issues", issue);
                     getList(session, conn);
                     request.getRequestDispatcher("index.jsp").forward(request, response);
@@ -43,14 +43,14 @@ public class IssueController extends HttpServlet {
                         switch (action) {
                             case "add": {
                                 Issue issue = getIssue(request);
-                                new IssueDao(conn).create(issue);
+                                new IssueDao(conn, Issue.class).create(issue);
                                 session.setAttribute("servlet", "issue");
                                 response.sendRedirect("/200.jsp");
                                 break;
                             }
                             case "edit": {
                                 Issue issue = getIssue(request);
-                                new IssueDao(conn).update(issue);
+                                new IssueDao(conn, Issue.class).update(issue);
                                 session.setAttribute("servlet", "issue");
                                 response.sendRedirect("/200.jsp");
                                 break;
@@ -90,17 +90,15 @@ public class IssueController extends HttpServlet {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     } else {
                         try (Connection conn = DBConnection.getConnection()) {
-                            final Issue issue = new IssueDao(conn).read(Integer.parseInt(issueId));
+                            final Issue issue = new IssueDao(conn, Issue.class).read(Integer.parseInt(issueId));
                             session.setAttribute("issue", issue);
-                            session.setAttribute("statuses", new StatusDao(conn).readAll());
-                            session.setAttribute("resolutions", new ResolutionDao(conn).readAll());
-                            session.setAttribute("types", new TypeDao(conn).readAll());
-                            session.setAttribute("priorities", new PriorityDao(conn).readAll());
-                            session.setAttribute("projects", new ProjectDao(conn).readAll());
-                            session.setAttribute("users", new UserDao(conn).readAll());
+                            session.setAttribute("statuses", new StatusDao(conn, Status.class).readAll());
+                            session.setAttribute("resolutions", new ResolutionDao(conn, Resolution.class).readAll());
+                            session.setAttribute("types", new TypeDao(conn, Type.class).readAll());
+                            session.setAttribute("priorities", new PriorityDao(conn, Priority.class).readAll());
+                            session.setAttribute("projects", new ProjectDao(conn, Project.class).readAll());
+                            session.setAttribute("users", new UserDao(conn, User.class).readAll());
                             request.getRequestDispatcher("/content/auth/issue/edit-issue.jsp").forward(request, response);
-                        } catch (SQLException e) {
-                            throw new Exception(e);
                         }
                     }
                 } else {
@@ -115,20 +113,14 @@ public class IssueController extends HttpServlet {
                                     response.sendError(HttpServletResponse.SC_FORBIDDEN);
                                     break;
                                 } else {
-                                    session.setAttribute("statuses", new StatusDao(conn).readAll());
-                                    session.setAttribute("resolutions", new ResolutionDao(conn).readAll());
-                                    session.setAttribute("types", new TypeDao(conn).readAll());
-                                    session.setAttribute("priorities", new PriorityDao(conn).readAll());
-                                    session.setAttribute("projects", new ProjectDao(conn).readAll());
-                                    session.setAttribute("builds", new BuildDao(conn).readAll());
-                                    session.setAttribute("users", new UserDao(conn).readAll());
+                                    getList(session, conn);
                                     request.getRequestDispatcher("/content/auth/issue/add-issue.jsp").forward(request, response);
                                     break;
                                 }
                             }
                             case "goBack":
                             case "list": {
-                                session.setAttribute("issues", new IssueDao(conn).readAll());
+                                session.setAttribute("issues", new IssueDao(conn, Issue.class).readAll());
                                 getList(session, conn);
                                 request.getRequestDispatcher("/content/auth/issue/issue.jsp").forward(request, response);
                                 break;
@@ -147,13 +139,13 @@ public class IssueController extends HttpServlet {
     }
 
     private void getList(HttpSession session, Connection conn) throws SQLException {
-        session.setAttribute("statuses", new StatusDao(conn).readAll());
-        session.setAttribute("resolutions", new ResolutionDao(conn).readAll());
-        session.setAttribute("types", new TypeDao(conn).readAll());
-        session.setAttribute("priorities", new PriorityDao(conn).readAll());
-        session.setAttribute("projects", new ProjectDao(conn).readAll());
-        session.setAttribute("builds", new BuildDao(conn).readAll());
-        session.setAttribute("users", new UserDao(conn).readAll());
+        session.setAttribute("statuses", new StatusDao(conn, Status.class).readAll());
+        session.setAttribute("resolutions", new ResolutionDao(conn, Resolution.class).readAll());
+        session.setAttribute("types", new TypeDao(conn, Type.class).readAll());
+        session.setAttribute("priorities", new PriorityDao(conn, Priority.class).readAll());
+        session.setAttribute("projects", new ProjectDao(conn, Project.class).readAll());
+        session.setAttribute("builds", new BuildDao(conn, Build.class).readAll());
+        session.setAttribute("users", new UserDao(conn, User.class).readAll());
     }
 
     private Issue getIssue(HttpServletRequest request) throws SQLException {

@@ -32,7 +32,7 @@ public class StatusController extends HttpServlet {
                         switch (action) {
                             case "edit": {
                                 Status status = getStatus(request);
-                                new StatusDao(conn).update(status);
+                                new StatusDao(conn, Status.class).update(status);
                                 session.setAttribute("servlet", "issue");
                                 response.sendRedirect("/200.jsp");
                                 break;
@@ -63,7 +63,7 @@ public class StatusController extends HttpServlet {
                 try {
                     if (statusId != null) {
                         try (Connection conn = DBConnection.getConnection()) {
-                            session.setAttribute("status", new StatusDao(conn).read(Integer.parseInt(statusId)));
+                            session.setAttribute("status", new StatusDao(conn, Status.class).read(Integer.parseInt(statusId)));
                             request.getRequestDispatcher("/content/admin/status/edit-status.jsp").forward(request, response);
                         } catch (SQLException e) {
                             throw new Exception(e);
@@ -73,7 +73,7 @@ public class StatusController extends HttpServlet {
                             case "goBack":
                             case "list": {
                                 try (Connection conn = DBConnection.getConnection()) {
-                                    session.setAttribute("statuses", new StatusDao(conn).readAll());
+                                    session.setAttribute("statuses", new StatusDao(conn, Status.class).readAll());
                                     request.getRequestDispatcher("/content/admin/status/status.jsp").forward(request, response);
                                 } catch (SQLException e) {
                                     throw new Exception(e);

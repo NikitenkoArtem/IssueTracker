@@ -1,28 +1,61 @@
 package by.itracker.dao;
 
-import by.itracker.DBConnection;
-import by.itracker.GenericDao;
 import by.itracker.entity.Status;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Price on 17.09.2016.
  */
-public class StatusDao implements GenericDao<Status, Integer> {
-    private Connection connection;
+public class StatusDao extends AbstractGenericDaoImpl<Status, Integer> {
+//    private Connection connection;
 
-    public StatusDao(Connection connection) {
-        this.connection = connection;
+    public StatusDao(Connection connection, Class<Status> clazz) {
+        super(connection, clazz);
     }
 
     @Override
+    public Integer create(Status entity) {
+        HashMap<Integer, Object> sqlParam = new HashMap<>();
+        sqlParam.put(1, entity.getStatusName());
+        super.setSql("INSERT INTO statuses(status_name) VALUES(?)");
+        super.setSqlParams(sqlParam);
+        return super.create(entity);
+    }
+
+    @Override
+    public Status read(Integer id) {
+        super.setSql("SELECT * FROM statuses WHERE status_id = " + id);
+        return super.read(id);
+    }
+
+    @Override
+    public List<Status> readAll() {
+        super.setSql("SELECT * FROM statuses");
+        return super.readAll();
+    }
+
+    @Override
+    public void update(Status entity) {
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getStatusName());
+        sqlParams.put(2, entity.getStatusName());
+        super.setSql("UPDATE statuses SET status_name = ? WHERE status_id = ?");
+        super.setSqlParams(sqlParams);
+        super.update(entity);
+    }
+
+    @Override
+    protected void selectRow(ResultSet rs, Status entity) throws SQLException {
+        entity.setStatusId(rs.getInt("status_id"));
+        entity.setStatusName(rs.getString("status_name"));
+    }
+
+/*    @Override
     public Integer create(Status entity) throws SQLException {
         final String sql = "INSERT INTO statuses(status_name) VALUES(?)";
         HashMap<Integer, Object> sqlParam = new HashMap<>();
@@ -78,5 +111,5 @@ public class StatusDao implements GenericDao<Status, Integer> {
     private void selectRow(ResultSet rs, Status status) throws SQLException {
         status.setStatusId(rs.getInt("status_id"));
         status.setStatusName(rs.getString("status_name"));
-    }
+    }*/
 }

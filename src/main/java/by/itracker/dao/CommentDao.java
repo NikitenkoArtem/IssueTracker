@@ -1,22 +1,67 @@
 package by.itracker.dao;
 
-import by.itracker.DBConnection;
-import by.itracker.GenericDao;
 import by.itracker.entity.Comment;
 import by.itracker.entity.User;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Price on 17.09.2016.
  */
-public class CommentDao implements GenericDao<Comment, Integer> {
+public class CommentDao extends AbstractGenericDaoImpl<Comment, Integer> {
+
+    public CommentDao(Connection connection, Class<Comment> clazz) {
+        super(connection, clazz);
+    }
+
+    @Override
+    public Integer create(Comment entity) {
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getAddedBy());
+        sqlParams.put(2, entity.getAddDate());
+        sqlParams.put(3, entity.getComment());
+        super.setSql("INSERT INTO comments(added_by, add_date, comment) VALUES(?, ?, ?)");
+        super.setSqlParams(sqlParams);
+        super.create(entity);
+        return entity.getCommentId();
+    }
+
+    @Override
+    public Comment read(Integer id) {
+        super.setSql("SELECT * FROM comments WHERE comment_id = " + id);
+        return super.read(id);
+    }
+
+    @Override
+    public List<Comment> readAll() {
+        super.setSql("SELECT * FROM comments");
+        return super.readAll();
+    }
+
+    @Override
+    public void update(Comment entity) {
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getComment());
+        sqlParams.put(2, entity.getCommentId());
+        super.setSql("UPDATE comments SET comment = ? WHERE comment_id = ?");
+        super.setSqlParams(sqlParams);
+        super.update(entity);
+    }
+
+    @Override
+    protected void selectRow(ResultSet rs, Comment entity) throws SQLException {
+        entity.setCommentId(rs.getInt("comment_id"));
+        User user = new User();
+        user.setUserId(rs.getInt("added_by"));
+        entity.setAddedBy(user);
+        entity.setAddDate(rs.getDate("add_date"));
+        entity.setComment(rs.getString("comment"));
+    }
+    /*
     private Connection connection;
 
     public CommentDao(Connection connection) {
@@ -26,10 +71,7 @@ public class CommentDao implements GenericDao<Comment, Integer> {
     @Override
     public Integer create(Comment entity) throws SQLException {
         final String sql = "INSERT INTO comments(added_by, add_date, comment) VALUES(?, ?, ?)";
-        HashMap<Integer, Object> sqlParams = new HashMap<>();
-        sqlParams.put(1, entity.getAddedBy());
-        sqlParams.put(2, entity.getAddDate());
-        sqlParams.put(3, entity.getComment());
+
         new DBConnection().executeUpdate(connection, sql, sqlParams);
         return null;
     }
@@ -86,4 +128,5 @@ public class CommentDao implements GenericDao<Comment, Integer> {
         comment.setAddDate(rs.getDate("add_date"));
         comment.setComment(rs.getString("comment"));
     }
+    */
 }

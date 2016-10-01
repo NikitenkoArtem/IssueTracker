@@ -252,3 +252,32 @@ INSERT INTO issues(CREATE_DATE, CREATED_BY, MODIFY_DATE, MODIFIED_BY, SUMMARY, D
                    TYPE_ID, PRIORITY_ID, PROJECT_ID, BUILD_ID, ASSIGNEE_ID)
 VALUES ('2016-09-15', 8, '2016-09-20', 2, 'info 6', 'test 6', 6, 4, 3, 3, 6, 16, 15);
 commit;
+
+SELECT
+  i.ISSUE_ID
+  , i.CREATE_DATE
+  , created_by.FIRST_NAME AS CREATED_BY
+  , i.MODIFY_DATE
+  , MODIFIED_BY.FIRST_NAME AS MODIFIED_BY
+  , i.SUMMARY
+  , i.DESCRIPTION
+  , s.STATUS_NAME
+  , r.RESOLUTION_NAME
+  , t.TYPE_NAME
+  , p.PRIORITY_NAME
+  , proj.PROJECT_NAME
+  , b.BUILD
+  , assignee_id.FIRST_NAME AS ASSIGNEE
+  , c.COMMENT
+  , i.FILE_ID
+FROM issues i
+  INNER JOIN users created_by ON i.CREATED_BY = created_by.USER_ID
+  INNER JOIN users modified_by ON i.MODIFIED_BY = modified_by.USER_ID
+  INNER JOIN statuses s ON i.STATUS_ID = s.STATUS_ID
+  INNER JOIN resolutions r ON i.RESOLUTION_ID = r.RESOLUTION_ID
+  INNER JOIN types t ON i.TYPE_ID = t.TYPE_ID
+  INNER JOIN priorities p ON i.PRIORITY_ID = p.PRIORITY_ID
+  INNER JOIN projects proj ON i.PROJECT_ID = proj.PROJECT_ID
+  INNER JOIN builds b ON i.BUILD_ID = b.BUILD_ID
+  INNER JOIN users assignee_id ON i.ASSIGNEE_ID = assignee_id.USER_ID
+  LEFT JOIN comments c ON i.COMMENT_ID = c.COMMENT_ID

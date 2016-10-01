@@ -1,27 +1,60 @@
 package by.itracker.dao;
 
-import by.itracker.DBConnection;
-import by.itracker.GenericDao;
 import by.itracker.entity.Type;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Price on 17.09.2016.
  */
-public class TypeDao implements GenericDao<Type, Integer> {
-    private Connection connection;
+public class TypeDao extends AbstractGenericDaoImpl<Type, Integer> {
+//    private Connection connection;
 
-    public TypeDao(Connection connection) {
-        this.connection = connection;
+    public TypeDao(Connection connection, Class<Type> clazz) {
+        super(connection, clazz);
     }
 
+    @Override
+    public Integer create(Type entity) {
+        HashMap<Integer, Object> sqlParam = new HashMap<>();
+        sqlParam.put(1, entity.getTypeName());
+        super.setSql("INSERT INTO types(type_name) VALUES(?)");
+        super.setSqlParams(sqlParam);
+        return super.create(entity);
+    }
+
+    @Override
+    public Type read(Integer id) {
+        super.setSql("SELECT * FROM types WHERE type_id = " + id);
+        return super.read(id);
+    }
+
+    @Override
+    public List<Type> readAll() {
+        super.setSql("SELECT * FROM types");
+        return super.readAll();
+    }
+
+    @Override
+    public void update(Type entity) {
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getTypeName());
+        sqlParams.put(2, entity.getTypeId());
+        super.setSql("UPDATE types SET type_name = ? WHERE type_id = ?");
+        super.setSqlParams(sqlParams);
+        super.update(entity);
+    }
+
+    @Override
+    protected void selectRow(ResultSet rs, Type entity) throws SQLException {
+        entity.setTypeId(rs.getInt("type_id"));
+        entity.setTypeName(rs.getString("type_name"));
+    }
+/*
     @Override
     public Integer create(Type entity) throws SQLException {
         final String sql = "INSERT INTO types(type_name) VALUES(?)";
@@ -78,5 +111,5 @@ public class TypeDao implements GenericDao<Type, Integer> {
     private void selectRow(ResultSet rs, Type type) throws SQLException {
         type.setTypeId(rs.getInt("type_id"));
         type.setTypeName(rs.getString("type_name"));
-    }
+    }*/
 }

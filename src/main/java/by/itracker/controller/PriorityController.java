@@ -29,14 +29,14 @@ public class PriorityController extends HttpServlet {
                         switch (action) {
                             case "add": {
                                 Priority priority = getPriority(request);
-                                new PriorityDao(conn).create(priority);
+                                new PriorityDao(conn, Priority.class).create(priority);
                                 session.setAttribute("servlet", "priority");
                                 response.sendRedirect("/200.jsp");
                                 break;
                             }
                             case "edit": {
                                 Priority priority = getPriority(request);
-                                new PriorityDao(conn).update(priority);
+                                new PriorityDao(conn, Priority.class).update(priority);
                                 session.setAttribute("servlet", "priority");
                                 response.sendRedirect("/200.jsp");
                                 break;
@@ -67,7 +67,7 @@ public class PriorityController extends HttpServlet {
                 try {
                     if (priorityId != null) {
                         try (Connection conn = DBConnection.getConnection()) {
-                            session.setAttribute("priority", new PriorityDao(conn).read(Integer.parseInt(priorityId)));
+                            session.setAttribute("priority", new PriorityDao(conn, Priority.class).read(Integer.parseInt(priorityId)));
                             request.getRequestDispatcher("admin/priority/edit-priority.jsp").forward(request, response);
                         } catch (SQLException e) {
                             throw new Exception(e);
@@ -81,7 +81,7 @@ public class PriorityController extends HttpServlet {
                             case "goBack":
                             case "list": {
                                 try (Connection conn = DBConnection.getConnection()) {
-                                    session.setAttribute("priorities", new PriorityDao(conn).readAll());
+                                    session.setAttribute("priorities", new PriorityDao(conn, Priority.class).readAll());
                                     request.getRequestDispatcher("/content/admin/priority/priority.jsp").forward(request, response);
                                 } catch (SQLException e) {
                                     throw new Exception(e);

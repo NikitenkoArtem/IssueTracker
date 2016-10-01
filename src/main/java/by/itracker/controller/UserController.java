@@ -35,13 +35,13 @@ public class UserController extends HttpServlet {
                                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
                             } else {
                                 User user = getUser(request);
-                                new UserDao(conn).create(user);
+                                new UserDao(conn, User.class).create(user);
                                 break;
                             }
                         }
                         case "edit": {
                             User user = getUser(request);
-                            new UserDao(conn).update(user);
+                            new UserDao(conn, User.class).update(user);
                             break;
                         }
                         case "find": {
@@ -49,9 +49,9 @@ public class UserController extends HttpServlet {
                                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
                             } else {
                                 User user = getUser(request);
-                                User read = new UserDao(conn).read(user.getUserId());
+                                User read = new UserDao(conn, User.class).read(user.getUserId());
                                 if (read == null) {
-                                    read = new UserDao(conn).read(user.getEmail());
+                                    read = new UserDao(conn, User.class).read(user.getEmail());
                                 }
                                 session.setAttribute("users", read);
                                 request.getRequestDispatcher("/content/admin/user/user.jsp").forward(request, response);
@@ -63,14 +63,12 @@ public class UserController extends HttpServlet {
                                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
                             } else {
                                 final int userId = Integer.parseInt(request.getParameter("userId"));
-                                User user = new UserDao(conn).read(userId);
-                                new UserDao(conn).updatePassword(user);
+                                User user = new UserDao(conn, User.class).read(userId);
+                                new UserDao(conn, User.class).updatePassword(user);
                                 break;
                             }
                         }
                     }
-                } catch (SQLException e) {
-                    throw new Exception(e);
                 }
             } catch (Exception e) {
                 Logger logger = Logger.getLogger(e.getClass().getName());
@@ -92,11 +90,9 @@ public class UserController extends HttpServlet {
             try {
                 if (userId != null) {
                     try (Connection conn = DBConnection.getConnection()) {
-                        session.setAttribute("users", new UserDao(conn).read(Integer.parseInt(userId)));
-                        session.setAttribute("roles", new RoleDao(conn).readAll());
+                        session.setAttribute("users", new UserDao(conn, User.class).read(Integer.parseInt(userId)));
+                        session.setAttribute("roles", new RoleDao(conn, Role.class).readAll());
                         request.getRequestDispatcher("/content/auth/edit-user.jsp").forward(request, response);
-                    } catch (SQLException e) {
-                        throw new Exception(e);
                     }
                 } else {
                     if (!userRole.getValue().equals("ADMINISTRATOR")) {
@@ -109,18 +105,16 @@ public class UserController extends HttpServlet {
                                     break;
                                 }
                                 case "new": {
-                                    session.setAttribute("roles", new RoleDao(conn).readAll());
+                                    session.setAttribute("roles", new RoleDao(conn, Role.class).readAll());
                                     request.getRequestDispatcher("/content/admin/user/add-user.jsp").forward(request, response);
                                     break;
                                 }
                                 case "list": {
-                                    session.setAttribute("users", new UserDao(conn).readAll());
-                                    session.setAttribute("roles", new RoleDao(conn).readAll());
+                                    session.setAttribute("users", new UserDao(conn, User.class).readAll());
+                                    session.setAttribute("roles", new RoleDao(conn, Role.class).readAll());
                                     request.getRequestDispatcher("/content/admin/user/user.jsp").forward(request, response);
                                 }
                             }
-                        } catch (SQLException e) {
-                            throw new Exception(e);
                         }
                     }
                 }

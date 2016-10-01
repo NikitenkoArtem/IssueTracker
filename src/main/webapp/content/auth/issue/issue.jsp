@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>Issue Tracker</title>
-    <link rel="stylesheet" type="text/css" href="/resources/styles/style.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/styles/style.css"/>
 </head>
 <body>
 <%@include file="/navigation.jspf" %>
@@ -36,7 +36,7 @@
             <td>${issue.summary}</td>
             <td>${issue.description}</td>
             <c:forEach var="status" items="${statuses}">
-                <c:if test="${status.statusId == issue.status}">
+                <c:if test="${status.statusId == issue.statusId}">
                     <td>${status.statusName}</td>
                 </c:if>
             </c:forEach>

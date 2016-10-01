@@ -9,6 +9,7 @@ import by.itracker.dao.UserDao;
 import by.itracker.entity.Build;
 import by.itracker.entity.Manager;
 import by.itracker.entity.Project;
+import by.itracker.entity.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,14 +38,14 @@ public class ProjectController extends HttpServlet {
                         switch (action) {
                             case "add": {
                                 Project project = getProject(request);
-                                new ProjectDao(conn).create(project);
+                                new ProjectDao(conn, Project.class).create(project);
                                 session.setAttribute("servlet", "project");
                                 response.sendRedirect("/200.jsp");
                                 break;
                             }
                             case "edit": {
                                 Project project = getProject(request);
-                                new ProjectDao(conn).update(project);
+                                new ProjectDao(conn, Project.class).update(project);
                                 session.setAttribute("servlet", "project");
                                 response.sendRedirect("/200.jsp");
                                 break;
@@ -75,24 +76,24 @@ public class ProjectController extends HttpServlet {
                 try {
                     try (Connection conn = DBConnection.getConnection()) {
                         if (projectId != null) {
-                            final Project project = new ProjectDao(conn).read(Integer.parseInt(projectId));
+                            final Project project = new ProjectDao(conn, Project.class).read(Integer.parseInt(projectId));
                             session.setAttribute("project", project);
-                            session.setAttribute("managers", new ManagerDao(conn).readAll());
-                            session.setAttribute("builds", new BuildDao(conn).readByProject(project.getProjectId()));
+                            session.setAttribute("managers", new ManagerDao(conn, Manager.class).readAll());
+                            session.setAttribute("builds", new BuildDao(conn, Build.class).readByProject(project.getProjectId()));
                             request.getRequestDispatcher("/content/admin/project/edit-project.jsp").forward(request, response);
                         } else {
                             switch (action) {
                                 case "new": {
-                                    session.setAttribute("managers", new ManagerDao(conn).readAll());
-                                    session.setAttribute("users", new UserDao(conn).readAll());
+                                    session.setAttribute("managers", new ManagerDao(conn, Manager.class).readAll());
+                                    session.setAttribute("users", new UserDao(conn, User.class).readAll());
                                     request.getRequestDispatcher("/content/admin/project/add-project.jsp").forward(request, response);
                                     break;
                                 }
                                 case "goBack":
                                 case "list": {
-                                    session.setAttribute("projects", new ProjectDao(conn).readAll());
-                                    session.setAttribute("managers", new ManagerDao(conn).readAll());
-                                    session.setAttribute("users", new UserDao(conn).readAll());
+                                    session.setAttribute("projects", new ProjectDao(conn, Project.class).readAll());
+                                    session.setAttribute("managers", new ManagerDao(conn, Manager.class).readAll());
+                                    session.setAttribute("users", new UserDao(conn, User.class).readAll());
                                     request.getRequestDispatcher("/content/admin/project/project.jsp").forward(request, response);
                                 }
                             }

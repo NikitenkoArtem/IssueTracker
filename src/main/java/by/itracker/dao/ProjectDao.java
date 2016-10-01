@@ -1,28 +1,69 @@
 package by.itracker.dao;
 
-import by.itracker.DBConnection;
-import by.itracker.GenericDao;
 import by.itracker.entity.Manager;
 import by.itracker.entity.Project;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Price on 17.09.2016.
  */
-public class ProjectDao implements GenericDao<Project, Integer> {
-    private Connection connection;
+public class ProjectDao extends AbstractGenericDaoImpl<Project, Integer> {
+//    private Connection connection;
 
-    public ProjectDao(Connection connection) {
-        this.connection = connection;
+    public ProjectDao(Connection connection, Class<Project> clazz) {
+        super(connection, clazz);
     }
 
+    @Override
+    public Integer create(Project entity) {
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getProjectName());
+        sqlParams.put(2, entity.getDescription());
+        sqlParams.put(3, entity.getManagerId());
+        super.setSql("INSERT INTO projects(project_name, description, manager_id) VALUES(?, ?, ?)");
+        super.setSqlParams(sqlParams);
+        return super.create(entity);
+    }
+
+    @Override
+    public Project read(Integer id) {
+        super.setSql("SELECT * FROM projects WHERE project_id = " + id);
+        return super.read(id);
+    }
+
+    @Override
+    public List<Project> readAll() {
+        super.setSql("SELECT * FROM projects");
+        return super.readAll();
+    }
+
+    @Override
+    public void update(Project entity) {
+        HashMap<Integer, Object> sqlParams = new HashMap<>();
+        sqlParams.put(1, entity.getProjectName());
+        sqlParams.put(2, entity.getDescription());
+        sqlParams.put(3, entity.getManagerId());
+        sqlParams.put(4, entity.getProjectId());
+        super.setSql("UPDATE projects SET project_name = ?, description = ?, manager_id = ? WHERE project_id = ?");
+        super.setSqlParams(sqlParams);
+        super.update(entity);
+    }
+
+    @Override
+    protected void selectRow(ResultSet rs, Project entity) throws SQLException {
+        entity.setProjectId(rs.getInt("project_id"));
+        entity.setProjectName(rs.getString("project_name"));
+        entity.setDescription(rs.getString("description"));
+        Manager manager = new Manager();
+        manager.setManagerId(rs.getInt("manager_id"));
+        entity.setManagerId(manager);
+    }
+/*
     @Override
     public Integer create(Project entity) throws SQLException {
         final String sql = "INSERT INTO projects(project_name, description, manager_id) VALUES(?, ?, ?)";
@@ -87,5 +128,5 @@ public class ProjectDao implements GenericDao<Project, Integer> {
         Manager manager = new Manager();
         manager.setManagerId(rs.getInt("manager_id"));
         project.setManagerId(manager);
-    }
+    }*/
 }
