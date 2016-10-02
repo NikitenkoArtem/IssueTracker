@@ -16,82 +16,68 @@ import java.util.logging.Logger;
 /**
  * Created by Price on 07.09.2016.
  */
-@WebServlet(name = "TypeController", urlPatterns = "/type")
+@WebServlet(name = "TypeController", urlPatterns = "/content/admin/type")
 public class TypeController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Cookie userRole = new Auth(request).getCookieByName("userRole");
-        if (userRole != null) {
-            if (!userRole.getValue().equals("ADMINISTRATOR")) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            } else {
-                final HttpSession session = request.getSession();
-                final String action = request.getParameter("action");
-                try {
-                    try (Connection conn = DBConnection.getConnection()) {
-                        switch (action) {
-                            case "add": {
-                                Type type = getType(request);
-                                new TypeDao(conn, Type.class).create(type);
-                                session.setAttribute("servlet", type);
-                                response.sendRedirect("/200.jsp");
-                                break;
-                            }
-                            case "edit": {
-                                Type type = getType(request);
-                                new TypeDao(conn, Type.class).update(type);
-                                session.setAttribute("servlet", "type");
-                                response.sendRedirect("/200.jsp");
-                                break;
-                            }
-                        }
+        final HttpSession session = request.getSession();
+        final String action = request.getParameter("action");
+        try {
+            try (Connection conn = DBConnection.getConnection()) {
+                switch (action) {
+                    case "add": {
+                        Type type = getType(request);
+                        new TypeDao(conn, Type.class).create(type);
+                        session.setAttribute("servlet", type);
+                        response.sendRedirect("/200.jsp");
+                        break;
                     }
-                } catch (Exception e) {
-                    Logger logger = Logger.getLogger(e.getClass().getName());
-                    logger.severe(e.getMessage());
-                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    case "edit": {
+                        Type type = getType(request);
+                        new TypeDao(conn, Type.class).update(type);
+                        session.setAttribute("servlet", "type");
+                        response.sendRedirect("/200.jsp");
+                        break;
+                    }
                 }
             }
+        } catch (Exception e) {
+            Logger logger = Logger.getLogger(e.getClass().getName());
+            logger.severe(e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Cookie userRole = new Auth(request).getCookieByName("userRole");
-        if (userRole != null) {
-            if (!userRole.getValue().equals("ADMINISTRATOR")) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+        final HttpSession session = request.getSession();
+        final String typeId = request.getParameter("typeId");
+        final String action = request.getParameter("action");
+        try {
+            if (typeId != null) {
+                try (Connection conn = DBConnection.getConnection()) {
+                    session.setAttribute("type", new TypeDao(conn, Type.class).read(Integer.parseInt(typeId)));
+                    request.getRequestDispatcher("/content/admin/type/edit-type.jsp").forward(request, response);
+                }
             } else {
-                final HttpSession session = request.getSession();
-                final String typeId = request.getParameter("typeId");
-                final String action = request.getParameter("action");
-                try {
-                    if (typeId != null) {
+                switch (action) {
+                    case "new": {
+                        request.getRequestDispatcher("/content/admin/type/add-type.jsp").forward(request, response);
+                        break;
+                    }
+                    case "goBack":
+                    case "list": {
                         try (Connection conn = DBConnection.getConnection()) {
-                            session.setAttribute("type", new TypeDao(conn, Type.class).read(Integer.parseInt(typeId)));
-                            request.getRequestDispatcher("/content/admin/type/edit-type.jsp").forward(request, response);
-                        }
-                    } else {
-                        switch (action) {
-                            case "new": {
-                                request.getRequestDispatcher("/content/admin/type/add-type.jsp").forward(request, response);
-                                break;
-                            }
-                            case "goBack":
-                            case "list": {
-                                try (Connection conn = DBConnection.getConnection()) {
-                                    session.setAttribute("types", new TypeDao(conn, Type.class).readAll());
-                                    request.getRequestDispatcher("/content/admin/type/type.jsp").forward(request, response);
-                                }
-                            }
+                            session.setAttribute("types", new TypeDao(conn, Type.class).readAll());
+                            request.getRequestDispatcher("/content/admin/type/type.jsp").forward(request, response);
                         }
                     }
-                } catch (Exception e) {
-                    Logger logger = Logger.getLogger(e.getClass().getName());
-                    logger.severe(e.getMessage());
-                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 }
             }
+        } catch (Exception e) {
+            Logger logger = Logger.getLogger(e.getClass().getName());
+            logger.severe(e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 

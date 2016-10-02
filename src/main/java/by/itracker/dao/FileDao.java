@@ -1,5 +1,6 @@
 package by.itracker.dao;
 
+import by.itracker.dao.generic.AbstractGenericDaoImpl;
 import by.itracker.entity.File;
 import by.itracker.entity.User;
 

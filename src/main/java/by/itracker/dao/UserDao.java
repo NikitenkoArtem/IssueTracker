@@ -1,5 +1,6 @@
 package by.itracker.dao;
 
+import by.itracker.dao.generic.AbstractGenericDaoImpl;
 import by.itracker.entity.Role;
 import by.itracker.entity.User;
 
@@ -40,7 +41,9 @@ public class UserDao extends AbstractGenericDaoImpl<User, Integer> {
 
     @Override
     public List<User> readAll() {
-        super.setSql("SELECT * FROM users");
+        super.setSql("SELECT user_id, email, first_name, last_name, r.role_name AS role, password\n" +
+                "FROM users u\n" +
+                "INNER JOIN roles r ON u.ROLE_ID = r.ROLE_ID");
         return super.readAll();
     }
 
@@ -64,17 +67,21 @@ public class UserDao extends AbstractGenericDaoImpl<User, Integer> {
         entity.setFirstName(rs.getString("first_name"));
         entity.setLastName(rs.getString("last_name"));
         Role role = new Role();
-        role.setRoleId(rs.getInt("role_id"));
+        role.setRoleName(rs.getString("role"));
         entity.setRoleId(role);
         entity.setPassword(rs.getString("password"));
     }
 
-    public User read(String email) throws SQLException {
-        super.setSql("SELECT * FROM users WHERE email = '" + email + "'");
+    public User read(String email) {
+//        super.setSql("SELECT * FROM users WHERE email = '" + email + "'");
+        super.setSql("SELECT user_id, email, first_name, last_name, r.role_name AS role, password\n" +
+                "FROM users u\n" +
+                "INNER JOIN roles r ON u.ROLE_ID = r.ROLE_ID\n" +
+                "WHERE email = '" + email + "'");
         return super.read(-1);
     }
 
-    public void updatePassword(User entity) throws SQLException {
+    public void updatePassword(User entity) {
         HashMap<Integer, Object> sqlParams = new HashMap<>();
         sqlParams.put(1, entity.getPassword());
         sqlParams.put(2, entity.getEmail());

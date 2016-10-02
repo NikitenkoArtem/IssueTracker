@@ -40,10 +40,10 @@ public class LoginController extends HttpServlet {
 //                            }
 //                            Cookie sessionid = new Cookie("SESSIONID", sessionId);
                             Cookie userName = new Cookie("userName", user.getFirstName());
-                            Role role = new RoleDao(conn, Role.class).read(user.getRoleId().getRoleId());
-                            String roleName = role.getRoleName();
+//                            Role role = new RoleDao(conn, Role.class).read(user.getRoleId().getRoleId());
+//                            String roleName = role.getRoleName();
 
-                            Cookie userRole = new Cookie("userRole", roleName);
+                            Cookie userRole = new Cookie("userRole", user.getRoleId().getRoleName());
                             final int id = user.getUserId();
                             Cookie userId = new Cookie("userId", Integer.toString(id));
 //                            sessionid.setPath("/");
@@ -55,17 +55,24 @@ public class LoginController extends HttpServlet {
                             response.addCookie(userId);
                             response.addCookie(userName);
                             response.addCookie(userRole);
-                            HttpSession session = request.getSession(true);
+//                            HttpSession session = request.getSession(true);
+//                            request.authenticate(response);
+//                            request.login(user.getEmail(), user.getPassword());
+//                            try {
+//                                request.login(username, password);
+//                            } catch (ServletException e) {
+//                                e.getMessage();
+//                            }
                             Principal principal = request.getUserPrincipal();
-                            response.sendRedirect("issue");
+//                            request.getRequestDispatcher("issue").forward(request, response);
+//                            response.sendRedirect("issue");
+                            System.out.println(principal);
                         } else {
                             loginFailed(request, response);
                         }
                     } else {
                         loginFailed(request, response);
                     }
-                } catch (SQLException e) {
-                    throw new Exception(e);
                 }
             } catch (Exception e) {
                 Logger logger = Logger.getLogger(e.getClass().getName());

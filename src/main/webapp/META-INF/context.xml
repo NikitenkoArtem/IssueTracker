@@ -34,6 +34,7 @@
            userRoleTable="roles" roleNameCol="role_name"/>-->
 
     <Realm className="org.apache.catalina.realm.DataSourceRealm"
+           name="jdbcRealm"
            dataSourceName="jdbc/itracker"
            userTable="users" userNameCol="email" userCredCol="password"
            userRoleTable="roles" roleNameCol="role_name"/>

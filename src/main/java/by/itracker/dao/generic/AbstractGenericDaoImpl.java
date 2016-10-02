@@ -1,4 +1,4 @@
-package by.itracker.dao;
+package by.itracker.dao.generic;
 
 import java.lang.reflect.Field;
 import java.sql.*;
@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by Price on 30.09.2016.
  */
-abstract class AbstractGenericDaoImpl<E, PK> implements GenericDao<E, PK> {
+public abstract class AbstractGenericDaoImpl<E, PK> implements GenericDao<E, PK> {
     private Connection connection;
     private String sql;
     private Map<Integer, Object> sqlParams;
@@ -81,7 +81,7 @@ abstract class AbstractGenericDaoImpl<E, PK> implements GenericDao<E, PK> {
     }
 
     private int executeUpdate() throws SQLException {
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             for (Map.Entry<Integer, Object> entry : sqlParams.entrySet()) {
                 final int index = entry.getKey().intValue();
                 final Object value = entry.getValue();

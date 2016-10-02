@@ -1,7 +1,9 @@
 package by.itracker.dao;
 
+import by.itracker.dao.generic.AbstractGenericDaoImpl;
 import by.itracker.entity.Manager;
 import by.itracker.entity.Project;
+import by.itracker.entity.User;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -38,7 +40,10 @@ public class ProjectDao extends AbstractGenericDaoImpl<Project, Integer> {
 
     @Override
     public List<Project> readAll() {
-        super.setSql("SELECT * FROM projects");
+        super.setSql("SELECT project_id, project_name, description, u.first_name AS manager\n" +
+                "FROM projects\n" +
+                "INNER JOIN managers mgr ON projects.MANAGER_ID = mgr.MANAGER_ID\n" +
+                "INNER JOIN users u ON mgr.USER_ID = u.USER_ID");
         return super.readAll();
     }
 
@@ -59,8 +64,10 @@ public class ProjectDao extends AbstractGenericDaoImpl<Project, Integer> {
         entity.setProjectId(rs.getInt("project_id"));
         entity.setProjectName(rs.getString("project_name"));
         entity.setDescription(rs.getString("description"));
+        User user = new User();
+        user.setFirstName(rs.getString("manager"));
         Manager manager = new Manager();
-        manager.setManagerId(rs.getInt("manager_id"));
+        manager.setUserId(user);
         entity.setManagerId(manager);
     }
 /*

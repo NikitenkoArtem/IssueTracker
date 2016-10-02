@@ -25,11 +25,7 @@
             <td name="firstName">${user.firstName}</td>
             <td name="lastName">${user.lastName}</td>
             <td name="email">${user.email}</td>
-            <c:forEach var="role" items="${roles}">
-            <c:if test="${user.role == role.roleId}">
-                <td>${role.roleName}</td>
-            </c:if>
-            </c:forEach>
+            <td name="roleName">${user.roleId.roleName}</td>
         </tr>
     </c:forEach>
     </tbody>

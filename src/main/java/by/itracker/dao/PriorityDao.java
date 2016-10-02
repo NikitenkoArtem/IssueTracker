@@ -1,5 +1,6 @@
 package by.itracker.dao;
 
+import by.itracker.dao.generic.AbstractGenericDaoImpl;
 import by.itracker.entity.Priority;
 
 import java.sql.Connection;

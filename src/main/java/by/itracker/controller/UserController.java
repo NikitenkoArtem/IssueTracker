@@ -111,7 +111,6 @@ public class UserController extends HttpServlet {
                                 }
                                 case "list": {
                                     session.setAttribute("users", new UserDao(conn, User.class).readAll());
-                                    session.setAttribute("roles", new RoleDao(conn, Role.class).readAll());
                                     request.getRequestDispatcher("/content/admin/user/user.jsp").forward(request, response);
                                 }
                             }

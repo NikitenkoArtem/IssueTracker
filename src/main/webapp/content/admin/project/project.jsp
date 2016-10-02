@@ -26,17 +26,7 @@
                 <tr>
                     <td><a href="/project?projectId=${project.projectId}">${project.projectName}</a></td>
                     <td>${project.description}</td>
-                    <td>
-                        <c:forEach var="mgr" items="${managers}">
-                            <c:if test="${project.managerId.userId == user.userId}">
-                                <c:forEach var="user" items="${users}">
-                                    <c:if test="${user.userId == mgr.user}">
-                                        ${user.firstName}
-                                    </c:if>
-                                </c:forEach>
-                            </c:if>
-                        </c:forEach>
-                    </td>
+                    <td>${project.managerId.userId.firstName}</td>
                 </tr>
             </c:forEach>
         </c:otherwise>

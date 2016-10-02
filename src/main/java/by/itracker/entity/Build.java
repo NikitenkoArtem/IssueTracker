@@ -6,15 +6,15 @@ import java.io.Serializable;
  * Created by Price on 17.09.2016.
  */
 public class Build implements Serializable {
-    private int buildId;
+    private Integer buildId;
     private String build;
     private Project projectId;
 
-    public int getBuildId() {
+    public Integer getBuildId() {
         return buildId;
     }
 
-    public void setBuildId(int buildId) {
+    public void setBuildId(Integer buildId) {
         this.buildId = buildId;
     }
 

@@ -1,5 +1,6 @@
 package by.itracker.dao;
 
+import by.itracker.dao.generic.AbstractGenericDaoImpl;
 import by.itracker.entity.Build;
 import by.itracker.entity.Project;
 
@@ -23,7 +24,7 @@ public class BuildDao extends AbstractGenericDaoImpl<Build, Integer> {
     public Integer create(Build entity) {
         HashMap<Integer, Object> sqlParams = new HashMap<>();
         sqlParams.put(1, entity.getBuild());
-        sqlParams.put(2, entity.getProjectId());
+        sqlParams.put(2, entity.getProjectId().getProjectId());
         super.setSql("INSERT INTO builds(build, project_id) VALUES(?, ?)");
         super.setSqlParams(sqlParams);
         return super.create(entity);

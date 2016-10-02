@@ -15,10 +15,10 @@ public class Auth {
 
     public Cookie getCookieByName(String cookieName) {
         Cookie[] cookies = request.getCookies();
-        if(cookies != null) {
-            for(Cookie cookie : cookies){
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
                 final String name = cookie.getName();
-                if(name.equals(cookieName)){
+                if (name.equals(cookieName)) {
                     return cookie;
                 }
             }
@@ -28,15 +28,26 @@ public class Auth {
 
     public String getCookieValue(String cookieName) {
         Cookie[] cookies = request.getCookies();
-        if(cookies != null) {
-            for(Cookie cookie : cookies){
-                final String name = cookie.getName();
-                if(name.equals(cookieName)){
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                String name = cookie.getName();
+                if (name.equals(cookieName)) {
                     cookieName = cookie.getValue();
                     return cookieName;
                 }
             }
         }
         return null;
+    }
+
+    public boolean isUserInRole(String role) {
+        Cookie userRole = getCookieByName("userRole");
+        if (userRole != null) {
+            String roleName = userRole.getValue();
+            if (roleName.equals(role)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -11,7 +11,7 @@
 <form method="post" action="issue">
     <input type="search" name="search" placeholder="Search"/>
 </form>
-<table border="1px">
+<%--<table border="1px">
     <thead>
     <tr>
         <th>Id</th>
@@ -50,6 +50,6 @@
         </tr>
     </c:forEach>
     </tbody>
-</table>
+</table>--%>
 </body>
 </html>

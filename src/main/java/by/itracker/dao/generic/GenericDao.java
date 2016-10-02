@@ -1,4 +1,4 @@
-package by.itracker.dao;
+package by.itracker.dao.generic;
 
 import java.sql.SQLException;
 import java.util.List;

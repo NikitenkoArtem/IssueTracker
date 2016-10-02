@@ -35,41 +35,13 @@
         <tr>
             <td>${issue.summary}</td>
             <td>${issue.description}</td>
-            <c:forEach var="status" items="${statuses}">
-                <c:if test="${status.statusId == issue.statusId}">
-                    <td>${status.statusName}</td>
-                </c:if>
-            </c:forEach>
-            <c:forEach var="resolution" items="${resolutions}">
-                <c:if test="${resolution.resolutionId == issue.resolution}">
-                    <td>${resolution.resolutionName}</td>
-                </c:if>
-            </c:forEach>
-            <c:forEach var="type" items="${types}">
-                <c:if test="${type.typeId == issue.type}">
-                    <td>${type.typeName}</td>
-                </c:if>
-            </c:forEach>
-            <c:forEach var="priority" items="${priorities}">
-                <c:if test="${priority.priorityId == issue.priority}">
-                    <td>${priority.priorityName}</td>
-                </c:if>
-            </c:forEach>
-            <c:forEach var="project" items="${projects}">
-                <c:if test="${project.projectId == issue.project}">
-                    <td>${project.projectName}</td>
-                </c:if>
-            </c:forEach>
-            <c:forEach var="build" items="${builds}">
-                <c:if test="${issue.build == build.buildId}">
-                    <td>${build.build}</td>
-                </c:if>
-            </c:forEach>
-            <c:forEach var="user" items="${users}">
-                <c:if test="${user.userId == issue.assignee}">
-                    <td>${user.firstName}</td>
-                </c:if>
-            </c:forEach>
+            <td>${issue.statusId.statusName}</td>
+            <td>${issue.resolutionId.resolutionName}</td>
+            <td>${issue.typeId.typeName}</td>
+            <td>${issue.priorityId.priorityName}</td>
+            <td>${issue.projectId.projectName}</td>
+            <td>${issue.buildId.build}</td>
+            <td>${issue.assigneeId.firstName}</td>
         </tr>
     </c:forEach>
     </tbody>

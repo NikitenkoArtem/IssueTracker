@@ -3,7 +3,7 @@
         <c:when test="${cookie['userName'].value != null && cookie['userRole'].value == 'ADMINISTRATOR'}">
                 <ul class="adminMenu">
                     <li class="home">
-                        <a href="index.jsp">Home</a>
+                        <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
                     </li>
                     <li class="issue">
                         <a href="#">Issue</a>
@@ -12,53 +12,53 @@
                             <a href="issue?action=new">Submit issue</a>
                         </div>
                     </li>
-                    <li class="projectId">
+                    <li class="project">
                         <a href="#">Project</a>
-                        <div class="projectId-content">
-                            <a href="projectId?action=list">Project list</a>
-                            <a href="projectId?action=new">Add projectId</a>
+                        <div class="project-content">
+                            <a href="project?action=list">Project list</a>
+                            <a href="project?action=new">Add projectId</a>
                         </div>
                     </li>
-                    <li class="statusId">
+                    <li class="status">
                         <a href="#">Status</a>
-                        <div class="statusId-content">
-                            <a href="statusId?action=list">Status list</a>
+                        <div class="status-content">
+                            <a href="status?action=list">Status list</a>
                         </div>
                     </li>
-                    <li class="resolutionId">
+                    <li class="resolution">
                         <a href="#">Resolution</a>
-                        <div class="resolutionId-content">
-                            <a href="resolutionId?action=list">Resolution list</a>
-                            <a href="resolutionId?action=new">Add resolutionId</a>
+                        <div class="resolution-content">
+                            <a href="resolution?action=list">Resolution list</a>
+                            <a href="resolution?action=new">Add resolutionId</a>
                         </div>
                     </li>
-                    <li class="priorityId">
+                    <li class="priority">
                         <a href="#">Priority</a>
-                        <div class="priorityId-content">
-                            <a href="priorityId?action=list">Priority list</a>
-                            <a href="priorityId?action=new">Add priorityId</a>
+                        <div class="priority-content">
+                            <a href="priority?action=list">Priority list</a>
+                            <a href="priority?action=new">Add priorityId</a>
                         </div>
                     </li>
-                    <li class="typeId">
+                    <li class="type">
                         <a href="#">Type</a>
-                        <div class="typeId-content">
-                            <a href="typeId?action=list">Type list</a>
-                            <a href="typeId?action=new">Add typeId</a>
+                        <div class="type-content">
+                            <a href="type?action=list">Type list</a>
+                            <a href="type?action=new">Add typeId</a>
                         </div>
                     </li>
-                    <li class="userId">
+                    <li class="user">
                         <a href="#">User</a>
-                        <div class="userId-content">
-                            <a href="userId?action=list">User list</a>
-                            <a href="userId?action=search">Find userId</a>
-                            <a href="userId?action=new">Add userId</a>
+                        <div class="user-content">
+                            <a href="user?action=list">User list</a>
+                            <a href="user?action=search">Find userId</a>
+                            <a href="user?action=new">Add userId</a>
                         </div>
                     </li>
                     <li class="logout">
                         <a href="#">${cookie['userName'].value}</a>
                         <div class="logout-content">
-                            <a href="userId?userId=${cookie['userId'].value}">Profile</a>
-                            <a href="logout">Log out</a>
+                            <a href="user?userId=${cookie['userId'].value}">Profile</a>
+                            <a href="${pageContext.request.contextPath}/logout">Log out</a>
                         </div>
                     </li>
                 </ul>
@@ -78,8 +78,8 @@
                 <li class="logout">
                     <a href="#">${cookie['userName'].value}</a>
                     <div class="logout-content">
-                        <a href="userId?action=edit">Profile</a>
-                        <a href="logout">Log out</a>
+                        <a href="user?action=edit">Profile</a>
+                        <a href="${pageContext.request.contextPath}/logout">Log out</a>
                     </div>
                 </li>
             </ul>
@@ -87,7 +87,7 @@
         <c:otherwise>
             <ul class="loginMenu">
                 <li class="login">
-                    <a href="login">Log in</a>
+                    <a href="${pageContext.request.contextPath}/login">Log in</a>
                 </li>
             </ul>
         </c:otherwise>

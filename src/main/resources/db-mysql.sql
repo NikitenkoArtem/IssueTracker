@@ -254,22 +254,22 @@ VALUES ('2016-09-15', 8, '2016-09-20', 2, 'info 6', 'test 6', 6, 4, 3, 3, 6, 16,
 commit;
 
 SELECT
-  i.ISSUE_ID
-  , i.CREATE_DATE
-  , created_by.FIRST_NAME AS CREATED_BY
-  , i.MODIFY_DATE
-  , MODIFIED_BY.FIRST_NAME AS MODIFIED_BY
-  , i.SUMMARY
-  , i.DESCRIPTION
-  , s.STATUS_NAME
-  , r.RESOLUTION_NAME
-  , t.TYPE_NAME
-  , p.PRIORITY_NAME
-  , proj.PROJECT_NAME
-  , b.BUILD
-  , assignee_id.FIRST_NAME AS ASSIGNEE
-  , c.COMMENT
-  , i.FILE_ID
+  issue_id
+  , create_date
+  , created_by.first_name AS created_by
+  , modify_date
+  , modified_by.first_name AS modified_by
+  , summary
+  , i.description AS description
+  , s.status_name AS status
+  , r.resolution_name AS resolution
+  , t.type_name AS type
+  , p.priority_name AS priority
+  , proj.project_name AS project
+  , b.build
+  , assignee_id.first_name as assignee
+  , c.comment
+  , i.file_id
 FROM issues i
   INNER JOIN users created_by ON i.CREATED_BY = created_by.USER_ID
   INNER JOIN users modified_by ON i.MODIFIED_BY = modified_by.USER_ID
@@ -280,4 +280,13 @@ FROM issues i
   INNER JOIN projects proj ON i.PROJECT_ID = proj.PROJECT_ID
   INNER JOIN builds b ON i.BUILD_ID = b.BUILD_ID
   INNER JOIN users assignee_id ON i.ASSIGNEE_ID = assignee_id.USER_ID
-  LEFT JOIN comments c ON i.COMMENT_ID = c.COMMENT_ID
+  LEFT JOIN comments c ON i.COMMENT_ID = c.COMMENT_ID;
+
+SELECT project_id, project_name, description, u.first_name AS manager
+FROM projects
+  INNER JOIN managers mgr ON projects.MANAGER_ID = mgr.MANAGER_ID
+  INNER JOIN users u ON mgr.USER_ID = u.USER_ID;
+
+SELECT user_id, email, first_name, last_name, r.role_name AS role, password
+FROM users u
+  INNER JOIN roles r ON u.ROLE_ID = r.ROLE_ID;

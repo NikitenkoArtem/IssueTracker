@@ -1,5 +1,6 @@
 package by.itracker.dao;
 
+import by.itracker.dao.generic.AbstractGenericDaoImpl;
 import by.itracker.entity.*;
 
 import java.sql.Connection;
@@ -53,22 +54,22 @@ public class IssueDao extends AbstractGenericDaoImpl<Issue, Integer> {
     public List<Issue> readAll() {
 //        super.setSql("SELECT * FROM issues");
         super.setSql("SELECT\n" +
-                "  i.ISSUE_ID\n" +
-                "  , i.CREATE_DATE\n" +
-                "  , created_by.FIRST_NAME AS CREATED_BY\n" +
-                "  , i.MODIFY_DATE\n" +
-                "  , MODIFIED_BY.FIRST_NAME AS MODIFIED_BY\n" +
-                "  , i.SUMMARY\n" +
-                "  , i.DESCRIPTION\n" +
-                "  , s.STATUS_NAME\n" +
-                "  , r.RESOLUTION_NAME\n" +
-                "  , t.TYPE_NAME\n" +
-                "  , p.PRIORITY_NAME\n" +
-                "  , proj.PROJECT_NAME\n" +
-                "  , b.BUILD\n" +
-                "  , assignee_id.FIRST_NAME AS ASSIGNEE\n" +
-                "  , c.COMMENT\n" +
-                "  , i.FILE_ID\n" +
+                "  issue_id\n" +
+                "  , create_date\n" +
+                "  , created_by.first_name AS created_by\n" +
+                "  , modify_date\n" +
+                "  , modified_by.first_name AS modified_by\n" +
+                "  , summary\n" +
+                "  , i.description AS description\n" +
+                "  , s.status_name AS status\n" +
+                "  , r.resolution_name AS resolution\n" +
+                "  , t.type_name AS type\n" +
+                "  , p.priority_name AS priority\n" +
+                "  , proj.project_name AS project\n" +
+                "  , b.build\n" +
+                "  , assignee_id.first_name as assignee\n" +
+                "  , c.comment\n" +
+                "  , i.file_id\n" +
                 "FROM issues i\n" +
                 "  INNER JOIN users created_by ON i.CREATED_BY = created_by.USER_ID\n" +
                 "  INNER JOIN users modified_by ON i.MODIFIED_BY = modified_by.USER_ID\n" +
@@ -106,38 +107,38 @@ public class IssueDao extends AbstractGenericDaoImpl<Issue, Integer> {
         entity.setIssueId(rs.getInt("issue_id"));
         entity.setCreateDate(rs.getDate("create_date"));
         User createdBy = new User();
-        createdBy.setUserId(rs.getInt("created_by"));
+        createdBy.setFirstName(rs.getString("created_by"));
         entity.setCreatedBy(createdBy);
         entity.setModifyDate(rs.getDate("modify_date"));
         User modifiedBy = new User();
-        modifiedBy.setUserId(rs.getInt("modified_by"));
+        modifiedBy.setFirstName(rs.getString("modified_by"));
         entity.setCreatedBy(modifiedBy);
         entity.setModifiedBy(modifiedBy);
         entity.setSummary(rs.getString("summary"));
         entity.setDescription(rs.getString("description"));
         Status status = new Status();
-        status.setStatusId(rs.getInt("status_id"));
+        status.setStatusName(rs.getString("status"));
         entity.setStatusId(status);
         Resolution resolution = new Resolution();
-        resolution.setResolutionId(rs.getInt("resolution_id"));
+        resolution.setResolutionName(rs.getString("resolution"));
         entity.setResolutionId(resolution);
         Type type = new Type();
-        type.setTypeId(rs.getInt("type_id"));
+        type.setTypeName(rs.getString("type"));
         entity.setTypeId(type);
         Priority priority = new Priority();
-        priority.setPriorityId(rs.getInt("priority_id"));
+        priority.setPriorityName(rs.getString("priority"));
         entity.setPriorityId(priority);
         Project project = new Project();
-        project.setProjectId(rs.getInt("project_id"));
+        project.setProjectName(rs.getString("project"));
         entity.setProjectId(project);
         Build build = new Build();
-        build.setBuildId(rs.getInt("build_id"));
+        build.setBuild(rs.getString("build"));
         entity.setBuildId(build);
         User assignee = new User();
-        assignee.setUserId(rs.getInt("assignee_id"));
+        assignee.setFirstName(rs.getString("assignee"));
         entity.setAssigneeId(assignee);
         Comment comment = new Comment();
-        comment.setCommentId(rs.getInt("comment_id"));
+        comment.setComment(rs.getString("comment"));
         entity.setCommentId(comment);
         File file = new File();
         file.setFileId(rs.getInt("file_id"));
